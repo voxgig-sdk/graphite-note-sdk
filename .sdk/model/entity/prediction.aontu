@@ -1,0 +1,105 @@
+# Entity: prediction
+
+main: kit: entity: prediction: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "column"
+      req: false
+      type: "`$ARRAY`"
+    }
+    {
+      name: "data"
+      op: {
+        create: {
+          req: true
+          type: "`$OBJECT`"
+        }
+      }
+      req: false
+      type: "`$ARRAY`"
+    }
+  ]
+
+  name: "prediction"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "model_code"
+                orig: "model_code"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          method: "POST"
+          orig: "/v1/prediction/model/{model_code}"
+          parts: [
+            "v1"
+            "prediction"
+            "model"
+            "{model_code}"
+          ]
+          select: {
+            exist: [
+              "model_code"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "model_code"
+                orig: "model_code"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          method: "POST"
+          orig: "/v2/prediction/model/{model_code}"
+          parts: [
+            "v2"
+            "prediction"
+            "model"
+            "{model_code}"
+          ]
+          select: {
+            exist: [
+              "model_code"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+  relations: {
+    ancestors: [
+      [
+        "model"
+      ]
+    ]
+  }
+
+
+
+}

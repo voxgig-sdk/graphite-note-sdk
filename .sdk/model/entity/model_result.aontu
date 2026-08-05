@@ -1,0 +1,73 @@
+# Entity: model_result
+
+main: kit: entity: model_result: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "data"
+      req: false
+      type: "`$ARRAY`"
+    }
+    {
+      name: "page"
+      req: false
+      type: "`$INTEGER`"
+    }
+    {
+      name: "page_size"
+      req: false
+      type: "`$INTEGER`"
+    }
+  ]
+
+  name: "model_result"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "model_code"
+                orig: "model_code"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          method: "POST"
+          orig: "/model/fetch-result/{model_code}"
+          parts: [
+            "model"
+            "fetch-result"
+            "{model_code}"
+          ]
+          select: {
+            exist: [
+              "model_code"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+  relations: {
+    ancestors: [
+      [
+        "fetch_result"
+      ]
+    ]
+  }
+
+
+
+}

@@ -1,0 +1,848 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Graphite Note API",
+    "version": "1.0.0",
+    "description": "Graphite Note (graphite-note.com) no-code predictive analytics: the Dataset API (create/fill/complete datasets), the Prediction API (v1 alias-based, v2 column-based, and timeseries forecasting), the Model Results API (paginated result tables) and the Model Info API (model metadata for MLOps/auditing).\n\nThis definition was authored by Voxgig from Graphite Note's public developer documentation (docs.graphite-note.com, REST API section) \u2014 no first-party OpenAPI definition is published. Shapes mirror the documented examples exactly; replace with a first-party definition if one becomes available.\n\nRate limits: 10 requests/min per tenant, 200/min global; 429 on excess. Custom 44x business statuses: 441 plan limit, 442 email exists, 443 trial finished, 445 model creation limit.",
+    "contact": {
+      "email": "hello@graphite-note.com",
+      "url": "https://docs.graphite-note.com"
+    }
+  },
+  "externalDocs": {
+    "url": "https://docs.graphite-note.com/graphite-note-documentation/rest-api/api-introduction",
+    "description": "Graphite Note REST API documentation"
+  },
+  "servers": [
+    {
+      "url": "https://app.graphite-note.com/api",
+      "description": "Production. The Bearer tenant token comes from the in-app Account Info page."
+    }
+  ],
+  "security": [
+    {
+      "BearerTokenAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Dataset",
+      "description": "Create, fill and finalise datasets"
+    },
+    {
+      "name": "Prediction",
+      "description": "Request predictions from trained models"
+    },
+    {
+      "name": "Model",
+      "description": "Model results and metadata"
+    }
+  ],
+  "paths": {
+    "/dataset-create": {
+      "post": {
+        "operationId": "CreateDataset",
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Create a dataset",
+        "description": "Define the columns, types and properties of a new dataset. Useful for automating dataset setup during onboarding.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetCreateResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset-fill": {
+      "post": {
+        "operationId": "FillDataset",
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Insert or append rows into an existing dataset",
+        "description": "Populate a pre-defined dataset. insert-data is a STRING: JSON-escaped rows when compressed=false, gzip+base64 when compressed=true. Batch large loads (~10,000 rows per call), then call /dataset-complete.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetFillRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetFillResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset-complete": {
+      "post": {
+        "operationId": "CompleteDataset",
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Signal the end of dataset insertion",
+        "description": "Call once all /dataset-fill batches are sent: triggers the final dataset shape calculation and post-processing.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetCompleteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetFillResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prediction/model/{model_code}": {
+      "post": {
+        "operationId": "PredictV1",
+        "tags": [
+          "Prediction"
+        ],
+        "summary": "Request predictions (v1, alias-based; also Timeseries)",
+        "description": "Backward-compatible v1 body: rows of alias/selectedValue objects for Binary/Multiclass Classification and Regression models, or a startDate/endDate/sequenceID object for Timeseries forecasting (daysData required for regressor-trained models). All training features must be present; extra identifier fields pass through to the response.",
+        "parameters": [
+          {
+            "name": "model_code",
+            "in": "path",
+            "required": true,
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictionRequestV1"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prediction results. Timeseries models answer {data: [TimeseriesPoint...]} instead.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/prediction/model/{model_code}": {
+      "post": {
+        "operationId": "PredictV2",
+        "tags": [
+          "Prediction"
+        ],
+        "summary": "Request predictions (v2, column-name-based; recommended)",
+        "description": "Simplified flat body: each prediction row is one JSON object keyed by the exact training column names. Recommended for pipelines and tabular sources. All training features must be present; extra identifier fields pass through to the response.",
+        "parameters": [
+          {
+            "name": "model_code",
+            "in": "path",
+            "required": true,
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictionRequestV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/model/fetch-result/{model_code}": {
+      "post": {
+        "operationId": "FetchModelResults",
+        "tags": [
+          "Model"
+        ],
+        "summary": "Fetch a model's results, paginated",
+        "description": "Returns paginated rows from the result table of an RFM, CLV, ABC or General Segmentation model. Defaults: page 1, page-size 10000.",
+        "parameters": [
+          {
+            "name": "model_code",
+            "in": "path",
+            "required": true,
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelResultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A page of result rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelResultsResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Page": {
+                "description": "The current page number.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-Page-Size": {
+                "description": "Rows returned per page.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/model/fetch-model-info/{model_code}": {
+      "get": {
+        "operationId": "FetchModelInfo",
+        "tags": [
+          "Model"
+        ],
+        "summary": "Fetch a model's metadata and configuration",
+        "description": "Identifiers, timestamps, dataset linkage and the full model properties (minus training artifacts). Supports all model types. Lightweight; cache if polled.",
+        "parameters": [
+          {
+            "name": "model_code",
+            "in": "path",
+            "required": true,
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelInfoResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerTokenAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Tenant token from the Graphite Note app's Account Info page."
+      }
+    },
+    "schemas": {
+      "ColumnDefinition": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Column name as it appears in the source data."
+          },
+          "alias": {
+            "type": "string",
+            "description": "Display alias for the column."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "measure",
+              "dimension"
+            ]
+          },
+          "subtype": {
+            "type": "string",
+            "enum": [
+              "text",
+              "numeric",
+              "date",
+              "datetime"
+            ]
+          },
+          "format": {
+            "type": "string",
+            "description": "Optional display format, e.g. '#,###.##' for numeric or 'Y-d-m H:i:s' for datetime."
+          }
+        },
+        "required": [
+          "name",
+          "alias",
+          "type",
+          "subtype"
+        ],
+        "description": "One column of a dataset's structure."
+      },
+      "DatasetCreateRequest": {
+        "type": "object",
+        "properties": {
+          "user-code": {
+            "type": "string",
+            "description": "Unique code identifying the user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable dataset name."
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          }
+        },
+        "required": [
+          "user-code",
+          "name",
+          "columns"
+        ]
+      },
+      "Dataset": {
+        "type": "object",
+        "properties": {
+          "dataset-code": {
+            "type": "string",
+            "description": "Unique code assigned to the created dataset."
+          },
+          "table-name": {
+            "type": "string",
+            "description": "Backing table name, e.g. dataset_csv_<code>."
+          },
+          "columns": {
+            "type": "integer",
+            "description": "Number of columns created."
+          }
+        },
+        "description": "A created dataset."
+      },
+      "DatasetCreateResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Dataset"
+          }
+        }
+      },
+      "DatasetFillRequest": {
+        "type": "object",
+        "properties": {
+          "user-code": {
+            "type": "string"
+          },
+          "dataset-code": {
+            "type": "string"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "insert-data": {
+            "type": "string",
+            "description": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. Batch large datasets (e.g. 10,000 rows per call)."
+          },
+          "compressed": {
+            "type": "boolean",
+            "description": "True when insert-data is gzip+base64; false when it is a JSON-escaped string."
+          },
+          "append": {
+            "type": "boolean",
+            "description": "True to append to existing rows; false to truncate the dataset first."
+          }
+        },
+        "required": [
+          "user-code",
+          "dataset-code",
+          "columns",
+          "insert-data",
+          "compressed",
+          "append"
+        ]
+      },
+      "DatasetFillDetails": {
+        "type": "object",
+        "properties": {
+          "dataset-code": {
+            "type": "string"
+          },
+          "rows-count": {
+            "type": "integer",
+            "description": "Total rows in the dataset after the operation."
+          }
+        }
+      },
+      "DatasetFillStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "'success' on success."
+          },
+          "details": {
+            "$ref": "#/components/schemas/DatasetFillDetails"
+          }
+        }
+      },
+      "DatasetFillResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DatasetFillStatus"
+          }
+        }
+      },
+      "DatasetCompleteRequest": {
+        "type": "object",
+        "properties": {
+          "user-code": {
+            "type": "string"
+          },
+          "dataset-code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user-code",
+          "dataset-code"
+        ],
+        "description": "Signals the end of dataset insertion: triggers final dataset shape calculation and post-processing."
+      },
+      "PredictionFeatureV1": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "type": "string",
+            "description": "Input column name as defined during model training."
+          },
+          "selectedValue": {
+            "description": "The value submitted for prediction."
+          }
+        },
+        "required": [
+          "alias",
+          "selectedValue"
+        ],
+        "description": "v1 alias-based feature value. One object per feature; every feature used in training must be present."
+      },
+      "TimeseriesDayData": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date the regressor values apply to (YYYY-MM-DD)."
+          }
+        },
+        "description": "One day of regressor values for a regressor-trained timeseries model. Beyond `date`, include EVERY regressor column used in training (e.g. promotion, price) as additional properties.",
+        "additionalProperties": true
+      },
+      "TimeseriesPredictValues": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Start of prediction window (YYYY-MM-DD); must align to model frequency."
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "End of prediction window (YYYY-MM-DD), inclusive."
+          },
+          "sequenceID": {
+            "type": "string",
+            "description": "Identifies the specific time series to forecast (product, store, region); 'n/a' if unused."
+          },
+          "daysData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeseriesDayData"
+            },
+            "description": "Required ONLY for models trained with regressors: one entry per date, every regressor per entry."
+          }
+        },
+        "required": [
+          "startDate",
+          "endDate",
+          "sequenceID"
+        ]
+      },
+      "PredictionRequestV1": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "predict_values": {
+                "description": "Either an array of prediction rows (each row an array of alias/selectedValue objects \u2014 Binary/Multiclass Classification and Regression models), or a single timeseries object (startDate/endDate/sequenceID[/daysData] \u2014 Timeseries models).",
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PredictionFeatureV1"
+                      }
+                    },
+                    "description": "Classification/regression rows."
+                  },
+                  {
+                    "$ref": "#/components/schemas/TimeseriesPredictValues"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "predict_values"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "PredictionRowV2": {
+        "type": "object",
+        "properties": {},
+        "description": "One prediction row: keys are the EXACT column names used during model training, values are the inputs. All training features are required; extra identifier fields (Lead ID, Customer ID) are passed through unchanged and echoed in the response.",
+        "additionalProperties": true
+      },
+      "PredictionRequestV2": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "predict_values": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PredictionRowV2"
+                }
+              }
+            },
+            "required": [
+              "predict_values"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "Prediction": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Column names associated with each prediction row."
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Label": {
+                  "type": "string",
+                  "description": "Predicted label (classification models)."
+                }
+              },
+              "description": "One prediction result row: the input attributes echoed back, the predicted Label, and per-class probability scores as Score_<CLASS> keys (e.g. Score_YES: 0.1045 = 10.45%).",
+              "additionalProperties": true
+            }
+          }
+        },
+        "description": "Classification/regression prediction results."
+      },
+      "PredictionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Prediction"
+          }
+        }
+      },
+      "TimeseriesPoint": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO datetime aligned to the model frequency."
+          },
+          "predicted": {
+            "type": "number",
+            "format": "double",
+            "description": "Point forecast."
+          },
+          "predicted_lower": {
+            "type": "number",
+            "format": "double",
+            "description": "Lower uncertainty bound."
+          },
+          "predicted_upper": {
+            "type": "number",
+            "format": "double",
+            "description": "Upper uncertainty bound."
+          },
+          "sequenceID": {
+            "type": "string",
+            "description": "Present only on the trailing element, echoing the request's sequenceID."
+          }
+        },
+        "description": "One element of a timeseries forecast response. The data array holds one point per date, then a final object carrying only sequenceID."
+      },
+      "ModelResultRequest": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "description": "Page number for paginated results. Defaults to 1."
+          },
+          "page-size": {
+            "type": "integer",
+            "description": "Rows per page. Defaults to 10000."
+          }
+        },
+        "description": "Pagination for model result retrieval. Response carries X-Page and X-Page-Size headers."
+      },
+      "ModelResultRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Row id within the result table."
+          }
+        },
+        "description": "One row of a model's result table; remaining keys mirror the dataset's columns.",
+        "additionalProperties": true
+      },
+      "ModelResultsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelResultRow"
+            }
+          }
+        }
+      },
+      "ModelInfo": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Model code (Settings tab, ID section)."
+          },
+          "name": {
+            "type": "string",
+            "description": "User-given model name."
+          },
+          "model_name": {
+            "type": "string",
+            "description": "Model type name, e.g. 'RFM Customer Segmentation'."
+          },
+          "dataset_code": {
+            "type": "string",
+            "description": "Code of the dataset the model is trained on."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {},
+            "description": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
+            "additionalProperties": true
+          }
+        },
+        "description": "Metadata for a model created in Graphite Note."
+      },
+      "ModelInfoResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ModelInfo"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors \u2014 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+        "additionalProperties": true
+      }
+    }
+  }
+}

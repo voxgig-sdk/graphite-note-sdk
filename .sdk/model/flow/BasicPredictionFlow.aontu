@@ -1,0 +1,22 @@
+# BasicPredictionFlow
+
+main: kit: flow: BasicPredictionFlow:
+{
+  entity: "prediction",
+  kind: "basic",
+  name: "BasicPredictionFlow",
+  step: [
+    {
+      input: {
+        ref: "prediction_ref01"
+      }
+
+      match: {
+        model_code: "model_code01"
+      }
+
+      op: "create"
+    }
+  ],
+  "key$": "BasicPredictionFlow"
+}

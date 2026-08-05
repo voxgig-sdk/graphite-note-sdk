@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "voxgig-sdk-graphite-note"
+version = "0.0.1"
+description = "Unofficial generated Python SDK for the Graphite Note public API. Not affiliated with or endorsed by the upstream API provider."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+keywords = ["voxgig", "sdk", "generated-sdk", "openapi", "api-client", "graphite-note"]
+dependencies = [
+    "requests>=2.33",
+]
+
+[project.urls]
+Homepage = "https://github.com/voxgig-sdk/graphite-note-sdk"
+Repository = "https://github.com/voxgig-sdk/graphite-note-sdk"
+Issues = "https://github.com/voxgig-sdk/graphite-note-sdk/issues"
+
+# Ship the top-level single-file modules (setuptools find only discovers
+# package dirs, never these) so the documented import actually installs.
+# graphitenote_types holds the generated @dataclass models.
+[tool.setuptools]
+py-modules = ["graphitenote_sdk", "graphitenote_types", "config", "features"]
+
+# Explicit package list — setuptools auto-discovery refuses to pick when
+# multiple top-level dirs (core/entity/feature/utility) are present.
+[tool.setuptools.packages.find]
+include = ["core*", "entity*", "feature*", "utility*"]
+
+# Ship the PEP 561 py.typed marker(s) so the inline type hints reach consumers.
+[tool.setuptools.package-data]
+"*" = ["py.typed"]

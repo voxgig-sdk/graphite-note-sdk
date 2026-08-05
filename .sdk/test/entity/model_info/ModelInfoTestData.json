@@ -1,0 +1,52 @@
+{
+  "existing": {
+    "model_info": {
+      "MODEL_INFO00": {
+        "code": "s46",
+        "created_at": "s47",
+        "dataset_code": "s48",
+        "model_name": "s49",
+        "name": "s4a",
+        "property": {},
+        "updated_at": "s4c",
+        "model_code": "MODEL_CODE01",
+        "id": "MODEL_INFO00"
+      },
+      "MODEL_INFO01": {
+        "code": "s8c",
+        "created_at": "s8d",
+        "dataset_code": "s8e",
+        "model_name": "s8f",
+        "name": "s90",
+        "property": {},
+        "updated_at": "s92",
+        "model_code": "MODEL_CODE01",
+        "id": "MODEL_INFO01"
+      },
+      "MODEL_INFO02": {
+        "code": "sd2",
+        "created_at": "sd3",
+        "dataset_code": "sd4",
+        "model_name": "sd5",
+        "name": "sd6",
+        "property": {},
+        "updated_at": "sd8",
+        "model_code": "MODEL_CODE01",
+        "id": "MODEL_INFO02"
+      }
+    }
+  },
+  "new": {
+    "model_info": {
+      "model_info_ref01": {
+        "code": "s118",
+        "created_at": "s119",
+        "dataset_code": "s11a",
+        "model_name": "s11b",
+        "name": "s11c",
+        "property": {},
+        "updated_at": "s11e"
+      }
+    }
+  }
+}

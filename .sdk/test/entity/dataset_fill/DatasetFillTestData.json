@@ -1,0 +1,53 @@
+{
+  "existing": {
+    "dataset_fill": {
+      "DATASET_FILL00": {
+        "append": true,
+        "column": [],
+        "compressed": true,
+        "dataset_code": "s53",
+        "detail": {},
+        "insert_data": "s55",
+        "status": "s56",
+        "user_code": "s57",
+        "id": "DATASET_FILL00"
+      },
+      "DATASET_FILL01": {
+        "append": true,
+        "column": [],
+        "compressed": true,
+        "dataset_code": "sa3",
+        "detail": {},
+        "insert_data": "sa5",
+        "status": "sa6",
+        "user_code": "sa7",
+        "id": "DATASET_FILL01"
+      },
+      "DATASET_FILL02": {
+        "append": true,
+        "column": [],
+        "compressed": true,
+        "dataset_code": "sf3",
+        "detail": {},
+        "insert_data": "sf5",
+        "status": "sf6",
+        "user_code": "sf7",
+        "id": "DATASET_FILL02"
+      }
+    }
+  },
+  "new": {
+    "dataset_fill": {
+      "dataset_fill_ref01": {
+        "append": true,
+        "column": [],
+        "compressed": true,
+        "dataset_code": "s143",
+        "detail": {},
+        "insert_data": "s145",
+        "status": "s146",
+        "user_code": "s147"
+      }
+    }
+  }
+}

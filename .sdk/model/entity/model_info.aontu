@@ -1,0 +1,93 @@
+# Entity: model_info
+
+main: kit: entity: model_info: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "code"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "created_at"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "dataset_code"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "model_name"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "name"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "property"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "updated_at"
+      req: false
+      type: "`$STRING`"
+    }
+  ]
+
+  name: "model_info"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "model_code"
+                orig: "model_code"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/model/fetch-model-info/{model_code}"
+          parts: [
+            "model"
+            "fetch-model-info"
+            "{model_code}"
+          ]
+          select: {
+            exist: [
+              "model_code"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+  relations: {
+    ancestors: [
+      [
+        "fetch_model_info"
+      ]
+    ]
+  }
+
+
+
+}

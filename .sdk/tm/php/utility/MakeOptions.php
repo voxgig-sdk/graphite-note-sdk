@@ -1,0 +1,192 @@
+<?php
+declare(strict_types=1);
+
+// GraphiteNote SDK utility: make_options
+
+class GraphiteNoteMakeOptions
+{
+    private static function to_array_deep(mixed $val): mixed
+    {
+        if ($val instanceof \Closure) {
+            return $val;
+        }
+        if (is_object($val)) {
+            $val = (array)$val;
+        }
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                if (is_object($v) || is_array($v)) {
+                    $val[$k] = self::to_array_deep($v);
+                }
+            }
+        }
+        return $val;
+    }
+
+    public static function call(GraphiteNoteContext $ctx): array
+    {
+        $options = $ctx->options ?? [];
+
+        $custom_utils = \Voxgig\Struct\Struct::getprop($options, 'utility');
+        if ((is_array($custom_utils) || is_object($custom_utils)) && $ctx->utility) {
+            foreach ((array)$custom_utils as $k => $v) {
+                $ctx->utility->custom[$k] = $v;
+            }
+        }
+
+        // Preserve system.fetch before merge/validate.
+        $sys_fetch = \Voxgig\Struct\Struct::getpath($options, 'system.fetch');
+
+        $opts = \Voxgig\Struct\Struct::clone($options);
+        $opts = self::to_array_deep($opts);
+        if (!is_array($opts)) {
+            $opts = [];
+        }
+
+        // Feature add-order. options['feature'] may be given as an ordered LIST
+        // of ['name'=>..., 'active'=>..., ...] entries (the list position IS the
+        // order in which features are added), or as a ['name'=>[opts]] map.
+        // Normalize a list to a map (so merge/validate/init are unchanged) and
+        // remember the explicit order; a map defaults to test-first so the
+        // `test` mock transport is installed as the base of the wrapper chain.
+        $featureorder = [];
+        if (isset($opts['feature']) && is_array($opts['feature']) && array_is_list($opts['feature'])) {
+            $fmap = [];
+            foreach ($opts['feature'] as $entry) {
+                if (!is_array($entry)) {
+                    continue;
+                }
+                $name = $entry['name'] ?? null;
+                if ($name === null) {
+                    continue;
+                }
+                $fopts = $entry;
+                unset($fopts['name']);
+                $fmap[$name] = $fopts;
+                $featureorder[] = $name;
+            }
+            $opts['feature'] = $fmap;
+        }
+
+        $config = $ctx->config ?? [];
+        $cfgopts = isset($config['options']) && is_array($config['options']) ? $config['options'] : [];
+
+        $optspec = [
+            'apikey' => '',
+            'base' => 'http://localhost:8000',
+            'prefix' => '',
+            'suffix' => '',
+            'auth' => ['prefix' => ''],
+            'headers' => ['`$CHILD`' => '`$STRING`'],
+            'allow' => [
+                'method' => 'GET,PUT,POST,PATCH,DELETE,OPTIONS',
+                'op' => 'create,update,load,list,remove,command,direct',
+            ],
+            'entity' => ['`$CHILD`' => ['`$OPEN`' => true, 'active' => false, 'alias' => (object)[]]],
+            'feature' => ['`$CHILD`' => ['`$OPEN`' => true, 'active' => false]],
+            'utility' => (object)[],
+            'system' => (object)[],
+            'test' => ['active' => false, 'entity' => ['`$OPEN`' => true]],
+            'clean' => ['keys' => 'key,token,id'],
+            // Server-variable values for a templated base URL (OpenAPI server
+            // variables): {name} placeholders in 'base' are substituted from
+            // this map at construction. Spec defaults arrive via the generated
+            // config; user values override them.
+            'server' => ['`$CHILD`' => ''],
+        ];
+
+        // Empty [] would be treated as a list and clobber the map under merge;
+        // substitute an empty stdClass to preserve map semantics.
+        $cfgopts_merge = empty($cfgopts) ? new \stdClass() : $cfgopts;
+        $opts_merge = empty($opts) ? new \stdClass() : $opts;
+        $merged = \Voxgig\Struct\Struct::merge([(object)[], $cfgopts_merge, $opts_merge]);
+        $validated = \Voxgig\Struct\Struct::validate($merged, $optspec);
+        $opts = self::to_array_deep($validated);
+        if (!is_array($opts)) {
+            $opts = [];
+        }
+
+        // Resolve a templated base URL (e.g. https://{tenant_id}.hanko.io).
+        // Every placeholder must resolve to a non-empty value: from
+        // $options['server'] (user), else the config default. A placeholder
+        // that resolves to '' is a construction ERROR in live mode — the URL
+        // cannot work — but in test mode substitutes the deterministic value
+        // "test-<name>" so offline tests need no configuration.
+        $base = $opts['base'] ?? null;
+        if (is_string($base) && strpos($base, '{') !== false) {
+            $testmode =
+                \Voxgig\Struct\Struct::getpath($opts, 'test.active') === true
+                || \Voxgig\Struct\Struct::getpath($opts, 'feature.test.active') === true;
+            $server = is_array($opts['server'] ?? null) ? $opts['server'] : [];
+            $sdkname = \Voxgig\Struct\Struct::getpath($config, 'main.name');
+            if (!is_string($sdkname) || $sdkname === '') {
+                $sdkname = 'SDK';
+            }
+            $opts['base'] = preg_replace_callback(
+                '/\{([A-Za-z0-9_]+)\}/',
+                function ($m) use ($server, $testmode, $sdkname, $base) {
+                    $name = $m[1];
+                    $val = $server[$name] ?? '';
+                    if (!is_string($val)) {
+                        $val = '';
+                    }
+                    if ($val === '') {
+                        if ($testmode) {
+                            return 'test-' . $name;
+                        }
+                        throw new \InvalidArgumentException(
+                            $sdkname . ": the server variable '" . $name . "' is required: " .
+                            "the API base URL is '" . $base . "' — pass " .
+                            "['server' => ['" . $name . "' => '...']] in the SDK options");
+                    }
+                    return $val;
+                },
+                $base
+            );
+        }
+
+        if ($sys_fetch) {
+            if (!is_array($opts['system'] ?? null)) {
+                $opts['system'] = [];
+            }
+            $opts['system']['fetch'] = $sys_fetch;
+        }
+
+        $clean_keys = \Voxgig\Struct\Struct::getpath($opts, 'clean.keys');
+        if (!is_string($clean_keys)) {
+            $clean_keys = 'key,token,id';
+        }
+        $parts = array_filter(array_map('trim', explode(',', $clean_keys)), function ($p) {
+            return $p !== '';
+        });
+        $parts = array_map(function ($p) {
+            return \Voxgig\Struct\Struct::escre($p);
+        }, $parts);
+        $keyre = implode('|', $parts);
+
+        // Resolve the feature add-order: an explicit list order (above) wins;
+        // otherwise order the map test-first, then the remaining names sorted,
+        // so the outcome is deterministic and `test` is always the base.
+        if (count($featureorder) === 0) {
+            $fmap = $opts['feature'] ?? null;
+            $names = is_array($fmap)
+                ? array_values(array_filter(array_keys($fmap), 'is_string'))
+                : [];
+            sort($names, SORT_STRING);
+            if (in_array('test', $names, true)) {
+                $rest = array_values(array_filter($names, function ($n) {
+                    return $n !== 'test';
+                }));
+                $featureorder = array_merge(['test'], $rest);
+            } else {
+                $featureorder = $names;
+            }
+        }
+
+        $derived = ['clean' => $keyre === '' ? [] : ['keyre' => $keyre]];
+        $derived['featureorder'] = $featureorder;
+        $opts['__derived__'] = $derived;
+
+        return $opts;
+    }
+}

@@ -1,0 +1,36 @@
+# API Information
+
+
+main: {
+  kit: {
+    info: {
+      contact: {
+        email: "hello@graphite-note.com"
+        url: "https://docs.graphite-note.com"
+      }
+      description: `Graphite Note (graphite-note.com) no-code predictive analytics: the Dataset API (create/fill/complete datasets), the Prediction API (v1 alias-based, v2 column-based, and timeseries forecasting), the Model Results API (paginated result tables) and the Model Info API (model metadata for MLOps/auditing).
+
+This definition was authored by Voxgig from Graphite Note's public developer documentation (docs.graphite-note.com, REST API section) — no first-party OpenAPI definition is published. Shapes mirror the documented examples exactly; replace with a first-party definition if one becomes available.
+
+Rate limits: 10 requests/min per tenant, 200/min global; 429 on excess. Custom 44x business statuses: 441 plan limit, 442 email exists, 443 trial finished, 445 model creation limit.`
+      security: {
+        in: "header"
+        name: "Authorization"
+        prefix: "Bearer"
+        scheme: "BearerTokenAuth"
+        type: "http"
+      }
+      servers: [
+        {
+          description: "Production. The Bearer tenant token comes from the in-app Account Info page."
+          url: "https://app.graphite-note.com/api"
+        }
+      ]
+      summary: "Graphite Note (graphite-note.com) no-code predictive analytics: the Dataset API (create/fill/complete datasets), the Prediction API (v1 alias-based, v2 column-based, and timeseries forecasting), the Model Results API (paginated result tabl…"
+      title: "Graphite Note API"
+      version: "1.0.0"
+      website: "https://docs.graphite-note.com/graphite-note-documentation/rest-api/api-introduction"
+    }
+  }
+}
+

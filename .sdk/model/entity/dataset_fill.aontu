@@ -1,0 +1,83 @@
+# Entity: dataset_fill
+
+main: kit: entity: dataset_fill: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "append"
+      req: true
+      type: "`$BOOLEAN`"
+    }
+    {
+      name: "column"
+      req: true
+      type: "`$ARRAY`"
+    }
+    {
+      name: "compressed"
+      req: true
+      type: "`$BOOLEAN`"
+    }
+    {
+      name: "dataset_code"
+      req: true
+      type: "`$STRING`"
+    }
+    {
+      name: "detail"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "insert_data"
+      req: true
+      type: "`$STRING`"
+    }
+    {
+      name: "status"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "user_code"
+      req: true
+      type: "`$STRING`"
+    }
+  ]
+
+  name: "dataset_fill"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          method: "POST"
+          orig: "/dataset-complete"
+          parts: [
+            "dataset-complete"
+          ]
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+        {
+          method: "POST"
+          orig: "/dataset-fill"
+          parts: [
+            "dataset-fill"
+          ]
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -1,0 +1,32 @@
+{
+  "existing": {
+    "prediction": {
+      "PREDICTION00": {
+        "column": [],
+        "data": [],
+        "model_code": "MODEL_CODE01",
+        "id": "PREDICTION00"
+      },
+      "PREDICTION01": {
+        "column": [],
+        "data": [],
+        "model_code": "MODEL_CODE01",
+        "id": "PREDICTION01"
+      },
+      "PREDICTION02": {
+        "column": [],
+        "data": [],
+        "model_code": "MODEL_CODE01",
+        "id": "PREDICTION02"
+      }
+    }
+  },
+  "new": {
+    "prediction": {
+      "prediction_ref01": {
+        "column": [],
+        "data": []
+      }
+    }
+  }
+}

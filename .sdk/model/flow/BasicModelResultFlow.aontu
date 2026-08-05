@@ -1,0 +1,22 @@
+# BasicModelResultFlow
+
+main: kit: flow: BasicModelResultFlow:
+{
+  entity: "model_result",
+  kind: "basic",
+  name: "BasicModelResultFlow",
+  step: [
+    {
+      input: {
+        ref: "model_result_ref01"
+      }
+
+      match: {
+        model_code: "model_code01"
+      }
+
+      op: "create"
+    }
+  ],
+  "key$": "BasicModelResultFlow"
+}

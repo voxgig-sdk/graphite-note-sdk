@@ -1,0 +1,50 @@
+# Guide
+
+guide: {
+  metrics: count: entity: 5
+  metrics: count: path: 7
+  metrics: count: method: 7
+
+  entity: dataset: {
+    path: "/dataset-create": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.data`")|top
+    }
+  }
+
+  entity: dataset_fill: {
+    path: "/dataset-complete": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.data`")|top
+    }
+    path: "/dataset-fill": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.data`")|top
+    }
+  }
+
+  entity: model_info: {
+    path: "/model/fetch-model-info/{model_code}": {
+      op: load: method: *GET
+      op: load: transform: res: *("`body.data`")|top
+    }
+  }
+
+  entity: model_result: {
+    path: "/model/fetch-result/{model_code}": {
+      op: create: method: *POST
+    }
+  }
+
+  entity: prediction: {
+    path: "/v1/prediction/model/{model_code}": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.data`")|top
+    }
+    path: "/v2/prediction/model/{model_code}": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.data`")|top
+    }
+  }
+
+}

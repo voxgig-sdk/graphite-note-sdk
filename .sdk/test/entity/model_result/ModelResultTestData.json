@@ -1,0 +1,36 @@
+{
+  "existing": {
+    "model_result": {
+      "MODEL_RESULT00": {
+        "data": [],
+        "page": "s1f",
+        "page_size": "s20",
+        "model_code": "MODEL_CODE01",
+        "id": "MODEL_RESULT00"
+      },
+      "MODEL_RESULT01": {
+        "data": [],
+        "page": "s3d",
+        "page_size": "s3e",
+        "model_code": "MODEL_CODE01",
+        "id": "MODEL_RESULT01"
+      },
+      "MODEL_RESULT02": {
+        "data": [],
+        "page": "s5b",
+        "page_size": "s5c",
+        "model_code": "MODEL_CODE01",
+        "id": "MODEL_RESULT02"
+      }
+    }
+  },
+  "new": {
+    "model_result": {
+      "model_result_ref01": {
+        "data": [],
+        "page": "s79",
+        "page_size": "s7a"
+      }
+    }
+  }
+}

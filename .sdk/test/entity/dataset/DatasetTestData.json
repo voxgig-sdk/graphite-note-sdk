@@ -1,0 +1,41 @@
+{
+  "existing": {
+    "dataset": {
+      "DATASET00": {
+        "column": "s32",
+        "dataset_code": "s33",
+        "name": "s34",
+        "table_name": "s35",
+        "user_code": "s36",
+        "id": "DATASET00"
+      },
+      "DATASET01": {
+        "column": "s64",
+        "dataset_code": "s65",
+        "name": "s66",
+        "table_name": "s67",
+        "user_code": "s68",
+        "id": "DATASET01"
+      },
+      "DATASET02": {
+        "column": "s96",
+        "dataset_code": "s97",
+        "name": "s98",
+        "table_name": "s99",
+        "user_code": "s9a",
+        "id": "DATASET02"
+      }
+    }
+  },
+  "new": {
+    "dataset": {
+      "dataset_ref01": {
+        "column": "sc8",
+        "dataset_code": "sc9",
+        "name": "sca",
+        "table_name": "scb",
+        "user_code": "scc"
+      }
+    }
+  }
+}

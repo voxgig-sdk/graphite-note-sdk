@@ -1,0 +1,32 @@
+# BasicModelInfoFlow
+
+main: kit: flow: BasicModelInfoFlow:
+{
+  entity: "model_info",
+  kind: "basic",
+  name: "BasicModelInfoFlow",
+  step: [
+    {
+      input: {
+        ref: "model_info_ref01",
+        srcdatavar: "model_info_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "model_info01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-model_info_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicModelInfoFlow"
+}
