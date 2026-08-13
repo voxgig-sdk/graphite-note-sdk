@@ -49,7 +49,7 @@ print(modelinfo)
 
 ```lua
 -- Create
-local created, err = client:Dataset():create({ name = "example_name", user_code = "example_user_code" })
+local created, err = client:Dataset():create({ name = "example_name", usercode = "example_usercode" })
 if err then error(err) end
 
 ```
@@ -232,9 +232,9 @@ data **directly** — there is no wrapper:
 
 Check `err` first (it is non-`nil` on failure), then use `value`:
 
-    local dataset, err = client:Dataset():load()
+    local model_info, err = client:ModelInfo():load()
     if err then error(err) end
-    -- dataset is the loaded record
+    -- model_info is the loaded record
 
 Only `direct()` returns a response envelope — a `table` with `ok`,
 `status`, `headers`, and `data` keys.
@@ -245,11 +245,11 @@ Only `direct()` returns a response envelope — a `table` with `ok`,
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
-| `dataset_code` |  |
+| `columns` |  |
+| `datasetcode` |  |
 | `name` |  |
-| `table_name` |  |
-| `user_code` |  |
+| `tablename` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -260,13 +260,13 @@ API path: `/dataset-create`
 | Field | Description |
 | --- | --- |
 | `append` |  |
-| `column` |  |
+| `columns` |  |
 | `compressed` |  |
-| `dataset_code` |  |
-| `detail` |  |
-| `insert_data` |  |
+| `datasetcode` |  |
+| `details` |  |
+| `insertdata` |  |
 | `status` |  |
-| `user_code` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -281,7 +281,7 @@ API path: `/dataset-complete`
 | `dataset_code` |  |
 | `model_name` |  |
 | `name` |  |
-| `property` |  |
+| `properties` |  |
 | `updated_at` |  |
 
 Operations: Load.
@@ -294,7 +294,7 @@ API path: `/model/fetch-model-info/{model_code}`
 | --- | --- |
 | `data` |  |
 | `page` |  |
-| `page_size` |  |
+| `pagesize` |  |
 
 Operations: Create.
 
@@ -304,7 +304,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
+| `columns` |  |
 | `data` |  |
 
 Operations: Create.
@@ -330,18 +330,18 @@ Create an instance: `local dataset = client:Dataset(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `number` |  |
-| `dataset_code` | `string` |  |
+| `columns` | `number` |  |
+| `datasetcode` | `string` |  |
 | `name` | `string` |  |
-| `table_name` | `string` |  |
-| `user_code` | `string` |  |
+| `tablename` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```lua
 local dataset, err = client:Dataset():create({
   name = "example_name", -- string
-  user_code = "example_user_code", -- string
+  usercode = "example_usercode", -- string
 })
 ```
 
@@ -361,24 +361,24 @@ Create an instance: `local dataset_fill = client:DatasetFill(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `append` | `boolean` |  |
-| `column` | `table` |  |
+| `columns` | `table` |  |
 | `compressed` | `boolean` |  |
-| `dataset_code` | `string` |  |
-| `detail` | `table` |  |
-| `insert_data` | `string` |  |
+| `datasetcode` | `string` |  |
+| `details` | `table` |  |
+| `insertdata` | `string` |  |
 | `status` | `string` |  |
-| `user_code` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```lua
 local dataset_fill, err = client:DatasetFill():create({
   append = true, -- boolean
-  column = {}, -- table
+  columns = {}, -- table
   compressed = true, -- boolean
-  dataset_code = "example_dataset_code", -- string
-  insert_data = "example_insert_data", -- string
-  user_code = "example_user_code", -- string
+  datasetcode = "example_datasetcode", -- string
+  insertdata = "example_insertdata", -- string
+  usercode = "example_usercode", -- string
 })
 ```
 
@@ -402,7 +402,7 @@ Create an instance: `local model_info = client:ModelInfo(nil)`
 | `dataset_code` | `string` |  |
 | `model_name` | `string` |  |
 | `name` | `string` |  |
-| `property` | `table` |  |
+| `properties` | `table` |  |
 | `updated_at` | `string` |  |
 
 #### Example: Load
@@ -428,7 +428,7 @@ Create an instance: `local model_result = client:ModelResult(nil)`
 | --- | --- | --- |
 | `data` | `table` |  |
 | `page` | `number` |  |
-| `page_size` | `number` |  |
+| `pagesize` | `number` |  |
 
 #### Example: Create
 
@@ -453,7 +453,7 @@ Create an instance: `local prediction = client:Prediction(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `table` |  |
+| `columns` | `table` |  |
 | `data` | `table` |  |
 
 #### Example: Create

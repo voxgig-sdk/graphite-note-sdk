@@ -16,7 +16,7 @@ main: kit: entity: model_result: {
       type: "`$INTEGER`"
     }
     {
-      name: "page_size"
+      name: "pagesize"
       req: false
       type: "`$INTEGER`"
     }

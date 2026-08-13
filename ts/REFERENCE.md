@@ -165,21 +165,21 @@ const dataset = client.Dataset()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `number` | No |  |
-| `dataset_code` | `string` | No |  |
+| `columns` | `number` | No |  |
+| `datasetcode` | `string` | No |  |
 | `name` | `string` | Yes |  |
-| `table_name` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `tablename` | `string` | No |  |
+| `usercode` | `string` | Yes |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | Yes |
-| `dataset_code` | - |
+| `columns` | Yes |
+| `datasetcode` | - |
 | `name` | - |
-| `table_name` | - |
-| `user_code` | - |
+| `tablename` | - |
+| `usercode` | - |
 
 ### Operations
 
@@ -190,7 +190,7 @@ Create a new entity with the given data.
 ```ts
 const result = await client.Dataset().create({
   name: 'example_name',
-  user_code: 'example_user_code',
+  usercode: 'example_usercode',
 })
 ```
 
@@ -233,13 +233,13 @@ const dataset_fill = client.DatasetFill()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `append` | `boolean` | Yes |  |
-| `column` | `any[]` | Yes |  |
+| `columns` | `any[]` | Yes |  |
 | `compressed` | `boolean` | Yes |  |
-| `dataset_code` | `string` | Yes |  |
-| `detail` | `Record<string, any>` | No |  |
-| `insert_data` | `string` | Yes |  |
+| `datasetcode` | `string` | Yes |  |
+| `details` | `Record<string, any>` | No |  |
+| `insertdata` | `string` | Yes |  |
 | `status` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `usercode` | `string` | Yes |  |
 
 ### Operations
 
@@ -250,11 +250,11 @@ Create a new entity with the given data.
 ```ts
 const result = await client.DatasetFill().create({
   append: true,
-  column: [],
+  columns: [],
   compressed: true,
-  dataset_code: 'example_dataset_code',
-  insert_data: 'example_insert_data',
-  user_code: 'example_user_code',
+  datasetcode: 'example_datasetcode',
+  insertdata: 'example_insertdata',
+  usercode: 'example_usercode',
 })
 ```
 
@@ -301,7 +301,7 @@ const model_info = client.ModelInfo()
 | `dataset_code` | `string` | No |  |
 | `model_name` | `string` | No |  |
 | `name` | `string` | No |  |
-| `property` | `Record<string, any>` | No |  |
+| `properties` | `Record<string, any>` | No |  |
 | `updated_at` | `string` | No |  |
 
 ### Operations
@@ -354,7 +354,7 @@ const model_result = client.ModelResult()
 | --- | --- | --- | --- |
 | `data` | `any[]` | No |  |
 | `page` | `number` | No |  |
-| `page_size` | `number` | No |  |
+| `pagesize` | `number` | No |  |
 
 ### Operations
 
@@ -406,14 +406,14 @@ const prediction = client.Prediction()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `any[]` | No |  |
+| `columns` | `any[]` | No |  |
 | `data` | `any[]` | No |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | - |
+| `columns` | - |
 | `data` | Yes |
 
 ### Operations

@@ -38,7 +38,7 @@ ModelInfo is nested under model_code, so provide the `model_code`.
 
 ```ruby
 begin
-  # load returns the bare ModelInfo record (raises on error).
+  # load returns the ENTITY — call data_get for the ModelInfo record (raises on error).
   modelinfo = client.ModelInfo.load({ "model_code" => "example_model_code" })
   puts modelinfo
 rescue => err
@@ -49,8 +49,8 @@ end
 ### 4. Create, update, and remove
 
 ```ruby
-# create returns the bare created Dataset record.
-created = client.Dataset.create({ "name" => "example_name", "user_code" => "example_user_code" })
+# create returns the ENTITY — call data_get for the created Dataset record.
+created = client.Dataset.create({ "name" => "example_name", "usercode" => "example_usercode" })
 
 ```
 
@@ -129,7 +129,8 @@ Create a mock client for unit testing — no server required:
 ```ruby
 client = GraphiteNoteSDK.test
 
-# Entity ops return the bare mock record (raises on error).
+# Entity ops return the ENTITY (raises on error);
+# call data_get for the mock record.
 modelinfo = client.ModelInfo.load({ "model_code" => "example" })
 puts modelinfo
 ```
@@ -253,11 +254,11 @@ returns a result `Hash` with these keys:
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
-| `dataset_code` |  |
+| `columns` |  |
+| `datasetcode` |  |
 | `name` |  |
-| `table_name` |  |
-| `user_code` |  |
+| `tablename` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -268,13 +269,13 @@ API path: `/dataset-create`
 | Field | Description |
 | --- | --- |
 | `append` |  |
-| `column` |  |
+| `columns` |  |
 | `compressed` |  |
-| `dataset_code` |  |
-| `detail` |  |
-| `insert_data` |  |
+| `datasetcode` |  |
+| `details` |  |
+| `insertdata` |  |
 | `status` |  |
-| `user_code` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -289,7 +290,7 @@ API path: `/dataset-complete`
 | `dataset_code` |  |
 | `model_name` |  |
 | `name` |  |
-| `property` |  |
+| `properties` |  |
 | `updated_at` |  |
 
 Operations: Load.
@@ -302,7 +303,7 @@ API path: `/model/fetch-model-info/{model_code}`
 | --- | --- |
 | `data` |  |
 | `page` |  |
-| `page_size` |  |
+| `pagesize` |  |
 
 Operations: Create.
 
@@ -312,7 +313,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
+| `columns` |  |
 | `data` |  |
 
 Operations: Create.
@@ -338,18 +339,18 @@ Create an instance: `dataset = client.Dataset`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `Integer` |  |
-| `dataset_code` | `String` |  |
+| `columns` | `Integer` |  |
+| `datasetcode` | `String` |  |
 | `name` | `String` |  |
-| `table_name` | `String` |  |
-| `user_code` | `String` |  |
+| `tablename` | `String` |  |
+| `usercode` | `String` |  |
 
 #### Example: Create
 
 ```ruby
 dataset = client.Dataset.create({
   "name" => "example_name", # String
-  "user_code" => "example_user_code", # String
+  "usercode" => "example_usercode", # String
 })
 ```
 
@@ -369,24 +370,24 @@ Create an instance: `dataset_fill = client.DatasetFill`
 | Field | Type | Description |
 | --- | --- | --- |
 | `append` | `Boolean` |  |
-| `column` | `Array` |  |
+| `columns` | `Array` |  |
 | `compressed` | `Boolean` |  |
-| `dataset_code` | `String` |  |
-| `detail` | `Hash` |  |
-| `insert_data` | `String` |  |
+| `datasetcode` | `String` |  |
+| `details` | `Hash` |  |
+| `insertdata` | `String` |  |
 | `status` | `String` |  |
-| `user_code` | `String` |  |
+| `usercode` | `String` |  |
 
 #### Example: Create
 
 ```ruby
 dataset_fill = client.DatasetFill.create({
   "append" => true, # Boolean
-  "column" => [], # Array
+  "columns" => [], # Array
   "compressed" => true, # Boolean
-  "dataset_code" => "example_dataset_code", # String
-  "insert_data" => "example_insert_data", # String
-  "user_code" => "example_user_code", # String
+  "datasetcode" => "example_datasetcode", # String
+  "insertdata" => "example_insertdata", # String
+  "usercode" => "example_usercode", # String
 })
 ```
 
@@ -410,13 +411,13 @@ Create an instance: `model_info = client.ModelInfo`
 | `dataset_code` | `String` |  |
 | `model_name` | `String` |  |
 | `name` | `String` |  |
-| `property` | `Hash` |  |
+| `properties` | `Hash` |  |
 | `updated_at` | `String` |  |
 
 #### Example: Load
 
 ```ruby
-# load returns the bare ModelInfo record (raises on error).
+# load returns the ENTITY — call data_get for the ModelInfo record (raises on error).
 model_info = client.ModelInfo.load({ "model_code" => "model_code" })
 ```
 
@@ -437,7 +438,7 @@ Create an instance: `model_result = client.ModelResult`
 | --- | --- | --- |
 | `data` | `Array` |  |
 | `page` | `Integer` |  |
-| `page_size` | `Integer` |  |
+| `pagesize` | `Integer` |  |
 
 #### Example: Create
 
@@ -462,7 +463,7 @@ Create an instance: `prediction = client.Prediction`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `Array` |  |
+| `columns` | `Array` |  |
 | `data` | `Array` |  |
 
 #### Example: Create

@@ -7,38 +7,38 @@
 -- edit by hand.
 
 ---@class Dataset
----@field column? number
----@field dataset_code? string
+---@field columns? number
+---@field datasetcode? string
 ---@field name string
----@field table_name? string
----@field user_code string
+---@field tablename? string
+---@field usercode string
 
 ---@class DatasetCreateData
----@field column? number
----@field dataset_code? string
+---@field columns? number
+---@field datasetcode? string
 ---@field name string
----@field table_name? string
----@field user_code string
+---@field tablename? string
+---@field usercode string
 
 ---@class DatasetFill
 ---@field append boolean
----@field column table
+---@field columns table
 ---@field compressed boolean
----@field dataset_code string
----@field detail? table
----@field insert_data string
+---@field datasetcode string
+---@field details? table
+---@field insertdata string
 ---@field status? string
----@field user_code string
+---@field usercode string
 
 ---@class DatasetFillCreateData
 ---@field append boolean
----@field column table
+---@field columns table
 ---@field compressed boolean
----@field dataset_code string
----@field detail? table
----@field insert_data string
+---@field datasetcode string
+---@field details? table
+---@field insertdata string
 ---@field status? string
----@field user_code string
+---@field usercode string
 
 ---@class ModelInfo
 ---@field code? string
@@ -46,7 +46,7 @@
 ---@field dataset_code? string
 ---@field model_name? string
 ---@field name? string
----@field property? table
+---@field properties? table
 ---@field updated_at? string
 
 ---@class ModelInfoLoadMatch
@@ -55,21 +55,21 @@
 ---@class ModelResult
 ---@field data? table
 ---@field page? number
----@field page_size? number
+---@field pagesize? number
 
 ---@class ModelResultCreateData
 ---@field model_code string
 ---@field data? table
 ---@field page? number
----@field page_size? number
+---@field pagesize? number
 
 ---@class Prediction
----@field column? table
+---@field columns? table
 ---@field data? table
 
 ---@class PredictionCreateData
 ---@field model_code string
----@field column? table
+---@field columns? table
 ---@field data? table
 
 local M = {}

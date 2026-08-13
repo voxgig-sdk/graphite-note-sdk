@@ -26,8 +26,8 @@ import {
 describe('ModelInfoEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when GRAPHITENOTE_TEST_LIVE=TRUE.
-  afterEach(liveDelay('GRAPHITENOTE_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when GRAPHITE_NOTE_TEST_LIVE=TRUE.
+  afterEach(liveDelay('GRAPHITE_NOTE_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = GraphiteNoteSDK.test()

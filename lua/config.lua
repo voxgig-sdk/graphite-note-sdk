@@ -33,7 +33,7 @@ local function make_config()
         ["fields"] = {
           {
             ["active"] = true,
-            ["name"] = "column",
+            ["name"] = "columns",
             ["op"] = {
               ["create"] = {
                 ["req"] = true,
@@ -46,7 +46,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "dataset_code",
+            ["name"] = "datasetcode",
             ["req"] = false,
             ["type"] = "`$STRING`",
             ["index$"] = 1,
@@ -60,14 +60,14 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "table_name",
+            ["name"] = "tablename",
             ["req"] = false,
             ["type"] = "`$STRING`",
             ["index$"] = 3,
           },
           {
             ["active"] = true,
-            ["name"] = "user_code",
+            ["name"] = "usercode",
             ["req"] = true,
             ["type"] = "`$STRING`",
             ["index$"] = 4,
@@ -82,6 +82,7 @@ local function make_config()
               {
                 ["active"] = true,
                 ["args"] = {},
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/dataset-create",
                 ["parts"] = {
@@ -113,7 +114,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "column",
+            ["name"] = "columns",
             ["req"] = true,
             ["type"] = "`$ARRAY`",
             ["index$"] = 1,
@@ -127,21 +128,21 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "dataset_code",
+            ["name"] = "datasetcode",
             ["req"] = true,
             ["type"] = "`$STRING`",
             ["index$"] = 3,
           },
           {
             ["active"] = true,
-            ["name"] = "detail",
+            ["name"] = "details",
             ["req"] = false,
             ["type"] = "`$OBJECT`",
             ["index$"] = 4,
           },
           {
             ["active"] = true,
-            ["name"] = "insert_data",
+            ["name"] = "insertdata",
             ["req"] = true,
             ["type"] = "`$STRING`",
             ["index$"] = 5,
@@ -155,7 +156,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "user_code",
+            ["name"] = "usercode",
             ["req"] = true,
             ["type"] = "`$STRING`",
             ["index$"] = 7,
@@ -170,6 +171,7 @@ local function make_config()
               {
                 ["active"] = true,
                 ["args"] = {},
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/dataset-complete",
                 ["parts"] = {
@@ -185,6 +187,7 @@ local function make_config()
               {
                 ["active"] = true,
                 ["args"] = {},
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/dataset-fill",
                 ["parts"] = {
@@ -244,7 +247,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "property",
+            ["name"] = "properties",
             ["req"] = false,
             ["type"] = "`$OBJECT`",
             ["index$"] = 5,
@@ -278,6 +281,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/model/fetch-model-info/{model_code}",
                 ["parts"] = {
@@ -326,7 +330,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "page_size",
+            ["name"] = "pagesize",
             ["req"] = false,
             ["type"] = "`$INTEGER`",
             ["index$"] = 2,
@@ -353,6 +357,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/model/fetch-result/{model_code}",
                 ["parts"] = {
@@ -387,7 +392,7 @@ local function make_config()
         ["fields"] = {
           {
             ["active"] = true,
-            ["name"] = "column",
+            ["name"] = "columns",
             ["req"] = false,
             ["type"] = "`$ARRAY`",
             ["index$"] = 0,
@@ -427,6 +432,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/v1/prediction/model/{model_code}",
                 ["parts"] = {
@@ -461,6 +467,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/v2/prediction/model/{model_code}",
                 ["parts"] = {

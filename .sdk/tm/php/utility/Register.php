@@ -23,6 +23,7 @@ require_once __DIR__ . '/MakeUrl.php';
 require_once __DIR__ . '/Param.php';
 require_once __DIR__ . '/PrepareAuth.php';
 require_once __DIR__ . '/PrepareBody.php';
+require_once __DIR__ . '/Graphql.php';
 require_once __DIR__ . '/PrepareHeaders.php';
 require_once __DIR__ . '/PrepareMethod.php';
 require_once __DIR__ . '/PrepareParams.php';
@@ -59,6 +60,8 @@ GraphiteNoteUtility::setRegistrar(function (GraphiteNoteUtility $u): void {
     $u->prepare_params = [GraphiteNotePrepareParams::class, 'call'];
     $u->prepare_path = [GraphiteNotePreparePath::class, 'call'];
     $u->prepare_query = [GraphiteNotePrepareQuery::class, 'call'];
+    $u->graphql_body = [GraphiteNoteGraphql::class, 'body'];
+    $u->graphql_errors = [GraphiteNoteGraphql::class, 'errors'];
     $u->result_basic = [GraphiteNoteResultBasic::class, 'call'];
     $u->result_body = [GraphiteNoteResultBody::class, 'call'];
     $u->result_headers = [GraphiteNoteResultHeaders::class, 'call'];

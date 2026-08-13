@@ -3,9 +3,9 @@
 import json
 import pytest
 
-from utility.voxgig_struct import voxgig_struct as vs
+from graphitenote_sdk.utility.voxgig_struct import voxgig_struct as vs
 from graphitenote_sdk import GraphiteNoteSDK
-from core import helpers
+from graphitenote_sdk.core import helpers
 from test import runner
 
 
@@ -66,16 +66,16 @@ def _model_info_direct_setup(mockres):
     calls = []
 
     env = runner.env_override({
-        "GRAPHITENOTE_TEST_MODEL_INFO_ENTID": {},
-        "GRAPHITENOTE_TEST_LIVE": "FALSE",
-        "GRAPHITENOTE_APIKEY": "NONE",
+        "GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID": {},
+        "GRAPHITE_NOTE_TEST_LIVE": "FALSE",
+        "GRAPHITE_NOTE_APIKEY": "NONE",
     })
 
-    live = env.get("GRAPHITENOTE_TEST_LIVE") == "TRUE"
+    live = env.get("GRAPHITE_NOTE_TEST_LIVE") == "TRUE"
 
     if live:
         merged_opts = {
-            "apikey": env.get("GRAPHITENOTE_APIKEY"),
+            "apikey": env.get("GRAPHITE_NOTE_APIKEY"),
         }
         client = GraphiteNoteSDK(merged_opts)
         return {

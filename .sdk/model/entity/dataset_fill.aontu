@@ -11,7 +11,7 @@ main: kit: entity: dataset_fill: {
       type: "`$BOOLEAN`"
     }
     {
-      name: "column"
+      name: "columns"
       req: true
       type: "`$ARRAY`"
     }
@@ -21,17 +21,17 @@ main: kit: entity: dataset_fill: {
       type: "`$BOOLEAN`"
     }
     {
-      name: "dataset_code"
+      name: "datasetcode"
       req: true
       type: "`$STRING`"
     }
     {
-      name: "detail"
+      name: "details"
       req: false
       type: "`$OBJECT`"
     }
     {
-      name: "insert_data"
+      name: "insertdata"
       req: true
       type: "`$STRING`"
     }
@@ -41,7 +41,7 @@ main: kit: entity: dataset_fill: {
       type: "`$STRING`"
     }
     {
-      name: "user_code"
+      name: "usercode"
       req: true
       type: "`$STRING`"
     }

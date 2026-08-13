@@ -115,21 +115,21 @@ fmt.Println(dataset.GetName()) // "dataset"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `int` | No |  |
-| `dataset_code` | `string` | No |  |
+| `columns` | `int` | No |  |
+| `datasetcode` | `string` | No |  |
 | `name` | `string` | Yes |  |
-| `table_name` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `tablename` | `string` | No |  |
+| `usercode` | `string` | Yes |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | Yes |
-| `dataset_code` | - |
+| `columns` | Yes |
+| `datasetcode` | - |
 | `name` | - |
-| `table_name` | - |
-| `user_code` | - |
+| `tablename` | - |
+| `usercode` | - |
 
 ### Operations
 
@@ -140,7 +140,7 @@ Create a new entity with the given data.
 ```go
 result, err := client.Dataset(nil).Create(map[string]any{
     "name": "example_name",
-    "user_code": "example_user_code",
+    "usercode": "example_usercode",
 }, nil)
 if err != nil {
     panic(err)
@@ -184,13 +184,13 @@ fmt.Println(datasetFill.GetName()) // "dataset_fill"
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `append` | `bool` | Yes |  |
-| `column` | `[]any` | Yes |  |
+| `columns` | `[]any` | Yes |  |
 | `compressed` | `bool` | Yes |  |
-| `dataset_code` | `string` | Yes |  |
-| `detail` | `map[string]any` | No |  |
-| `insert_data` | `string` | Yes |  |
+| `datasetcode` | `string` | Yes |  |
+| `details` | `map[string]any` | No |  |
+| `insertdata` | `string` | Yes |  |
 | `status` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `usercode` | `string` | Yes |  |
 
 ### Operations
 
@@ -201,11 +201,11 @@ Create a new entity with the given data.
 ```go
 result, err := client.DatasetFill(nil).Create(map[string]any{
     "append": true,
-    "column": []any{},
+    "columns": []any{},
     "compressed": true,
-    "dataset_code": "example_dataset_code",
-    "insert_data": "example_insert_data",
-    "user_code": "example_user_code",
+    "datasetcode": "example_datasetcode",
+    "insertdata": "example_insertdata",
+    "usercode": "example_usercode",
 }, nil)
 if err != nil {
     panic(err)
@@ -253,7 +253,7 @@ fmt.Println(modelInfo.GetName()) // "model_info"
 | `dataset_code` | `string` | No |  |
 | `model_name` | `string` | No |  |
 | `name` | `string` | No |  |
-| `property` | `map[string]any` | No |  |
+| `properties` | `map[string]any` | No |  |
 | `updated_at` | `string` | No |  |
 
 ### Operations
@@ -307,7 +307,7 @@ fmt.Println(modelResult.GetName()) // "model_result"
 | --- | --- | --- | --- |
 | `data` | `[]any` | No |  |
 | `page` | `int` | No |  |
-| `page_size` | `int` | No |  |
+| `pagesize` | `int` | No |  |
 
 ### Operations
 
@@ -360,14 +360,14 @@ fmt.Println(prediction.GetName()) // "prediction"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `[]any` | No |  |
+| `columns` | `[]any` | No |  |
 | `data` | `[]any` | No |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | - |
+| `columns` | - |
 | `data` | Yes |
 
 ### Operations

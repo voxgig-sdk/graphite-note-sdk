@@ -1,4 +1,4 @@
-# ProjectName SDK exists test
+# GraphiteNote SDK exists test
 
 import pytest
 from graphitenote_sdk import GraphiteNoteSDK

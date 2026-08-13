@@ -6,7 +6,7 @@ main: kit: entity: prediction: {
 
   fields: [
     {
-      name: "column"
+      name: "columns"
       req: false
       type: "`$ARRAY`"
     }

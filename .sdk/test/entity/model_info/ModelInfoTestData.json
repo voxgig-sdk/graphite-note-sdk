@@ -7,7 +7,7 @@
         "dataset_code": "s48",
         "model_name": "s49",
         "name": "s4a",
-        "property": {},
+        "properties": {},
         "updated_at": "s4c",
         "model_code": "MODEL_CODE01",
         "id": "MODEL_INFO00"
@@ -18,7 +18,7 @@
         "dataset_code": "s8e",
         "model_name": "s8f",
         "name": "s90",
-        "property": {},
+        "properties": {},
         "updated_at": "s92",
         "model_code": "MODEL_CODE01",
         "id": "MODEL_INFO01"
@@ -29,7 +29,7 @@
         "dataset_code": "sd4",
         "model_name": "sd5",
         "name": "sd6",
-        "property": {},
+        "properties": {},
         "updated_at": "sd8",
         "model_code": "MODEL_CODE01",
         "id": "MODEL_INFO02"
@@ -44,7 +44,7 @@
         "dataset_code": "s11a",
         "model_name": "s11b",
         "name": "s11c",
-        "property": {},
+        "properties": {},
         "updated_at": "s11e"
       }
     }

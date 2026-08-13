@@ -6,41 +6,41 @@
 // @voxgig/apidef VALID_CANON). Do not edit by hand.
 
 export interface Dataset {
-  column?: number
-  dataset_code?: string
+  columns?: number
+  datasetcode?: string
   name: string
-  table_name?: string
-  user_code: string
+  tablename?: string
+  usercode: string
 }
 
 export interface DatasetCreateData {
-  column?: number
-  dataset_code?: string
+  columns?: number
+  datasetcode?: string
   name: string
-  table_name?: string
-  user_code: string
+  tablename?: string
+  usercode: string
 }
 
 export interface DatasetFill {
   append: boolean
-  column: any[]
+  columns: any[]
   compressed: boolean
-  dataset_code: string
-  detail?: Record<string, any>
-  insert_data: string
+  datasetcode: string
+  details?: Record<string, any>
+  insertdata: string
   status?: string
-  user_code: string
+  usercode: string
 }
 
 export interface DatasetFillCreateData {
   append: boolean
-  column: any[]
+  columns: any[]
   compressed: boolean
-  dataset_code: string
-  detail?: Record<string, any>
-  insert_data: string
+  datasetcode: string
+  details?: Record<string, any>
+  insertdata: string
   status?: string
-  user_code: string
+  usercode: string
 }
 
 export interface ModelInfo {
@@ -49,7 +49,7 @@ export interface ModelInfo {
   dataset_code?: string
   model_name?: string
   name?: string
-  property?: Record<string, any>
+  properties?: Record<string, any>
   updated_at?: string
 }
 
@@ -60,24 +60,24 @@ export interface ModelInfoLoadMatch {
 export interface ModelResult {
   data?: any[]
   page?: number
-  page_size?: number
+  pagesize?: number
 }
 
 export interface ModelResultCreateData {
   model_code: string
   data?: any[]
   page?: number
-  page_size?: number
+  pagesize?: number
 }
 
 export interface Prediction {
-  column?: any[]
+  columns?: any[]
   data?: any[]
 }
 
 export interface PredictionCreateData {
   model_code: string
-  column?: any[]
+  columns?: any[]
   data?: any[]
 }
 

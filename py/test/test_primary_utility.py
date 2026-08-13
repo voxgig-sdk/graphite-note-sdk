@@ -6,15 +6,15 @@ import re
 
 import pytest
 
-from utility.voxgig_struct import voxgig_struct as vs
+from graphitenote_sdk.utility.voxgig_struct import voxgig_struct as vs
 from graphitenote_sdk import GraphiteNoteSDK
-from core.spec import GraphiteNoteSpec
-from core.result import GraphiteNoteResult
-from core.response import GraphiteNoteResponse
-from core.operation import GraphiteNoteOperation
-from core.error import GraphiteNoteError
-from core import helpers
-from feature.base_feature import GraphiteNoteBaseFeature
+from graphitenote_sdk.core.spec import GraphiteNoteSpec
+from graphitenote_sdk.core.result import GraphiteNoteResult
+from graphitenote_sdk.core.response import GraphiteNoteResponse
+from graphitenote_sdk.core.operation import GraphiteNoteOperation
+from graphitenote_sdk.core.error import GraphiteNoteError
+from graphitenote_sdk.core import helpers
+from graphitenote_sdk.feature.base_feature import GraphiteNoteBaseFeature
 
 _TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 

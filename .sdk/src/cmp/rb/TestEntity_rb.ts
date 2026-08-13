@@ -24,7 +24,7 @@ import {
   buildIdNames,
   getMatchEntries,
   isAuthActive,
-  entityDataIdField,
+  entityDataIdField, envName, envToken
 } from '@voxgig/sdkgen'
 
 
@@ -58,7 +58,7 @@ const TestEntity = cmp(function TestEntity(props: any) {
     return
   }
 
-  const PROJUPPER = nom(model.const, 'Name').toUpperCase().replace(/[^A-Z_]/g, '_')
+  const PROJUPPER = envName(model)
 
   const authActive = isAuthActive(model)
   const apikeyEnvEntry = authActive
@@ -146,7 +146,7 @@ ${hasList ? `
     # The basic flow consumes synthetic IDs from the fixture. In live mode
     # without an *_ENTID env override, those IDs hit the live API and 4xx.
     if setup[:synthetic_only]
-      skip "live entity test uses synthetic IDs from fixture — set ${PROJUPPER}_TEST_${entity.name.toUpperCase().replace(/[^A-Z_]/g, '_')}_ENTID JSON to run live"
+      skip "live entity test uses synthetic IDs from fixture — set ${PROJUPPER}_TEST_${envToken(entity.name)}_ENTID JSON to run live"
       return
     end
     client = setup[:client]
@@ -221,17 +221,17 @@ end
     Content(`  # Detect ENTID env override before envOverride consumes it. When live
   # mode is on without a real override, the basic test runs against synthetic
   # IDs from the fixture and 4xx's. Surface this so the test can skip.
-  entid_env_raw = ENV["${PROJUPPER}_TEST_${entity.name.toUpperCase().replace(/[^A-Z_]/g, '_')}_ENTID"]
+  entid_env_raw = ENV["${PROJUPPER}_TEST_${envToken(entity.name)}_ENTID"]
   idmap_overridden = !entid_env_raw.nil? && entid_env_raw.strip.start_with?("{")
 
   env = Runner.env_override({
-    "${PROJUPPER}_TEST_${entity.name.toUpperCase().replace(/[^A-Z_]/g, '_')}_ENTID" => idmap,
+    "${PROJUPPER}_TEST_${envToken(entity.name)}_ENTID" => idmap,
     "${PROJUPPER}_TEST_LIVE" => "FALSE",
     "${PROJUPPER}_TEST_EXPLAIN" => "FALSE",${apikeyEnvEntry}
   })
 
   idmap_resolved = Helpers.to_map(
-    env["${PROJUPPER}_TEST_${entity.name.toUpperCase().replace(/[^A-Z_]/g, '_')}_ENTID"])
+    env["${PROJUPPER}_TEST_${envToken(entity.name)}_ENTID"])
   if idmap_resolved.nil?
     idmap_resolved = Helpers.to_map(idmap)
   end
@@ -316,7 +316,7 @@ const generateCreate: OpGen = (ctx, step, index) => {
 
   Content(`
     ${datavar}_result = ${entvar}.create(${datavar}, nil)
-    ${datavar} = Helpers.to_map(${datavar}_result)
+    ${datavar} = Helpers.to_map(${datavar}_result.respond_to?(:data_get) ? ${datavar}_result.data_get : ${datavar}_result)
     assert !${datavar}.nil?
 `)
   if (null != ctx.entity.id) {
@@ -450,7 +450,7 @@ const generateUpdate: OpGen = (ctx, step, index) => {
 
   Content(`
     ${resdatavar}_result = ${entvar}.update(${datavar}_up, nil)
-    ${resdatavar} = Helpers.to_map(${resdatavar}_result)
+    ${resdatavar} = Helpers.to_map(${resdatavar}_result.respond_to?(:data_get) ? ${resdatavar}_result.data_get : ${resdatavar}_result)
     assert !${resdatavar}.nil?
 `)
   if (hasEntIdU) {
@@ -515,7 +515,7 @@ const generateLoad: OpGen = (ctx, step, index) => {
       "id" => ${srcdatavar}["id"],
     }
     ${datavar}_loaded = ${entvar}.load(${matchvar}, nil)
-    ${datavar}_load_result = Helpers.to_map(${datavar}_loaded)
+    ${datavar}_load_result = Helpers.to_map(${datavar}_loaded.respond_to?(:data_get) ? ${datavar}_loaded.data_get : ${datavar}_loaded)
     assert !${datavar}_load_result.nil?
     assert_equal ${datavar}_load_result["id"], ${srcdatavar}["id"]
 `)

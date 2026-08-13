@@ -26,7 +26,7 @@ class ModelResultEntityTest < Minitest::Test
     # The basic flow consumes synthetic IDs from the fixture. In live mode
     # without an *_ENTID env override, those IDs hit the live API and 4xx.
     if setup[:synthetic_only]
-      skip "live entity test uses synthetic IDs from fixture — set GRAPHITENOTE_TEST_MODEL_RESULT_ENTID JSON to run live"
+      skip "live entity test uses synthetic IDs from fixture — set GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID JSON to run live"
       return
     end
     client = setup[:client]
@@ -38,7 +38,7 @@ class ModelResultEntityTest < Minitest::Test
     model_result_ref01_data["model_code"] = setup[:idmap]["model_code01"]
 
     model_result_ref01_data_result = model_result_ref01_ent.create(model_result_ref01_data, nil)
-    model_result_ref01_data = Helpers.to_map(model_result_ref01_data_result)
+    model_result_ref01_data = Helpers.to_map(model_result_ref01_data_result.respond_to?(:data_get) ? model_result_ref01_data_result.data_get : model_result_ref01_data_result)
     assert !model_result_ref01_data.nil?
 
   end
@@ -70,39 +70,39 @@ def model_result_basic_setup(extra)
   # Detect ENTID env override before envOverride consumes it. When live
   # mode is on without a real override, the basic test runs against synthetic
   # IDs from the fixture and 4xx's. Surface this so the test can skip.
-  entid_env_raw = ENV["GRAPHITENOTE_TEST_MODEL_RESULT_ENTID"]
+  entid_env_raw = ENV["GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID"]
   idmap_overridden = !entid_env_raw.nil? && entid_env_raw.strip.start_with?("{")
 
   env = Runner.env_override({
-    "GRAPHITENOTE_TEST_MODEL_RESULT_ENTID" => idmap,
-    "GRAPHITENOTE_TEST_LIVE" => "FALSE",
-    "GRAPHITENOTE_TEST_EXPLAIN" => "FALSE",
-    "GRAPHITENOTE_APIKEY" => "NONE",
+    "GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID" => idmap,
+    "GRAPHITE_NOTE_TEST_LIVE" => "FALSE",
+    "GRAPHITE_NOTE_TEST_EXPLAIN" => "FALSE",
+    "GRAPHITE_NOTE_APIKEY" => "NONE",
   })
 
   idmap_resolved = Helpers.to_map(
-    env["GRAPHITENOTE_TEST_MODEL_RESULT_ENTID"])
+    env["GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID"])
   if idmap_resolved.nil?
     idmap_resolved = Helpers.to_map(idmap)
   end
 
-  if env["GRAPHITENOTE_TEST_LIVE"] == "TRUE"
+  if env["GRAPHITE_NOTE_TEST_LIVE"] == "TRUE"
     merged_opts = Vs.merge([
       {
-        "apikey" => env["GRAPHITENOTE_APIKEY"],
+        "apikey" => env["GRAPHITE_NOTE_APIKEY"],
       },
       extra || {},
     ])
     client = GraphiteNoteSDK.new(Helpers.to_map(merged_opts))
   end
 
-  live = env["GRAPHITENOTE_TEST_LIVE"] == "TRUE"
+  live = env["GRAPHITE_NOTE_TEST_LIVE"] == "TRUE"
   {
     client: client,
     data: entity_data,
     idmap: idmap_resolved,
     env: env,
-    explain: env["GRAPHITENOTE_TEST_EXPLAIN"] == "TRUE",
+    explain: env["GRAPHITE_NOTE_TEST_EXPLAIN"] == "TRUE",
     live: live,
     synthetic_only: live && !idmap_overridden,
     now: (Time.now.to_f * 1000).to_i,

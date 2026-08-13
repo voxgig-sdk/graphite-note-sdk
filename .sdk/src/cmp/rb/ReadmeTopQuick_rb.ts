@@ -75,7 +75,7 @@ puts ${eVar}s
             it.name === idF ? 'example_id' : 'example_' + it.name)}`).join(', ')} }`
         : ''
       Content(`
-# Load a specific ${eName.toLowerCase()} (returns the bare record; raises on error)
+# Load a specific ${eName.toLowerCase()} (returns the ENTITY; call data_get for the record)
 ${eVar} = client.${eName}.load(${loadArg})
 puts ${eVar}
 `)

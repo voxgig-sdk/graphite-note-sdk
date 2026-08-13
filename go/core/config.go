@@ -33,7 +33,7 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"active": true,
-						"name": "column",
+						"name": "columns",
 						"op": map[string]any{
 							"create": map[string]any{
 								"req": true,
@@ -46,7 +46,7 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"active": true,
-						"name": "dataset_code",
+						"name": "datasetcode",
 						"req": false,
 						"type": "`$STRING`",
 						"index$": 1,
@@ -60,14 +60,14 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"active": true,
-						"name": "table_name",
+						"name": "tablename",
 						"req": false,
 						"type": "`$STRING`",
 						"index$": 3,
 					},
 					map[string]any{
 						"active": true,
-						"name": "user_code",
+						"name": "usercode",
 						"req": true,
 						"type": "`$STRING`",
 						"index$": 4,
@@ -82,6 +82,7 @@ func MakeConfig() map[string]any {
 							map[string]any{
 								"active": true,
 								"args": map[string]any{},
+								"kind": "http",
 								"method": "POST",
 								"orig": "/dataset-create",
 								"parts": []any{
@@ -95,7 +96,6 @@ func MakeConfig() map[string]any {
 								"index$": 0,
 							},
 						},
-						"key$": "create",
 					},
 				},
 				"relations": map[string]any{
@@ -113,7 +113,7 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"active": true,
-						"name": "column",
+						"name": "columns",
 						"req": true,
 						"type": "`$ARRAY`",
 						"index$": 1,
@@ -127,21 +127,21 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"active": true,
-						"name": "dataset_code",
+						"name": "datasetcode",
 						"req": true,
 						"type": "`$STRING`",
 						"index$": 3,
 					},
 					map[string]any{
 						"active": true,
-						"name": "detail",
+						"name": "details",
 						"req": false,
 						"type": "`$OBJECT`",
 						"index$": 4,
 					},
 					map[string]any{
 						"active": true,
-						"name": "insert_data",
+						"name": "insertdata",
 						"req": true,
 						"type": "`$STRING`",
 						"index$": 5,
@@ -155,7 +155,7 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"active": true,
-						"name": "user_code",
+						"name": "usercode",
 						"req": true,
 						"type": "`$STRING`",
 						"index$": 7,
@@ -170,6 +170,7 @@ func MakeConfig() map[string]any {
 							map[string]any{
 								"active": true,
 								"args": map[string]any{},
+								"kind": "http",
 								"method": "POST",
 								"orig": "/dataset-complete",
 								"parts": []any{
@@ -185,6 +186,7 @@ func MakeConfig() map[string]any {
 							map[string]any{
 								"active": true,
 								"args": map[string]any{},
+								"kind": "http",
 								"method": "POST",
 								"orig": "/dataset-fill",
 								"parts": []any{
@@ -198,7 +200,6 @@ func MakeConfig() map[string]any {
 								"index$": 1,
 							},
 						},
-						"key$": "create",
 					},
 				},
 				"relations": map[string]any{
@@ -244,7 +245,7 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"active": true,
-						"name": "property",
+						"name": "properties",
 						"req": false,
 						"type": "`$OBJECT`",
 						"index$": 5,
@@ -278,6 +279,7 @@ func MakeConfig() map[string]any {
 										},
 									},
 								},
+								"kind": "http",
 								"method": "GET",
 								"orig": "/model/fetch-model-info/{model_code}",
 								"parts": []any{
@@ -297,7 +299,6 @@ func MakeConfig() map[string]any {
 								"index$": 0,
 							},
 						},
-						"key$": "load",
 					},
 				},
 				"relations": map[string]any{
@@ -326,7 +327,7 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"active": true,
-						"name": "page_size",
+						"name": "pagesize",
 						"req": false,
 						"type": "`$INTEGER`",
 						"index$": 2,
@@ -353,6 +354,7 @@ func MakeConfig() map[string]any {
 										},
 									},
 								},
+								"kind": "http",
 								"method": "POST",
 								"orig": "/model/fetch-result/{model_code}",
 								"parts": []any{
@@ -372,7 +374,6 @@ func MakeConfig() map[string]any {
 								"index$": 0,
 							},
 						},
-						"key$": "create",
 					},
 				},
 				"relations": map[string]any{
@@ -387,7 +388,7 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"active": true,
-						"name": "column",
+						"name": "columns",
 						"req": false,
 						"type": "`$ARRAY`",
 						"index$": 0,
@@ -427,6 +428,7 @@ func MakeConfig() map[string]any {
 										},
 									},
 								},
+								"kind": "http",
 								"method": "POST",
 								"orig": "/v1/prediction/model/{model_code}",
 								"parts": []any{
@@ -461,6 +463,7 @@ func MakeConfig() map[string]any {
 										},
 									},
 								},
+								"kind": "http",
 								"method": "POST",
 								"orig": "/v2/prediction/model/{model_code}",
 								"parts": []any{
@@ -481,7 +484,6 @@ func MakeConfig() map[string]any {
 								"index$": 1,
 							},
 						},
-						"key$": "create",
 					},
 				},
 				"relations": map[string]any{

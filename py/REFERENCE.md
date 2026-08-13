@@ -104,21 +104,21 @@ dataset = client.Dataset()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `int` | No |  |
-| `dataset_code` | `str` | No |  |
+| `columns` | `int` | No |  |
+| `datasetcode` | `str` | No |  |
 | `name` | `str` | Yes |  |
-| `table_name` | `str` | No |  |
-| `user_code` | `str` | Yes |  |
+| `tablename` | `str` | No |  |
+| `usercode` | `str` | Yes |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | Yes |
-| `dataset_code` | - |
+| `columns` | Yes |
+| `datasetcode` | - |
 | `name` | - |
-| `table_name` | - |
-| `user_code` | - |
+| `tablename` | - |
+| `usercode` | - |
 
 ### Operations
 
@@ -129,7 +129,7 @@ Create a new entity with the given data. Returns the created entity data and rai
 ```python
 result = client.Dataset().create({
     "name": "example_name",  # str
-    "user_code": "example_user_code",  # str
+    "usercode": "example_usercode",  # str
 })
 ```
 
@@ -173,13 +173,13 @@ dataset_fill = client.DatasetFill()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `append` | `bool` | Yes |  |
-| `column` | `list` | Yes |  |
+| `columns` | `list` | Yes |  |
 | `compressed` | `bool` | Yes |  |
-| `dataset_code` | `str` | Yes |  |
-| `detail` | `dict` | No |  |
-| `insert_data` | `str` | Yes |  |
+| `datasetcode` | `str` | Yes |  |
+| `details` | `dict` | No |  |
+| `insertdata` | `str` | Yes |  |
 | `status` | `str` | No |  |
-| `user_code` | `str` | Yes |  |
+| `usercode` | `str` | Yes |  |
 
 ### Operations
 
@@ -190,11 +190,11 @@ Create a new entity with the given data. Returns the created entity data and rai
 ```python
 result = client.DatasetFill().create({
     "append": True,  # bool
-    "column": [],  # list
+    "columns": [],  # list
     "compressed": True,  # bool
-    "dataset_code": "example_dataset_code",  # str
-    "insert_data": "example_insert_data",  # str
-    "user_code": "example_user_code",  # str
+    "datasetcode": "example_datasetcode",  # str
+    "insertdata": "example_insertdata",  # str
+    "usercode": "example_usercode",  # str
 })
 ```
 
@@ -242,7 +242,7 @@ model_info = client.ModelInfo()
 | `dataset_code` | `str` | No |  |
 | `model_name` | `str` | No |  |
 | `name` | `str` | No |  |
-| `property` | `dict` | No |  |
+| `properties` | `dict` | No |  |
 | `updated_at` | `str` | No |  |
 
 ### Operations
@@ -296,7 +296,7 @@ model_result = client.ModelResult()
 | --- | --- | --- | --- |
 | `data` | `list` | No |  |
 | `page` | `int` | No |  |
-| `page_size` | `int` | No |  |
+| `pagesize` | `int` | No |  |
 
 ### Operations
 
@@ -349,14 +349,14 @@ prediction = client.Prediction()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `list` | No |  |
+| `columns` | `list` | No |  |
 | `data` | `list` | No |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | - |
+| `columns` | - |
 | `data` | Yes |
 
 ### Operations

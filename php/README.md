@@ -39,7 +39,7 @@ ModelInfo is nested under model_code, so provide the `model_code`.
 
 ```php
 try {
-    // load() returns the bare ModelInfo record (throws on error).
+    // load() returns the ENTITY — call data_get() for the ModelInfo record (throws on error).
     $modelinfo = $client->ModelInfo()->load(["model_code" => "example_model_code"]);
     print_r($modelinfo);
 } catch (\Throwable $err) {
@@ -50,8 +50,8 @@ try {
 ### 4. Create, update, and remove
 
 ```php
-// create() returns the bare created Dataset record.
-$created = $client->Dataset()->create(["name" => "example_name", "user_code" => "example_user_code"]);
+// create() returns the ENTITY — call data_get() for the created Dataset record.
+$created = $client->Dataset()->create(["name" => "example_name", "usercode" => "example_usercode"]);
 
 ```
 
@@ -135,7 +135,8 @@ Create a mock client for unit testing — no server required:
 ```php
 $client = GraphiteNoteSDK::test();
 
-// Entity ops return the bare mock record (throws on error).
+// Entity ops return the ENTITY (throws on error);
+// call data_get() for the mock record.
 $modelinfo = $client->ModelInfo()->load(["model_code" => "example"]);
 print_r($modelinfo);
 ```
@@ -241,7 +242,7 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the bare result data (an `array` for single-entity
+Entity operations return the ENTITY (call data_get() for the record) (an `array` for single-entity
 ops, a `list` for `list`) and throw on error. Wrap calls in
 `try`/`catch` to handle failures.
 
@@ -263,11 +264,11 @@ On error, `ok` is `false` and `$err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
-| `dataset_code` |  |
+| `columns` |  |
+| `datasetcode` |  |
 | `name` |  |
-| `table_name` |  |
-| `user_code` |  |
+| `tablename` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -278,13 +279,13 @@ API path: `/dataset-create`
 | Field | Description |
 | --- | --- |
 | `append` |  |
-| `column` |  |
+| `columns` |  |
 | `compressed` |  |
-| `dataset_code` |  |
-| `detail` |  |
-| `insert_data` |  |
+| `datasetcode` |  |
+| `details` |  |
+| `insertdata` |  |
 | `status` |  |
-| `user_code` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -299,7 +300,7 @@ API path: `/dataset-complete`
 | `dataset_code` |  |
 | `model_name` |  |
 | `name` |  |
-| `property` |  |
+| `properties` |  |
 | `updated_at` |  |
 
 Operations: Load.
@@ -312,7 +313,7 @@ API path: `/model/fetch-model-info/{model_code}`
 | --- | --- |
 | `data` |  |
 | `page` |  |
-| `page_size` |  |
+| `pagesize` |  |
 
 Operations: Create.
 
@@ -322,7 +323,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
+| `columns` |  |
 | `data` |  |
 
 Operations: Create.
@@ -348,18 +349,18 @@ Create an instance: `$dataset = $client->Dataset();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `int` |  |
-| `dataset_code` | `string` |  |
+| `columns` | `int` |  |
+| `datasetcode` | `string` |  |
 | `name` | `string` |  |
-| `table_name` | `string` |  |
-| `user_code` | `string` |  |
+| `tablename` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```php
 $dataset = $client->Dataset()->create([
     "name" => null, // string
-    "user_code" => null, // string
+    "usercode" => null, // string
 ]);
 ```
 
@@ -379,24 +380,24 @@ Create an instance: `$dataset_fill = $client->DatasetFill();`
 | Field | Type | Description |
 | --- | --- | --- |
 | `append` | `bool` |  |
-| `column` | `array` |  |
+| `columns` | `array` |  |
 | `compressed` | `bool` |  |
-| `dataset_code` | `string` |  |
-| `detail` | `array` |  |
-| `insert_data` | `string` |  |
+| `datasetcode` | `string` |  |
+| `details` | `array` |  |
+| `insertdata` | `string` |  |
 | `status` | `string` |  |
-| `user_code` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```php
 $dataset_fill = $client->DatasetFill()->create([
     "append" => null, // bool
-    "column" => null, // array
+    "columns" => null, // array
     "compressed" => null, // bool
-    "dataset_code" => null, // string
-    "insert_data" => null, // string
-    "user_code" => null, // string
+    "datasetcode" => null, // string
+    "insertdata" => null, // string
+    "usercode" => null, // string
 ]);
 ```
 
@@ -420,13 +421,13 @@ Create an instance: `$model_info = $client->ModelInfo();`
 | `dataset_code` | `string` |  |
 | `model_name` | `string` |  |
 | `name` | `string` |  |
-| `property` | `array` |  |
+| `properties` | `array` |  |
 | `updated_at` | `string` |  |
 
 #### Example: Load
 
 ```php
-// load() returns the bare ModelInfo record (throws on error).
+// load() returns the ENTITY — call data_get() for the ModelInfo record (throws on error).
 $model_info = $client->ModelInfo()->load(["model_code" => "model_code"]);
 ```
 
@@ -447,7 +448,7 @@ Create an instance: `$model_result = $client->ModelResult();`
 | --- | --- | --- |
 | `data` | `array` |  |
 | `page` | `int` |  |
-| `page_size` | `int` |  |
+| `pagesize` | `int` |  |
 
 #### Example: Create
 
@@ -472,7 +473,7 @@ Create an instance: `$prediction = $client->Prediction();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `array` |  |
+| `columns` | `array` |  |
 | `data` | `array` |  |
 
 #### Example: Create

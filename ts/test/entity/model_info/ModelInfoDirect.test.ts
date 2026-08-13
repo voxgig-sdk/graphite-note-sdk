@@ -19,8 +19,8 @@ import {
 describe('ModelInfoDirect', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when GRAPHITENOTE_TEST_LIVE=TRUE.
-  afterEach(liveDelay('GRAPHITENOTE_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when GRAPHITE_NOTE_TEST_LIVE=TRUE.
+  afterEach(liveDelay('GRAPHITE_NOTE_TEST_LIVE'))
 
   test('direct-exists', async () => {
     const sdk = new GraphiteNoteSDK({
@@ -82,19 +82,19 @@ function directSetup(mockres?: any) {
   const calls: any[] = []
 
   const env = envOverride({
-    'GRAPHITENOTE_TEST_MODEL_INFO_ENTID': {},
-    'GRAPHITENOTE_TEST_LIVE': 'FALSE',
-    'GRAPHITENOTE_APIKEY': 'NONE',
+    'GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID': {},
+    'GRAPHITE_NOTE_TEST_LIVE': 'FALSE',
+    'GRAPHITE_NOTE_APIKEY': 'NONE',
   })
 
-  const live = 'TRUE' === env.GRAPHITENOTE_TEST_LIVE
+  const live = 'TRUE' === env.GRAPHITE_NOTE_TEST_LIVE
 
   if (live) {
     const client = new GraphiteNoteSDK({
-      apikey: env.GRAPHITENOTE_APIKEY,
+      apikey: env.GRAPHITE_NOTE_APIKEY,
     })
 
-    let idmap: any = env['GRAPHITENOTE_TEST_MODEL_INFO_ENTID']
+    let idmap: any = env['GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID']
     if ('string' === typeof idmap && idmap.startsWith('{')) {
       idmap = JSON.parse(idmap)
     }

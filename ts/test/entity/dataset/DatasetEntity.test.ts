@@ -26,8 +26,8 @@ import {
 describe('DatasetEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when GRAPHITENOTE_TEST_LIVE=TRUE.
-  afterEach(liveDelay('GRAPHITENOTE_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when GRAPHITE_NOTE_TEST_LIVE=TRUE.
+  afterEach(liveDelay('GRAPHITE_NOTE_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = GraphiteNoteSDK.test()
@@ -62,7 +62,7 @@ describe('DatasetEntity', async () => {
     const dataset_ref01_ent = client.Dataset()
     let dataset_ref01_data = setup.data.new.dataset['dataset_ref01']
 
-    dataset_ref01_data = await dataset_ref01_ent.create(dataset_ref01_data)
+    dataset_ref01_data = (await dataset_ref01_ent.create(dataset_ref01_data)).data()
     assert(null != dataset_ref01_data)
 
 

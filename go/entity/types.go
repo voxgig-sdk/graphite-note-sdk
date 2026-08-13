@@ -6,48 +6,52 @@
 // @voxgig/apidef VALID_CANON). Do not edit by hand.
 package entity
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/voxgig-sdk/graphite-note-sdk/go/core"
+)
 
 // Dataset is the typed data model for the dataset entity.
 type Dataset struct {
-	Column *int `json:"column,omitempty"`
-	DatasetCode *string `json:"dataset_code,omitempty"`
+	Columns *int `json:"columns,omitempty"`
+	Datasetcode *string `json:"datasetcode,omitempty"`
 	Name string `json:"name"`
-	TableName *string `json:"table_name,omitempty"`
-	UserCode string `json:"user_code"`
+	Tablename *string `json:"tablename,omitempty"`
+	Usercode string `json:"usercode"`
 }
 
 // DatasetCreateData is the typed request payload for Dataset.CreateTyped.
 type DatasetCreateData struct {
-	Column *int `json:"column,omitempty"`
-	DatasetCode *string `json:"dataset_code,omitempty"`
+	Columns *int `json:"columns,omitempty"`
+	Datasetcode *string `json:"datasetcode,omitempty"`
 	Name string `json:"name"`
-	TableName *string `json:"table_name,omitempty"`
-	UserCode string `json:"user_code"`
+	Tablename *string `json:"tablename,omitempty"`
+	Usercode string `json:"usercode"`
 }
 
 // DatasetFill is the typed data model for the dataset_fill entity.
 type DatasetFill struct {
 	Append bool `json:"append"`
-	Column []any `json:"column"`
+	Columns []any `json:"columns"`
 	Compressed bool `json:"compressed"`
-	DatasetCode string `json:"dataset_code"`
-	Detail *map[string]any `json:"detail,omitempty"`
-	InsertData string `json:"insert_data"`
+	Datasetcode string `json:"datasetcode"`
+	Details *map[string]any `json:"details,omitempty"`
+	Insertdata string `json:"insertdata"`
 	Status *string `json:"status,omitempty"`
-	UserCode string `json:"user_code"`
+	Usercode string `json:"usercode"`
 }
 
 // DatasetFillCreateData is the typed request payload for DatasetFill.CreateTyped.
 type DatasetFillCreateData struct {
 	Append bool `json:"append"`
-	Column []any `json:"column"`
+	Columns []any `json:"columns"`
 	Compressed bool `json:"compressed"`
-	DatasetCode string `json:"dataset_code"`
-	Detail *map[string]any `json:"detail,omitempty"`
-	InsertData string `json:"insert_data"`
+	Datasetcode string `json:"datasetcode"`
+	Details *map[string]any `json:"details,omitempty"`
+	Insertdata string `json:"insertdata"`
 	Status *string `json:"status,omitempty"`
-	UserCode string `json:"user_code"`
+	Usercode string `json:"usercode"`
 }
 
 // ModelInfo is the typed data model for the model_info entity.
@@ -57,7 +61,7 @@ type ModelInfo struct {
 	DatasetCode *string `json:"dataset_code,omitempty"`
 	ModelName *string `json:"model_name,omitempty"`
 	Name *string `json:"name,omitempty"`
-	Property *map[string]any `json:"property,omitempty"`
+	Properties *map[string]any `json:"properties,omitempty"`
 	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
@@ -70,7 +74,7 @@ type ModelInfoLoadMatch struct {
 type ModelResult struct {
 	Data *[]any `json:"data,omitempty"`
 	Page *int `json:"page,omitempty"`
-	PageSize *int `json:"page_size,omitempty"`
+	Pagesize *int `json:"pagesize,omitempty"`
 }
 
 // ModelResultCreateData is the typed request payload for ModelResult.CreateTyped.
@@ -78,19 +82,19 @@ type ModelResultCreateData struct {
 	ModelCode string `json:"model_code"`
 	Data *[]any `json:"data,omitempty"`
 	Page *int `json:"page,omitempty"`
-	PageSize *int `json:"page_size,omitempty"`
+	Pagesize *int `json:"pagesize,omitempty"`
 }
 
 // Prediction is the typed data model for the prediction entity.
 type Prediction struct {
-	Column *[]any `json:"column,omitempty"`
+	Columns *[]any `json:"columns,omitempty"`
 	Data *[]any `json:"data,omitempty"`
 }
 
 // PredictionCreateData is the typed request payload for Prediction.CreateTyped.
 type PredictionCreateData struct {
 	ModelCode string `json:"model_code"`
-	Column *[]any `json:"column,omitempty"`
+	Columns *[]any `json:"columns,omitempty"`
 	Data *[]any `json:"data,omitempty"`
 }
 
@@ -106,12 +110,26 @@ func asMap(v any) map[string]any {
 	return out
 }
 
-// typedFrom decodes a runtime value (a map[string]any produced by the op
-// pipeline) into a typed model T via a JSON round-trip. On any error it
-// returns the zero value of T; the op's own (value, error) tuple carries the
-// real error.
+// entityData unwraps an entity to its data map.
+//
+// Operations resolve to the ENTITY, not the raw data (see AGENTS.md), and an
+// entity's fields are UNEXPORTED — marshalling one directly yields `{}`, so
+// every typed accessor would silently hand back a zero-valued struct. The
+// typed boundary therefore takes the data hop first.
+func entityData(v any) any {
+	if ent, ok := v.(core.Entity); ok {
+		return ent.Data()
+	}
+	return v
+}
+
+// typedFrom decodes a runtime value (an entity, or the map[string]any the op
+// pipeline produced) into a typed model T via a JSON round-trip. On any error
+// it returns the zero value of T; the op's own (value, error) tuple carries
+// the real error.
 func typedFrom[T any](v any) T {
 	var out T
+	v = entityData(v)
 	if v == nil {
 		return out
 	}
@@ -123,12 +141,20 @@ func typedFrom[T any](v any) T {
 	return out
 }
 
-// typedSliceFrom decodes a runtime list value ([]any of maps) into a typed
-// slice []T via a JSON round-trip, for list ops.
+// typedSliceFrom decodes a runtime list value into a typed slice []T via a
+// JSON round-trip, for list ops. `list` resolves to a slice of ENTITY
+// instances, so each element takes the data hop.
 func typedSliceFrom[T any](v any) []T {
 	var out []T
 	if v == nil {
 		return out
+	}
+	if list, ok := v.([]any); ok {
+		unwrapped := make([]any, 0, len(list))
+		for _, item := range list {
+			unwrapped = append(unwrapped, entityData(item))
+		}
+		v = unwrapped
 	}
 	b, err := json.Marshal(v)
 	if err != nil {

@@ -109,21 +109,21 @@ $dataset = $client->Dataset();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `int` | No |  |
-| `dataset_code` | `string` | No |  |
+| `columns` | `int` | No |  |
+| `datasetcode` | `string` | No |  |
 | `name` | `string` | Yes |  |
-| `table_name` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `tablename` | `string` | No |  |
+| `usercode` | `string` | Yes |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | Yes |
-| `dataset_code` | - |
+| `columns` | Yes |
+| `datasetcode` | - |
 | `name` | - |
-| `table_name` | - |
-| `user_code` | - |
+| `tablename` | - |
+| `usercode` | - |
 
 ### Operations
 
@@ -134,7 +134,7 @@ Create a new entity with the given data. Throws on error.
 ```php
 $result = $client->Dataset()->create([
   "name" => null, // string
-  "user_code" => null, // string
+  "usercode" => null, // string
 ]);
 ```
 
@@ -179,13 +179,13 @@ $dataset_fill = $client->DatasetFill();
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `append` | `bool` | Yes |  |
-| `column` | `array` | Yes |  |
+| `columns` | `array` | Yes |  |
 | `compressed` | `bool` | Yes |  |
-| `dataset_code` | `string` | Yes |  |
-| `detail` | `array` | No |  |
-| `insert_data` | `string` | Yes |  |
+| `datasetcode` | `string` | Yes |  |
+| `details` | `array` | No |  |
+| `insertdata` | `string` | Yes |  |
 | `status` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `usercode` | `string` | Yes |  |
 
 ### Operations
 
@@ -196,11 +196,11 @@ Create a new entity with the given data. Throws on error.
 ```php
 $result = $client->DatasetFill()->create([
   "append" => null, // bool
-  "column" => null, // array
+  "columns" => null, // array
   "compressed" => null, // bool
-  "dataset_code" => null, // string
-  "insert_data" => null, // string
-  "user_code" => null, // string
+  "datasetcode" => null, // string
+  "insertdata" => null, // string
+  "usercode" => null, // string
 ]);
 ```
 
@@ -249,7 +249,7 @@ $model_info = $client->ModelInfo();
 | `dataset_code` | `string` | No |  |
 | `model_name` | `string` | No |  |
 | `name` | `string` | No |  |
-| `property` | `array` | No |  |
+| `properties` | `array` | No |  |
 | `updated_at` | `string` | No |  |
 
 ### Operations
@@ -304,7 +304,7 @@ $model_result = $client->ModelResult();
 | --- | --- | --- | --- |
 | `data` | `array` | No |  |
 | `page` | `int` | No |  |
-| `page_size` | `int` | No |  |
+| `pagesize` | `int` | No |  |
 
 ### Operations
 
@@ -358,14 +358,14 @@ $prediction = $client->Prediction();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `array` | No |  |
+| `columns` | `array` | No |  |
 | `data` | `array` | No |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | - |
+| `columns` | - |
 | `data` | Yes |
 
 ### Operations

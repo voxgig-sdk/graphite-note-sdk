@@ -126,7 +126,7 @@ const ReadmeEntity = cmp(function ReadmeEntity(props: any) {
       Content(`#### Example: Load
 
 \`\`\`ruby
-# load returns the bare ${entity.Name} record (raises on error).
+# load returns the ENTITY — call data_get for the ${entity.Name} record (raises on error).
 ${eVar} = client.${entity.Name}.load(${loadArg})
 \`\`\`
 

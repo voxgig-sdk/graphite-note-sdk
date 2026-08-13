@@ -39,7 +39,7 @@ class GraphiteNoteConfig
           'fields' => [
             [
               'active' => true,
-              'name' => 'column',
+              'name' => 'columns',
               'op' => [
                 'create' => [
                   'req' => true,
@@ -52,7 +52,7 @@ class GraphiteNoteConfig
             ],
             [
               'active' => true,
-              'name' => 'dataset_code',
+              'name' => 'datasetcode',
               'req' => false,
               'type' => '`$STRING`',
               'index$' => 1,
@@ -66,14 +66,14 @@ class GraphiteNoteConfig
             ],
             [
               'active' => true,
-              'name' => 'table_name',
+              'name' => 'tablename',
               'req' => false,
               'type' => '`$STRING`',
               'index$' => 3,
             ],
             [
               'active' => true,
-              'name' => 'user_code',
+              'name' => 'usercode',
               'req' => true,
               'type' => '`$STRING`',
               'index$' => 4,
@@ -88,6 +88,7 @@ class GraphiteNoteConfig
                 [
                   'active' => true,
                   'args' => [],
+                  'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/dataset-create',
                   'parts' => [
@@ -119,7 +120,7 @@ class GraphiteNoteConfig
             ],
             [
               'active' => true,
-              'name' => 'column',
+              'name' => 'columns',
               'req' => true,
               'type' => '`$ARRAY`',
               'index$' => 1,
@@ -133,21 +134,21 @@ class GraphiteNoteConfig
             ],
             [
               'active' => true,
-              'name' => 'dataset_code',
+              'name' => 'datasetcode',
               'req' => true,
               'type' => '`$STRING`',
               'index$' => 3,
             ],
             [
               'active' => true,
-              'name' => 'detail',
+              'name' => 'details',
               'req' => false,
               'type' => '`$OBJECT`',
               'index$' => 4,
             ],
             [
               'active' => true,
-              'name' => 'insert_data',
+              'name' => 'insertdata',
               'req' => true,
               'type' => '`$STRING`',
               'index$' => 5,
@@ -161,7 +162,7 @@ class GraphiteNoteConfig
             ],
             [
               'active' => true,
-              'name' => 'user_code',
+              'name' => 'usercode',
               'req' => true,
               'type' => '`$STRING`',
               'index$' => 7,
@@ -176,6 +177,7 @@ class GraphiteNoteConfig
                 [
                   'active' => true,
                   'args' => [],
+                  'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/dataset-complete',
                   'parts' => [
@@ -191,6 +193,7 @@ class GraphiteNoteConfig
                 [
                   'active' => true,
                   'args' => [],
+                  'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/dataset-fill',
                   'parts' => [
@@ -250,7 +253,7 @@ class GraphiteNoteConfig
             ],
             [
               'active' => true,
-              'name' => 'property',
+              'name' => 'properties',
               'req' => false,
               'type' => '`$OBJECT`',
               'index$' => 5,
@@ -284,6 +287,7 @@ class GraphiteNoteConfig
                       ],
                     ],
                   ],
+                  'kind' => 'http',
                   'method' => 'GET',
                   'orig' => '/model/fetch-model-info/{model_code}',
                   'parts' => [
@@ -332,7 +336,7 @@ class GraphiteNoteConfig
             ],
             [
               'active' => true,
-              'name' => 'page_size',
+              'name' => 'pagesize',
               'req' => false,
               'type' => '`$INTEGER`',
               'index$' => 2,
@@ -359,6 +363,7 @@ class GraphiteNoteConfig
                       ],
                     ],
                   ],
+                  'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/model/fetch-result/{model_code}',
                   'parts' => [
@@ -393,7 +398,7 @@ class GraphiteNoteConfig
           'fields' => [
             [
               'active' => true,
-              'name' => 'column',
+              'name' => 'columns',
               'req' => false,
               'type' => '`$ARRAY`',
               'index$' => 0,
@@ -433,6 +438,7 @@ class GraphiteNoteConfig
                       ],
                     ],
                   ],
+                  'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/v1/prediction/model/{model_code}',
                   'parts' => [
@@ -467,6 +473,7 @@ class GraphiteNoteConfig
                       ],
                     ],
                   ],
+                  'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/v2/prediction/model/{model_code}',
                   'parts' => [

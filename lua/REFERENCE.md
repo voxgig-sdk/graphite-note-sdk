@@ -107,21 +107,21 @@ local dataset = client:Dataset(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `number` | No |  |
-| `dataset_code` | `string` | No |  |
+| `columns` | `number` | No |  |
+| `datasetcode` | `string` | No |  |
 | `name` | `string` | Yes |  |
-| `table_name` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `tablename` | `string` | No |  |
+| `usercode` | `string` | Yes |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | Yes |
-| `dataset_code` | - |
+| `columns` | Yes |
+| `datasetcode` | - |
 | `name` | - |
-| `table_name` | - |
-| `user_code` | - |
+| `tablename` | - |
+| `usercode` | - |
 
 ### Operations
 
@@ -132,7 +132,7 @@ Create a new entity with the given data.
 ```lua
 local result, err = client:Dataset():create({
   name = --[[ string ]],
-  user_code = --[[ string ]],
+  usercode = --[[ string ]],
 })
 ```
 
@@ -177,13 +177,13 @@ local dataset_fill = client:DatasetFill(nil)
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `append` | `boolean` | Yes |  |
-| `column` | `table` | Yes |  |
+| `columns` | `table` | Yes |  |
 | `compressed` | `boolean` | Yes |  |
-| `dataset_code` | `string` | Yes |  |
-| `detail` | `table` | No |  |
-| `insert_data` | `string` | Yes |  |
+| `datasetcode` | `string` | Yes |  |
+| `details` | `table` | No |  |
+| `insertdata` | `string` | Yes |  |
 | `status` | `string` | No |  |
-| `user_code` | `string` | Yes |  |
+| `usercode` | `string` | Yes |  |
 
 ### Operations
 
@@ -194,11 +194,11 @@ Create a new entity with the given data.
 ```lua
 local result, err = client:DatasetFill():create({
   append = --[[ boolean ]],
-  column = --[[ table ]],
+  columns = --[[ table ]],
   compressed = --[[ boolean ]],
-  dataset_code = --[[ string ]],
-  insert_data = --[[ string ]],
-  user_code = --[[ string ]],
+  datasetcode = --[[ string ]],
+  insertdata = --[[ string ]],
+  usercode = --[[ string ]],
 })
 ```
 
@@ -247,7 +247,7 @@ local model_info = client:ModelInfo(nil)
 | `dataset_code` | `string` | No |  |
 | `model_name` | `string` | No |  |
 | `name` | `string` | No |  |
-| `property` | `table` | No |  |
+| `properties` | `table` | No |  |
 | `updated_at` | `string` | No |  |
 
 ### Operations
@@ -302,7 +302,7 @@ local model_result = client:ModelResult(nil)
 | --- | --- | --- | --- |
 | `data` | `table` | No |  |
 | `page` | `number` | No |  |
-| `page_size` | `number` | No |  |
+| `pagesize` | `number` | No |  |
 
 ### Operations
 
@@ -356,14 +356,14 @@ local prediction = client:Prediction(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `table` | No |  |
+| `columns` | `table` | No |  |
 | `data` | `table` | No |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | - |
+| `columns` | - |
 | `data` | Yes |
 
 ### Operations

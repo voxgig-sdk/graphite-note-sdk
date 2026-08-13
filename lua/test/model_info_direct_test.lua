@@ -70,16 +70,16 @@ function model_info_direct_setup(mockres)
   local calls = {}
 
   local env = runner.env_override({
-    ["GRAPHITENOTE_TEST_MODEL_INFO_ENTID"] = {},
-    ["GRAPHITENOTE_TEST_LIVE"] = "FALSE",
-    ["GRAPHITENOTE_APIKEY"] = "NONE",
+    ["GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID"] = {},
+    ["GRAPHITE_NOTE_TEST_LIVE"] = "FALSE",
+    ["GRAPHITE_NOTE_APIKEY"] = "NONE",
   })
 
-  local live = env["GRAPHITENOTE_TEST_LIVE"] == "TRUE"
+  local live = env["GRAPHITE_NOTE_TEST_LIVE"] == "TRUE"
 
   if live then
     local merged_opts = {
-      apikey = env["GRAPHITENOTE_APIKEY"],
+      apikey = env["GRAPHITE_NOTE_APIKEY"],
     }
     local client = sdk.new(merged_opts)
     return {

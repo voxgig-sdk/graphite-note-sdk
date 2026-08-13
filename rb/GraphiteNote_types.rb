@@ -10,51 +10,51 @@
 
 # Dataset entity data model.
 #
-# @!attribute [rw] column
+# @!attribute [rw] columns
 #   @return [Integer, nil]
 #
-# @!attribute [rw] dataset_code
+# @!attribute [rw] datasetcode
 #   @return [String, nil]
 #
 # @!attribute [rw] name
 #   @return [String]
 #
-# @!attribute [rw] table_name
+# @!attribute [rw] tablename
 #   @return [String, nil]
 #
-# @!attribute [rw] user_code
+# @!attribute [rw] usercode
 #   @return [String]
 Dataset = Struct.new(
-  :column,
-  :dataset_code,
+  :columns,
+  :datasetcode,
   :name,
-  :table_name,
-  :user_code,
+  :tablename,
+  :usercode,
   keyword_init: true
 )
 
 # Request payload for Dataset#create.
 #
-# @!attribute [rw] column
+# @!attribute [rw] columns
 #   @return [Integer, nil]
 #
-# @!attribute [rw] dataset_code
+# @!attribute [rw] datasetcode
 #   @return [String, nil]
 #
 # @!attribute [rw] name
 #   @return [String]
 #
-# @!attribute [rw] table_name
+# @!attribute [rw] tablename
 #   @return [String, nil]
 #
-# @!attribute [rw] user_code
+# @!attribute [rw] usercode
 #   @return [String]
 DatasetCreateData = Struct.new(
-  :column,
-  :dataset_code,
+  :columns,
+  :datasetcode,
   :name,
-  :table_name,
-  :user_code,
+  :tablename,
+  :usercode,
   keyword_init: true
 )
 
@@ -63,35 +63,35 @@ DatasetCreateData = Struct.new(
 # @!attribute [rw] append
 #   @return [Boolean]
 #
-# @!attribute [rw] column
+# @!attribute [rw] columns
 #   @return [Array]
 #
 # @!attribute [rw] compressed
 #   @return [Boolean]
 #
-# @!attribute [rw] dataset_code
+# @!attribute [rw] datasetcode
 #   @return [String]
 #
-# @!attribute [rw] detail
+# @!attribute [rw] details
 #   @return [Hash, nil]
 #
-# @!attribute [rw] insert_data
+# @!attribute [rw] insertdata
 #   @return [String]
 #
 # @!attribute [rw] status
 #   @return [String, nil]
 #
-# @!attribute [rw] user_code
+# @!attribute [rw] usercode
 #   @return [String]
 DatasetFill = Struct.new(
   :append,
-  :column,
+  :columns,
   :compressed,
-  :dataset_code,
-  :detail,
-  :insert_data,
+  :datasetcode,
+  :details,
+  :insertdata,
   :status,
-  :user_code,
+  :usercode,
   keyword_init: true
 )
 
@@ -100,35 +100,35 @@ DatasetFill = Struct.new(
 # @!attribute [rw] append
 #   @return [Boolean]
 #
-# @!attribute [rw] column
+# @!attribute [rw] columns
 #   @return [Array]
 #
 # @!attribute [rw] compressed
 #   @return [Boolean]
 #
-# @!attribute [rw] dataset_code
+# @!attribute [rw] datasetcode
 #   @return [String]
 #
-# @!attribute [rw] detail
+# @!attribute [rw] details
 #   @return [Hash, nil]
 #
-# @!attribute [rw] insert_data
+# @!attribute [rw] insertdata
 #   @return [String]
 #
 # @!attribute [rw] status
 #   @return [String, nil]
 #
-# @!attribute [rw] user_code
+# @!attribute [rw] usercode
 #   @return [String]
 DatasetFillCreateData = Struct.new(
   :append,
-  :column,
+  :columns,
   :compressed,
-  :dataset_code,
-  :detail,
-  :insert_data,
+  :datasetcode,
+  :details,
+  :insertdata,
   :status,
-  :user_code,
+  :usercode,
   keyword_init: true
 )
 
@@ -149,7 +149,7 @@ DatasetFillCreateData = Struct.new(
 # @!attribute [rw] name
 #   @return [String, nil]
 #
-# @!attribute [rw] property
+# @!attribute [rw] properties
 #   @return [Hash, nil]
 #
 # @!attribute [rw] updated_at
@@ -160,7 +160,7 @@ ModelInfo = Struct.new(
   :dataset_code,
   :model_name,
   :name,
-  :property,
+  :properties,
   :updated_at,
   keyword_init: true
 )
@@ -182,12 +182,12 @@ ModelInfoLoadMatch = Struct.new(
 # @!attribute [rw] page
 #   @return [Integer, nil]
 #
-# @!attribute [rw] page_size
+# @!attribute [rw] pagesize
 #   @return [Integer, nil]
 ModelResult = Struct.new(
   :data,
   :page,
-  :page_size,
+  :pagesize,
   keyword_init: true
 )
 
@@ -202,25 +202,25 @@ ModelResult = Struct.new(
 # @!attribute [rw] page
 #   @return [Integer, nil]
 #
-# @!attribute [rw] page_size
+# @!attribute [rw] pagesize
 #   @return [Integer, nil]
 ModelResultCreateData = Struct.new(
   :model_code,
   :data,
   :page,
-  :page_size,
+  :pagesize,
   keyword_init: true
 )
 
 # Prediction entity data model.
 #
-# @!attribute [rw] column
+# @!attribute [rw] columns
 #   @return [Array, nil]
 #
 # @!attribute [rw] data
 #   @return [Array, nil]
 Prediction = Struct.new(
-  :column,
+  :columns,
   :data,
   keyword_init: true
 )
@@ -230,14 +230,14 @@ Prediction = Struct.new(
 # @!attribute [rw] model_code
 #   @return [String]
 #
-# @!attribute [rw] column
+# @!attribute [rw] columns
 #   @return [Array, nil]
 #
 # @!attribute [rw] data
 #   @return [Array, nil]
 PredictionCreateData = Struct.new(
   :model_code,
-  :column,
+  :columns,
   :data,
   keyword_init: true
 )

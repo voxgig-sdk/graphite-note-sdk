@@ -42,7 +42,7 @@ client = GraphiteNoteSDK({
 ### 3. Load a modelinfo
 
 ModelInfo is nested under model_code, so provide the `model_code`.
-`load()` returns the bare record (a `dict`) and raises on error.
+`load()` returns the ENTITY — call data_get() for the record — and raises on error.
 
 ```python
 try:
@@ -55,8 +55,8 @@ except Exception as err:
 ### 4. Create, update, and remove
 
 ```python
-# Create — returns the bare created record (a dict)
-created = client.Dataset().create({"name": "example_name", "user_code": "example_user_code"})
+# Create — returns the ENTITY (call data_get() for the record)
+created = client.Dataset().create({"name": "example_name", "usercode": "example_usercode"})
 
 ```
 
@@ -134,7 +134,8 @@ Create a mock client for unit testing — no server required:
 ```python
 client = GraphiteNoteSDK.test()
 
-# Entity ops return the bare record and raise on error.
+# Entity ops return the ENTITY and raises on error;
+# call data_get() for the record.
 modelinfo = client.ModelInfo().load({"model_code": "example"})
 # modelinfo contains the mock response record
 ```
@@ -237,7 +238,7 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the bare result data (a `dict` for single-entity
+Entity operations return the ENTITY (call data_get() for the record) (a `dict` for single-entity
 ops, a `list` for `list`) and raise on error. Wrap calls in
 `try`/`except` to handle failures.
 
@@ -259,11 +260,11 @@ On error, `ok` is `False` and `err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
-| `dataset_code` |  |
+| `columns` |  |
+| `datasetcode` |  |
 | `name` |  |
-| `table_name` |  |
-| `user_code` |  |
+| `tablename` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -274,13 +275,13 @@ API path: `/dataset-create`
 | Field | Description |
 | --- | --- |
 | `append` |  |
-| `column` |  |
+| `columns` |  |
 | `compressed` |  |
-| `dataset_code` |  |
-| `detail` |  |
-| `insert_data` |  |
+| `datasetcode` |  |
+| `details` |  |
+| `insertdata` |  |
 | `status` |  |
-| `user_code` |  |
+| `usercode` |  |
 
 Operations: Create.
 
@@ -295,7 +296,7 @@ API path: `/dataset-complete`
 | `dataset_code` |  |
 | `model_name` |  |
 | `name` |  |
-| `property` |  |
+| `properties` |  |
 | `updated_at` |  |
 
 Operations: Load.
@@ -308,7 +309,7 @@ API path: `/model/fetch-model-info/{model_code}`
 | --- | --- |
 | `data` |  |
 | `page` |  |
-| `page_size` |  |
+| `pagesize` |  |
 
 Operations: Create.
 
@@ -318,7 +319,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
+| `columns` |  |
 | `data` |  |
 
 Operations: Create.
@@ -344,18 +345,18 @@ Create an instance: `dataset = client.Dataset()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `int` |  |
-| `dataset_code` | `str` |  |
+| `columns` | `int` |  |
+| `datasetcode` | `str` |  |
 | `name` | `str` |  |
-| `table_name` | `str` |  |
-| `user_code` | `str` |  |
+| `tablename` | `str` |  |
+| `usercode` | `str` |  |
 
 #### Example: Create
 
 ```python
 dataset = client.Dataset().create({
     "name": "example_name",  # str
-    "user_code": "example_user_code",  # str
+    "usercode": "example_usercode",  # str
 })
 ```
 
@@ -375,24 +376,24 @@ Create an instance: `dataset_fill = client.DatasetFill()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `append` | `bool` |  |
-| `column` | `list` |  |
+| `columns` | `list` |  |
 | `compressed` | `bool` |  |
-| `dataset_code` | `str` |  |
-| `detail` | `dict` |  |
-| `insert_data` | `str` |  |
+| `datasetcode` | `str` |  |
+| `details` | `dict` |  |
+| `insertdata` | `str` |  |
 | `status` | `str` |  |
-| `user_code` | `str` |  |
+| `usercode` | `str` |  |
 
 #### Example: Create
 
 ```python
 dataset_fill = client.DatasetFill().create({
     "append": True,  # bool
-    "column": [],  # list
+    "columns": [],  # list
     "compressed": True,  # bool
-    "dataset_code": "example_dataset_code",  # str
-    "insert_data": "example_insert_data",  # str
-    "user_code": "example_user_code",  # str
+    "datasetcode": "example_datasetcode",  # str
+    "insertdata": "example_insertdata",  # str
+    "usercode": "example_usercode",  # str
 })
 ```
 
@@ -416,7 +417,7 @@ Create an instance: `model_info = client.ModelInfo()`
 | `dataset_code` | `str` |  |
 | `model_name` | `str` |  |
 | `name` | `str` |  |
-| `property` | `dict` |  |
+| `properties` | `dict` |  |
 | `updated_at` | `str` |  |
 
 #### Example: Load
@@ -442,7 +443,7 @@ Create an instance: `model_result = client.ModelResult()`
 | --- | --- | --- |
 | `data` | `list` |  |
 | `page` | `int` |  |
-| `page_size` | `int` |  |
+| `pagesize` | `int` |  |
 
 #### Example: Create
 
@@ -467,7 +468,7 @@ Create an instance: `prediction = client.Prediction()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `list` |  |
+| `columns` | `list` |  |
 | `data` | `list` |  |
 
 #### Example: Create

@@ -24,6 +24,7 @@ require_relative 'prepare_method'
 require_relative 'prepare_params'
 require_relative 'prepare_path'
 require_relative 'prepare_query'
+require_relative 'graphql'
 require_relative 'result_basic'
 require_relative 'result_body'
 require_relative 'result_headers'
@@ -55,6 +56,8 @@ GraphiteNoteUtility.registrar = ->(u) {
   u.prepare_params = GraphiteNoteUtilities::PrepareParams
   u.prepare_path = GraphiteNoteUtilities::PreparePath
   u.prepare_query = GraphiteNoteUtilities::PrepareQuery
+  u.graphql_body = GraphiteNoteUtilities::GraphqlBody
+  u.graphql_errors = GraphiteNoteUtilities::GraphqlErrors
   u.result_basic = GraphiteNoteUtilities::ResultBasic
   u.result_body = GraphiteNoteUtilities::ResultBody
   u.result_headers = GraphiteNoteUtilities::ResultHeaders

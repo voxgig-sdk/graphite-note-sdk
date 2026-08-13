@@ -16,11 +16,11 @@
 import pytest
 
 from projectname_sdk import GraphiteNoteSDK
-from core.error import GraphiteNoteError
-from core.result import GraphiteNoteResult
-from core.response import GraphiteNoteResponse
-from core.spec import GraphiteNoteSpec
-from feature.base_feature import GraphiteNoteBaseFeature
+from projectname_sdk.core.error import GraphiteNoteError
+from projectname_sdk.core.result import GraphiteNoteResult
+from projectname_sdk.core.response import GraphiteNoteResponse
+from projectname_sdk.core.spec import GraphiteNoteSpec
+from projectname_sdk.feature.base_feature import GraphiteNoteBaseFeature
 
 
 def _client():

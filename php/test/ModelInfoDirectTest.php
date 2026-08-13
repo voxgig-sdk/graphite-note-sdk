@@ -75,16 +75,16 @@ function model_info_direct_setup($mockres)
     $calls = new \ArrayObject();
 
     $env = Runner::env_override([
-        "GRAPHITENOTE_TEST_MODEL_INFO_ENTID" => [],
-        "GRAPHITENOTE_TEST_LIVE" => "FALSE",
-        "GRAPHITENOTE_APIKEY" => "NONE",
+        "GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID" => [],
+        "GRAPHITE_NOTE_TEST_LIVE" => "FALSE",
+        "GRAPHITE_NOTE_APIKEY" => "NONE",
     ]);
 
-    $live = $env["GRAPHITENOTE_TEST_LIVE"] === "TRUE";
+    $live = $env["GRAPHITE_NOTE_TEST_LIVE"] === "TRUE";
 
     if ($live) {
         $merged_opts = [
-            "apikey" => $env["GRAPHITENOTE_APIKEY"],
+            "apikey" => $env["GRAPHITE_NOTE_APIKEY"],
         ];
         $client = new GraphiteNoteSDK($merged_opts);
         return [

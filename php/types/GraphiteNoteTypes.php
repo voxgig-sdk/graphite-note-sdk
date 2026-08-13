@@ -15,47 +15,47 @@ declare(strict_types=1);
 /** Dataset entity data model. */
 class Dataset
 {
-    public ?int $column = null;
-    public ?string $dataset_code = null;
+    public ?int $columns = null;
+    public ?string $datasetcode = null;
     public string $name;
-    public ?string $table_name = null;
-    public string $user_code;
+    public ?string $tablename = null;
+    public string $usercode;
 }
 
 /** Request payload for Dataset#create. */
 class DatasetCreateData
 {
-    public ?int $column = null;
-    public ?string $dataset_code = null;
+    public ?int $columns = null;
+    public ?string $datasetcode = null;
     public string $name;
-    public ?string $table_name = null;
-    public string $user_code;
+    public ?string $tablename = null;
+    public string $usercode;
 }
 
 /** DatasetFill entity data model. */
 class DatasetFill
 {
     public bool $append;
-    public array $column;
+    public array $columns;
     public bool $compressed;
-    public string $dataset_code;
-    public ?array $detail = null;
-    public string $insert_data;
+    public string $datasetcode;
+    public ?array $details = null;
+    public string $insertdata;
     public ?string $status = null;
-    public string $user_code;
+    public string $usercode;
 }
 
 /** Request payload for DatasetFill#create. */
 class DatasetFillCreateData
 {
     public bool $append;
-    public array $column;
+    public array $columns;
     public bool $compressed;
-    public string $dataset_code;
-    public ?array $detail = null;
-    public string $insert_data;
+    public string $datasetcode;
+    public ?array $details = null;
+    public string $insertdata;
     public ?string $status = null;
-    public string $user_code;
+    public string $usercode;
 }
 
 /** ModelInfo entity data model. */
@@ -66,7 +66,7 @@ class ModelInfo
     public ?string $dataset_code = null;
     public ?string $model_name = null;
     public ?string $name = null;
-    public ?array $property = null;
+    public ?array $properties = null;
     public ?string $updated_at = null;
 }
 
@@ -81,7 +81,7 @@ class ModelResult
 {
     public ?array $data = null;
     public ?int $page = null;
-    public ?int $page_size = null;
+    public ?int $pagesize = null;
 }
 
 /** Request payload for ModelResult#create. */
@@ -90,13 +90,13 @@ class ModelResultCreateData
     public string $model_code;
     public ?array $data = null;
     public ?int $page = null;
-    public ?int $page_size = null;
+    public ?int $pagesize = null;
 }
 
 /** Prediction entity data model. */
 class Prediction
 {
-    public ?array $column = null;
+    public ?array $columns = null;
     public ?array $data = null;
 }
 
@@ -104,7 +104,7 @@ class Prediction
 class PredictionCreateData
 {
     public string $model_code;
-    public ?array $column = null;
+    public ?array $columns = null;
     public ?array $data = null;
 }
 

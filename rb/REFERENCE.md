@@ -110,21 +110,21 @@ dataset = client.Dataset
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `Integer` | No |  |
-| `dataset_code` | `String` | No |  |
+| `columns` | `Integer` | No |  |
+| `datasetcode` | `String` | No |  |
 | `name` | `String` | Yes |  |
-| `table_name` | `String` | No |  |
-| `user_code` | `String` | Yes |  |
+| `tablename` | `String` | No |  |
+| `usercode` | `String` | Yes |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | Yes |
-| `dataset_code` | - |
+| `columns` | Yes |
+| `datasetcode` | - |
 | `name` | - |
-| `table_name` | - |
-| `user_code` | - |
+| `tablename` | - |
+| `usercode` | - |
 
 ### Operations
 
@@ -135,7 +135,7 @@ Create a new entity with the given data. Raises on error.
 ```ruby
 result = client.Dataset.create({
   "name" => "example_name", # String
-  "user_code" => "example_user_code", # String
+  "usercode" => "example_usercode", # String
 })
 ```
 
@@ -180,13 +180,13 @@ dataset_fill = client.DatasetFill
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `append` | `Boolean` | Yes |  |
-| `column` | `Array` | Yes |  |
+| `columns` | `Array` | Yes |  |
 | `compressed` | `Boolean` | Yes |  |
-| `dataset_code` | `String` | Yes |  |
-| `detail` | `Hash` | No |  |
-| `insert_data` | `String` | Yes |  |
+| `datasetcode` | `String` | Yes |  |
+| `details` | `Hash` | No |  |
+| `insertdata` | `String` | Yes |  |
 | `status` | `String` | No |  |
-| `user_code` | `String` | Yes |  |
+| `usercode` | `String` | Yes |  |
 
 ### Operations
 
@@ -197,11 +197,11 @@ Create a new entity with the given data. Raises on error.
 ```ruby
 result = client.DatasetFill.create({
   "append" => true, # Boolean
-  "column" => [], # Array
+  "columns" => [], # Array
   "compressed" => true, # Boolean
-  "dataset_code" => "example_dataset_code", # String
-  "insert_data" => "example_insert_data", # String
-  "user_code" => "example_user_code", # String
+  "datasetcode" => "example_datasetcode", # String
+  "insertdata" => "example_insertdata", # String
+  "usercode" => "example_usercode", # String
 })
 ```
 
@@ -250,7 +250,7 @@ model_info = client.ModelInfo
 | `dataset_code` | `String` | No |  |
 | `model_name` | `String` | No |  |
 | `name` | `String` | No |  |
-| `property` | `Hash` | No |  |
+| `properties` | `Hash` | No |  |
 | `updated_at` | `String` | No |  |
 
 ### Operations
@@ -305,7 +305,7 @@ model_result = client.ModelResult
 | --- | --- | --- | --- |
 | `data` | `Array` | No |  |
 | `page` | `Integer` | No |  |
-| `page_size` | `Integer` | No |  |
+| `pagesize` | `Integer` | No |  |
 
 ### Operations
 
@@ -359,14 +359,14 @@ prediction = client.Prediction
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `column` | `Array` | No |  |
+| `columns` | `Array` | No |  |
 | `data` | `Array` | No |  |
 
 ### Field Usage by Operation
 
 | Field | create |
 | --- | --- |
-| `column` | - |
+| `columns` | - |
 | `data` | Yes |
 
 ### Operations

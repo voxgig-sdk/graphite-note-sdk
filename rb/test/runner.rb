@@ -23,8 +23,8 @@ module GraphiteNoteTestRunner
   end
 
   def self.env_override(m)
-    live = getenv("GRAPHITENOTE_TEST_LIVE")
-    override = getenv("GRAPHITENOTE_TEST_OVERRIDE")
+    live = getenv("GRAPHITE_NOTE_TEST_LIVE")
+    override = getenv("GRAPHITE_NOTE_TEST_OVERRIDE")
 
     if live == "TRUE" || override == "TRUE"
       m.each_key do |key|
@@ -44,8 +44,8 @@ module GraphiteNoteTestRunner
       end
     end
 
-    explain = getenv("GRAPHITENOTE_TEST_EXPLAIN")
-    m["GRAPHITENOTE_TEST_EXPLAIN"] = explain if explain && !explain.empty?
+    explain = getenv("GRAPHITE_NOTE_TEST_EXPLAIN")
+    m["GRAPHITE_NOTE_TEST_EXPLAIN"] = explain if explain && !explain.empty?
 
     m
   end

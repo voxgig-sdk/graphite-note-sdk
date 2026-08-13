@@ -14,12 +14,12 @@ from __future__ import annotations
 
 from urllib.parse import quote
 
-from config import make_config
-from features import _make_feature
-from core.control import GraphiteNoteControl
-from core.error import GraphiteNoteError
-from core.result import GraphiteNoteResult
-from core.spec import GraphiteNoteSpec
+from graphitenote_sdk.config import make_config
+from graphitenote_sdk.features import _make_feature
+from graphitenote_sdk.core.control import GraphiteNoteControl
+from graphitenote_sdk.core.error import GraphiteNoteError
+from graphitenote_sdk.core.result import GraphiteNoteResult
+from graphitenote_sdk.core.spec import GraphiteNoteSpec
 
 
 # True when this SDK was generated with the named feature.

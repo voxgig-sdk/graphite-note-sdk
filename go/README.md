@@ -54,7 +54,7 @@ func main() {
     })
 
     // Create a dataset.
-    created, err := client.Dataset(nil).Create(map[string]any{"name": "example_name", "user_code": "example_user_code"}, nil)
+    created, err := client.Dataset(nil).Create(map[string]any{"name": "example_name", "usercode": "example_usercode"}, nil)
     if err != nil {
         panic(err)
     }
@@ -268,11 +268,11 @@ Only `Direct()` returns a response envelope — a `map[string]any` with
 
 | Field | Description |
 | --- | --- |
-| `"column"` |  |
-| `"dataset_code"` |  |
+| `"columns"` |  |
+| `"datasetcode"` |  |
 | `"name"` |  |
-| `"table_name"` |  |
-| `"user_code"` |  |
+| `"tablename"` |  |
+| `"usercode"` |  |
 
 Operations: Create.
 
@@ -283,13 +283,13 @@ API path: `/dataset-create`
 | Field | Description |
 | --- | --- |
 | `"append"` |  |
-| `"column"` |  |
+| `"columns"` |  |
 | `"compressed"` |  |
-| `"dataset_code"` |  |
-| `"detail"` |  |
-| `"insert_data"` |  |
+| `"datasetcode"` |  |
+| `"details"` |  |
+| `"insertdata"` |  |
 | `"status"` |  |
-| `"user_code"` |  |
+| `"usercode"` |  |
 
 Operations: Create.
 
@@ -304,7 +304,7 @@ API path: `/dataset-complete`
 | `"dataset_code"` |  |
 | `"model_name"` |  |
 | `"name"` |  |
-| `"property"` |  |
+| `"properties"` |  |
 | `"updated_at"` |  |
 
 Operations: Load.
@@ -317,7 +317,7 @@ API path: `/model/fetch-model-info/{model_code}`
 | --- | --- |
 | `"data"` |  |
 | `"page"` |  |
-| `"page_size"` |  |
+| `"pagesize"` |  |
 
 Operations: Create.
 
@@ -327,7 +327,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `"column"` |  |
+| `"columns"` |  |
 | `"data"` |  |
 
 Operations: Create.
@@ -353,18 +353,18 @@ Create an instance: `dataset := client.Dataset(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `int` |  |
-| `dataset_code` | `string` |  |
+| `columns` | `int` |  |
+| `datasetcode` | `string` |  |
 | `name` | `string` |  |
-| `table_name` | `string` |  |
-| `user_code` | `string` |  |
+| `tablename` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```go
 result, err := client.Dataset(nil).Create(map[string]any{
     "name": "example_name",
-    "user_code": "example_user_code",
+    "usercode": "example_usercode",
 }, nil)
 if err != nil {
     panic(err)
@@ -388,24 +388,24 @@ Create an instance: `datasetFill := client.DatasetFill(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `append` | `bool` |  |
-| `column` | `[]any` |  |
+| `columns` | `[]any` |  |
 | `compressed` | `bool` |  |
-| `dataset_code` | `string` |  |
-| `detail` | `map[string]any` |  |
-| `insert_data` | `string` |  |
+| `datasetcode` | `string` |  |
+| `details` | `map[string]any` |  |
+| `insertdata` | `string` |  |
 | `status` | `string` |  |
-| `user_code` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```go
 result, err := client.DatasetFill(nil).Create(map[string]any{
     "append": true,
-    "column": []any{},
+    "columns": []any{},
     "compressed": true,
-    "dataset_code": "example_dataset_code",
-    "insert_data": "example_insert_data",
-    "user_code": "example_user_code",
+    "datasetcode": "example_datasetcode",
+    "insertdata": "example_insertdata",
+    "usercode": "example_usercode",
 }, nil)
 if err != nil {
     panic(err)
@@ -433,7 +433,7 @@ Create an instance: `modelInfo := client.ModelInfo(nil)`
 | `dataset_code` | `string` |  |
 | `model_name` | `string` |  |
 | `name` | `string` |  |
-| `property` | `map[string]any` |  |
+| `properties` | `map[string]any` |  |
 | `updated_at` | `string` |  |
 
 #### Example: Load
@@ -463,7 +463,7 @@ Create an instance: `modelResult := client.ModelResult(nil)`
 | --- | --- | --- |
 | `data` | `[]any` |  |
 | `page` | `int` |  |
-| `page_size` | `int` |  |
+| `pagesize` | `int` |  |
 
 #### Example: Create
 
@@ -492,7 +492,7 @@ Create an instance: `prediction := client.Prediction(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `[]any` |  |
+| `columns` | `[]any` |  |
 | `data` | `[]any` |  |
 
 #### Example: Create

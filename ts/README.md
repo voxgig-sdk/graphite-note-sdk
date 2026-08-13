@@ -54,10 +54,10 @@ try {
 ### 4. Create, update, and remove
 
 ```ts
-// Create — returns the created Dataset
+// Create — returns the created Dataset ENTITY (.data() for the record)
 const created = await client.Dataset().create({
   name: 'example_name',
-  user_code: 'example_user_code',
+  usercode: 'example_usercode',
 })
 
 ```
@@ -137,7 +137,8 @@ Create a mock client for unit testing — no server required:
 const client = GraphiteNoteSDK.test()
 
 const modelinfo = await client.ModelInfo().load({ model_code: 'example_model_code' })
-// modelinfo is a bare entity populated with mock response data
+// modelinfo is the entity, populated with mock response data
+// — call modelinfo.data() for the record itself
 console.log(modelinfo)
 ```
 
@@ -309,11 +310,11 @@ The `prepare()` method returns:
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
-| `dataset_code` |  |
+| `columns` |  |
+| `datasetcode` |  |
 | `name` |  |
-| `table_name` |  |
-| `user_code` |  |
+| `tablename` |  |
+| `usercode` |  |
 
 Operations: create.
 
@@ -324,13 +325,13 @@ API path: `/dataset-create`
 | Field | Description |
 | --- | --- |
 | `append` |  |
-| `column` |  |
+| `columns` |  |
 | `compressed` |  |
-| `dataset_code` |  |
-| `detail` |  |
-| `insert_data` |  |
+| `datasetcode` |  |
+| `details` |  |
+| `insertdata` |  |
 | `status` |  |
-| `user_code` |  |
+| `usercode` |  |
 
 Operations: create.
 
@@ -345,7 +346,7 @@ API path: `/dataset-complete`
 | `dataset_code` |  |
 | `model_name` |  |
 | `name` |  |
-| `property` |  |
+| `properties` |  |
 | `updated_at` |  |
 
 Operations: load.
@@ -358,7 +359,7 @@ API path: `/model/fetch-model-info/{model_code}`
 | --- | --- |
 | `data` |  |
 | `page` |  |
-| `page_size` |  |
+| `pagesize` |  |
 
 Operations: create.
 
@@ -368,7 +369,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `column` |  |
+| `columns` |  |
 | `data` |  |
 
 Operations: create.
@@ -394,18 +395,18 @@ Create an instance: `const dataset = client.Dataset()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `number` |  |
-| `dataset_code` | `string` |  |
+| `columns` | `number` |  |
+| `datasetcode` | `string` |  |
 | `name` | `string` |  |
-| `table_name` | `string` |  |
-| `user_code` | `string` |  |
+| `tablename` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```ts
 const dataset = await client.Dataset().create({
   name: 'example_name',
-  user_code: 'example_user_code',
+  usercode: 'example_usercode',
 })
 ```
 
@@ -425,24 +426,24 @@ Create an instance: `const dataset_fill = client.DatasetFill()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `append` | `boolean` |  |
-| `column` | `any[]` |  |
+| `columns` | `any[]` |  |
 | `compressed` | `boolean` |  |
-| `dataset_code` | `string` |  |
-| `detail` | `Record<string, any>` |  |
-| `insert_data` | `string` |  |
+| `datasetcode` | `string` |  |
+| `details` | `Record<string, any>` |  |
+| `insertdata` | `string` |  |
 | `status` | `string` |  |
-| `user_code` | `string` |  |
+| `usercode` | `string` |  |
 
 #### Example: Create
 
 ```ts
 const dataset_fill = await client.DatasetFill().create({
   append: true,
-  column: [],
+  columns: [],
   compressed: true,
-  dataset_code: 'example_dataset_code',
-  insert_data: 'example_insert_data',
-  user_code: 'example_user_code',
+  datasetcode: 'example_datasetcode',
+  insertdata: 'example_insertdata',
+  usercode: 'example_usercode',
 })
 ```
 
@@ -466,7 +467,7 @@ Create an instance: `const model_info = client.ModelInfo()`
 | `dataset_code` | `string` |  |
 | `model_name` | `string` |  |
 | `name` | `string` |  |
-| `property` | `Record<string, any>` |  |
+| `properties` | `Record<string, any>` |  |
 | `updated_at` | `string` |  |
 
 #### Example: Load
@@ -492,7 +493,7 @@ Create an instance: `const model_result = client.ModelResult()`
 | --- | --- | --- |
 | `data` | `any[]` |  |
 | `page` | `number` |  |
-| `page_size` | `number` |  |
+| `pagesize` | `number` |  |
 
 #### Example: Create
 
@@ -517,7 +518,7 @@ Create an instance: `const prediction = client.Prediction()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `column` | `any[]` |  |
+| `columns` | `any[]` |  |
 | `data` | `any[]` |  |
 
 #### Example: Create

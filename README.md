@@ -23,7 +23,7 @@ support (`load`, `create`):
 const client = new GraphiteNoteSDK()
 const dataset = await client.Dataset().create({
   name: 'example',
-  user_code: 'example',
+  usercode: 'example',
 })
 ```
 
@@ -39,9 +39,18 @@ network, and no credentials:
 ### TypeScript
 
 ```ts
-const client = GraphiteNoteSDK.test()
+// The offline mock starts EMPTY — seed it with the records the test needs.
+// Shape: { entity: { <entity-name>: { <id>: <record> } } }
+const client = GraphiteNoteSDK.test({
+  entity: {
+    model_info: {
+      test01: { id: 'test01' },
+    },
+  },
+})
 const modelinfo = await client.ModelInfo().load({ model_code: 'example_model_code' })
-// modelinfo is a bare ModelInfo populated with mock data
+// modelinfo is the ModelInfo entity, populated with mock data
+// — call modelinfo.data() for the record itself
 console.log(modelinfo)
 ```
 

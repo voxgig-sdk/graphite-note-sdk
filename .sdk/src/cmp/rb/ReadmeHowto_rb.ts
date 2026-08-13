@@ -65,7 +65,8 @@ const ReadmeHowto = cmp(function ReadmeHowto(props: any) {
   // The op-driven test-mode line, shown only when the SDK has an entity op.
   // A direct()-only SDK (no ops anywhere) shows a direct() call instead.
   const testModeExample = primaryOp
-    ? `# Entity ops return the bare mock record (raises on error).
+    ? `# Entity ops return the ENTITY (raises on error);
+# call data_get for the mock record.
 ${eVar} = client.${eName}.${primaryOp}(${testCallArg})
 puts ${eVar}`
     : `result = client.direct({ "path" => "/api/resource", "method" => "GET" })

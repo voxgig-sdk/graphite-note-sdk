@@ -26,8 +26,8 @@ import {
 describe('PredictionEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when GRAPHITENOTE_TEST_LIVE=TRUE.
-  afterEach(liveDelay('GRAPHITENOTE_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when GRAPHITE_NOTE_TEST_LIVE=TRUE.
+  afterEach(liveDelay('GRAPHITE_NOTE_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = GraphiteNoteSDK.test()
@@ -63,7 +63,7 @@ describe('PredictionEntity', async () => {
     let prediction_ref01_data = setup.data.new.prediction['prediction_ref01']
     prediction_ref01_data['model_code'] = setup.idmap['model_code01']
 
-    prediction_ref01_data = await prediction_ref01_ent.create(prediction_ref01_data)
+    prediction_ref01_data = (await prediction_ref01_ent.create(prediction_ref01_data)).data()
     assert(null != prediction_ref01_data)
 
 

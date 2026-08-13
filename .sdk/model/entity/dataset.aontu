@@ -6,7 +6,7 @@ main: kit: entity: dataset: {
 
   fields: [
     {
-      name: "column"
+      name: "columns"
       op: {
         create: {
           req: true
@@ -17,7 +17,7 @@ main: kit: entity: dataset: {
       type: "`$INTEGER`"
     }
     {
-      name: "dataset_code"
+      name: "datasetcode"
       req: false
       type: "`$STRING`"
     }
@@ -27,12 +27,12 @@ main: kit: entity: dataset: {
       type: "`$STRING`"
     }
     {
-      name: "table_name"
+      name: "tablename"
       req: false
       type: "`$STRING`"
     }
     {
-      name: "user_code"
+      name: "usercode"
       req: true
       type: "`$STRING`"
     }

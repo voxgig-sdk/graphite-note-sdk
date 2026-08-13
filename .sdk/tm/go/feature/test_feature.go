@@ -16,7 +16,7 @@ var envelopeResRe = regexp.MustCompile("^`body\\.([^`.]+)`$")
 
 type TestFeature struct {
 	BaseFeature
-	client   *core.GraphiteNoteSDK
+	client   *core.ProjectNameSDK
 	options  map[string]any
 	netcalls int
 }

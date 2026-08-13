@@ -26,8 +26,8 @@ import {
 describe('ModelResultEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when GRAPHITENOTE_TEST_LIVE=TRUE.
-  afterEach(liveDelay('GRAPHITENOTE_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when GRAPHITE_NOTE_TEST_LIVE=TRUE.
+  afterEach(liveDelay('GRAPHITE_NOTE_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = GraphiteNoteSDK.test()
@@ -63,7 +63,7 @@ describe('ModelResultEntity', async () => {
     let model_result_ref01_data = setup.data.new.model_result['model_result_ref01']
     model_result_ref01_data['model_code'] = setup.idmap['model_code01']
 
-    model_result_ref01_data = await model_result_ref01_ent.create(model_result_ref01_data)
+    model_result_ref01_data = (await model_result_ref01_ent.create(model_result_ref01_data)).data()
     assert(null != model_result_ref01_data)
 
 

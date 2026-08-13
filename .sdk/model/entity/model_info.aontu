@@ -31,7 +31,7 @@ main: kit: entity: model_info: {
       type: "`$STRING`"
     }
     {
-      name: "property"
+      name: "properties"
       req: false
       type: "`$OBJECT`"
     }
