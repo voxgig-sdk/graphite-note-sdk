@@ -1,5 +1,8 @@
 -- GraphiteNote SDK configuration
 
+-- Build a fresh, fully materialised config table. Every call rebuilds the
+-- whole structure, so prefer require("config_shared") unless you need a
+-- private copy you intend to mutate.
 local function make_config()
   return {
     main = {
@@ -32,7 +35,6 @@ local function make_config()
       ["dataset"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "columns",
             ["op"] = {
               ["create"] = {
@@ -40,37 +42,25 @@ local function make_config()
                 ["type"] = "`$ARRAY`",
               },
             },
-            ["req"] = false,
             ["type"] = "`$INTEGER`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "datasetcode",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "name",
             ["req"] = true,
             ["type"] = "`$STRING`",
-            ["index$"] = 2,
           },
           {
-            ["active"] = true,
             ["name"] = "tablename",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 3,
           },
           {
-            ["active"] = true,
             ["name"] = "usercode",
             ["req"] = true,
             ["type"] = "`$STRING`",
-            ["index$"] = 4,
           },
         },
         ["name"] = "dataset",
@@ -80,7 +70,6 @@ local function make_config()
             ["name"] = "create",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {},
                 ["kind"] = "http",
                 ["method"] = "POST",
@@ -93,10 +82,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.data`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "create",
           },
         },
         ["relations"] = {
@@ -106,60 +93,42 @@ local function make_config()
       ["dataset_fill"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "append",
             ["req"] = true,
             ["type"] = "`$BOOLEAN`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "columns",
             ["req"] = true,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "compressed",
             ["req"] = true,
             ["type"] = "`$BOOLEAN`",
-            ["index$"] = 2,
           },
           {
-            ["active"] = true,
             ["name"] = "datasetcode",
             ["req"] = true,
             ["type"] = "`$STRING`",
-            ["index$"] = 3,
           },
           {
-            ["active"] = true,
             ["name"] = "details",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 4,
           },
           {
-            ["active"] = true,
             ["name"] = "insertdata",
             ["req"] = true,
             ["type"] = "`$STRING`",
-            ["index$"] = 5,
           },
           {
-            ["active"] = true,
             ["name"] = "status",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 6,
           },
           {
-            ["active"] = true,
             ["name"] = "usercode",
             ["req"] = true,
             ["type"] = "`$STRING`",
-            ["index$"] = 7,
           },
         },
         ["name"] = "dataset_fill",
@@ -169,7 +138,6 @@ local function make_config()
             ["name"] = "create",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {},
                 ["kind"] = "http",
                 ["method"] = "POST",
@@ -182,10 +150,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.data`",
                 },
-                ["index$"] = 0,
               },
               {
-                ["active"] = true,
                 ["args"] = {},
                 ["kind"] = "http",
                 ["method"] = "POST",
@@ -198,10 +164,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.data`",
                 },
-                ["index$"] = 1,
               },
             },
-            ["key$"] = "create",
           },
         },
         ["relations"] = {
@@ -211,53 +175,32 @@ local function make_config()
       ["model_info"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "code",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "created_at",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "dataset_code",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 2,
           },
           {
-            ["active"] = true,
             ["name"] = "model_name",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 3,
           },
           {
-            ["active"] = true,
             ["name"] = "name",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 4,
           },
           {
-            ["active"] = true,
             ["name"] = "properties",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 5,
           },
           {
-            ["active"] = true,
             ["name"] = "updated_at",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 6,
           },
         },
         ["name"] = "model_info",
@@ -267,17 +210,14 @@ local function make_config()
             ["name"] = "load",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "param",
                       ["name"] = "model_code",
                       ["orig"] = "model_code",
                       ["reqd"] = true,
                       ["type"] = "`$STRING`",
-                      ["index$"] = 0,
                     },
                   },
                 },
@@ -298,10 +238,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.data`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "load",
           },
         },
         ["relations"] = {
@@ -315,25 +253,16 @@ local function make_config()
       ["model_result"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "data",
-            ["req"] = false,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "page",
-            ["req"] = false,
             ["type"] = "`$INTEGER`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "pagesize",
-            ["req"] = false,
             ["type"] = "`$INTEGER`",
-            ["index$"] = 2,
           },
         },
         ["name"] = "model_result",
@@ -343,17 +272,14 @@ local function make_config()
             ["name"] = "create",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "param",
                       ["name"] = "model_code",
                       ["orig"] = "model_code",
                       ["reqd"] = true,
                       ["type"] = "`$STRING`",
-                      ["index$"] = 0,
                     },
                   },
                 },
@@ -374,10 +300,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "create",
           },
         },
         ["relations"] = {
@@ -391,14 +315,10 @@ local function make_config()
       ["prediction"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "columns",
-            ["req"] = false,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "data",
             ["op"] = {
               ["create"] = {
@@ -406,9 +326,7 @@ local function make_config()
                 ["type"] = "`$OBJECT`",
               },
             },
-            ["req"] = false,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 1,
           },
         },
         ["name"] = "prediction",
@@ -418,17 +336,14 @@ local function make_config()
             ["name"] = "create",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "param",
                       ["name"] = "model_code",
                       ["orig"] = "model_code",
                       ["reqd"] = true,
                       ["type"] = "`$STRING`",
-                      ["index$"] = 0,
                     },
                   },
                 },
@@ -450,20 +365,16 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.data`",
                 },
-                ["index$"] = 0,
               },
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "param",
                       ["name"] = "model_code",
                       ["orig"] = "model_code",
                       ["reqd"] = true,
                       ["type"] = "`$STRING`",
-                      ["index$"] = 0,
                     },
                   },
                 },
@@ -485,10 +396,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.data`",
                 },
-                ["index$"] = 1,
               },
             },
-            ["key$"] = "create",
           },
         },
         ["relations"] = {

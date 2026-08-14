@@ -5,6 +5,29 @@ declare(strict_types=1);
 
 class GraphiteNoteConfig
 {
+    /** @var array<string,mixed>|null */
+    private static ?array $shared_config = null;
+
+    /**
+     * Return the process-wide config, built once on first use. The SDK reads
+     * the config on every request and never writes to it, so one instance is
+     * shared by every client rather than rebuilt per client.
+     *
+     * PHP arrays are copy-on-write, so callers that do mutate the result get
+     * their own copy and cannot disturb the shared one.
+     */
+    public static function shared_config(): array
+    {
+        if (self::$shared_config === null) {
+            self::$shared_config = self::make_config();
+        }
+        return self::$shared_config;
+    }
+
+    /**
+     * Build a fresh, fully materialised config array. Every call rebuilds the
+     * whole structure, so prefer shared_config unless you need a private copy.
+     */
     public static function make_config(): array
     {
         return [
@@ -38,7 +61,6 @@ class GraphiteNoteConfig
         'dataset' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'columns',
               'op' => [
                 'create' => [
@@ -46,37 +68,25 @@ class GraphiteNoteConfig
                   'type' => '`$ARRAY`',
                 ],
               ],
-              'req' => false,
               'type' => '`$INTEGER`',
-              'index$' => 0,
             ],
             [
-              'active' => true,
               'name' => 'datasetcode',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 1,
             ],
             [
-              'active' => true,
               'name' => 'name',
               'req' => true,
               'type' => '`$STRING`',
-              'index$' => 2,
             ],
             [
-              'active' => true,
               'name' => 'tablename',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 3,
             ],
             [
-              'active' => true,
               'name' => 'usercode',
               'req' => true,
               'type' => '`$STRING`',
-              'index$' => 4,
             ],
           ],
           'name' => 'dataset',
@@ -86,7 +96,6 @@ class GraphiteNoteConfig
               'name' => 'create',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [],
                   'kind' => 'http',
                   'method' => 'POST',
@@ -99,10 +108,8 @@ class GraphiteNoteConfig
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'create',
             ],
           ],
           'relations' => [
@@ -112,60 +119,42 @@ class GraphiteNoteConfig
         'dataset_fill' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'append',
               'req' => true,
               'type' => '`$BOOLEAN`',
-              'index$' => 0,
             ],
             [
-              'active' => true,
               'name' => 'columns',
               'req' => true,
               'type' => '`$ARRAY`',
-              'index$' => 1,
             ],
             [
-              'active' => true,
               'name' => 'compressed',
               'req' => true,
               'type' => '`$BOOLEAN`',
-              'index$' => 2,
             ],
             [
-              'active' => true,
               'name' => 'datasetcode',
               'req' => true,
               'type' => '`$STRING`',
-              'index$' => 3,
             ],
             [
-              'active' => true,
               'name' => 'details',
-              'req' => false,
               'type' => '`$OBJECT`',
-              'index$' => 4,
             ],
             [
-              'active' => true,
               'name' => 'insertdata',
               'req' => true,
               'type' => '`$STRING`',
-              'index$' => 5,
             ],
             [
-              'active' => true,
               'name' => 'status',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 6,
             ],
             [
-              'active' => true,
               'name' => 'usercode',
               'req' => true,
               'type' => '`$STRING`',
-              'index$' => 7,
             ],
           ],
           'name' => 'dataset_fill',
@@ -175,7 +164,6 @@ class GraphiteNoteConfig
               'name' => 'create',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [],
                   'kind' => 'http',
                   'method' => 'POST',
@@ -188,10 +176,8 @@ class GraphiteNoteConfig
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
                   ],
-                  'index$' => 0,
                 ],
                 [
-                  'active' => true,
                   'args' => [],
                   'kind' => 'http',
                   'method' => 'POST',
@@ -204,10 +190,8 @@ class GraphiteNoteConfig
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
                   ],
-                  'index$' => 1,
                 ],
               ],
-              'key$' => 'create',
             ],
           ],
           'relations' => [
@@ -217,53 +201,32 @@ class GraphiteNoteConfig
         'model_info' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'code',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 0,
             ],
             [
-              'active' => true,
               'name' => 'created_at',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 1,
             ],
             [
-              'active' => true,
               'name' => 'dataset_code',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 2,
             ],
             [
-              'active' => true,
               'name' => 'model_name',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 3,
             ],
             [
-              'active' => true,
               'name' => 'name',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 4,
             ],
             [
-              'active' => true,
               'name' => 'properties',
-              'req' => false,
               'type' => '`$OBJECT`',
-              'index$' => 5,
             ],
             [
-              'active' => true,
               'name' => 'updated_at',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 6,
             ],
           ],
           'name' => 'model_info',
@@ -273,17 +236,14 @@ class GraphiteNoteConfig
               'name' => 'load',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [
                     'params' => [
                       [
-                        'active' => true,
                         'kind' => 'param',
                         'name' => 'model_code',
                         'orig' => 'model_code',
                         'reqd' => true,
                         'type' => '`$STRING`',
-                        'index$' => 0,
                       ],
                     ],
                   ],
@@ -304,10 +264,8 @@ class GraphiteNoteConfig
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'load',
             ],
           ],
           'relations' => [
@@ -321,25 +279,16 @@ class GraphiteNoteConfig
         'model_result' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'data',
-              'req' => false,
               'type' => '`$ARRAY`',
-              'index$' => 0,
             ],
             [
-              'active' => true,
               'name' => 'page',
-              'req' => false,
               'type' => '`$INTEGER`',
-              'index$' => 1,
             ],
             [
-              'active' => true,
               'name' => 'pagesize',
-              'req' => false,
               'type' => '`$INTEGER`',
-              'index$' => 2,
             ],
           ],
           'name' => 'model_result',
@@ -349,17 +298,14 @@ class GraphiteNoteConfig
               'name' => 'create',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [
                     'params' => [
                       [
-                        'active' => true,
                         'kind' => 'param',
                         'name' => 'model_code',
                         'orig' => 'model_code',
                         'reqd' => true,
                         'type' => '`$STRING`',
-                        'index$' => 0,
                       ],
                     ],
                   ],
@@ -380,10 +326,8 @@ class GraphiteNoteConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'create',
             ],
           ],
           'relations' => [
@@ -397,14 +341,10 @@ class GraphiteNoteConfig
         'prediction' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'columns',
-              'req' => false,
               'type' => '`$ARRAY`',
-              'index$' => 0,
             ],
             [
-              'active' => true,
               'name' => 'data',
               'op' => [
                 'create' => [
@@ -412,9 +352,7 @@ class GraphiteNoteConfig
                   'type' => '`$OBJECT`',
                 ],
               ],
-              'req' => false,
               'type' => '`$ARRAY`',
-              'index$' => 1,
             ],
           ],
           'name' => 'prediction',
@@ -424,17 +362,14 @@ class GraphiteNoteConfig
               'name' => 'create',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [
                     'params' => [
                       [
-                        'active' => true,
                         'kind' => 'param',
                         'name' => 'model_code',
                         'orig' => 'model_code',
                         'reqd' => true,
                         'type' => '`$STRING`',
-                        'index$' => 0,
                       ],
                     ],
                   ],
@@ -456,20 +391,16 @@ class GraphiteNoteConfig
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
                   ],
-                  'index$' => 0,
                 ],
                 [
-                  'active' => true,
                   'args' => [
                     'params' => [
                       [
-                        'active' => true,
                         'kind' => 'param',
                         'name' => 'model_code',
                         'orig' => 'model_code',
                         'reqd' => true,
                         'type' => '`$STRING`',
-                        'index$' => 0,
                       ],
                     ],
                   ],
@@ -491,10 +422,8 @@ class GraphiteNoteConfig
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
                   ],
-                  'index$' => 1,
                 ],
               ],
-              'key$' => 'create',
             ],
           ],
           'relations' => [

@@ -1,7 +1,30 @@
 # GraphiteNote SDK configuration
 
 
+_shared_config = None
+
+
+def shared_config():
+    """Return the process-wide config, built once on first use.
+
+    The SDK reads the config on every request and never writes to it, so one
+    instance is shared by every client rather than rebuilt per client.
+
+    The returned dict is shared: treat it as read-only. Callers that need to
+    mutate should use make_config, which always returns a fresh copy.
+    """
+    global _shared_config
+    if _shared_config is None:
+        _shared_config = make_config()
+    return _shared_config
+
+
 def make_config():
+    """Build a fresh, fully materialised config dict.
+
+    Every call rebuilds the whole structure, so prefer shared_config unless
+    you need a private copy you intend to mutate.
+    """
     return {
         "main": {
             "name": "GraphiteNote",
@@ -33,7 +56,6 @@ def make_config():
       "dataset": {
         "fields": [
           {
-            "active": True,
             "name": "columns",
             "op": {
               "create": {
@@ -41,37 +63,25 @@ def make_config():
                 "type": "`$ARRAY`",
               },
             },
-            "req": False,
             "type": "`$INTEGER`",
-            "index$": 0,
           },
           {
-            "active": True,
             "name": "datasetcode",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 1,
           },
           {
-            "active": True,
             "name": "name",
             "req": True,
             "type": "`$STRING`",
-            "index$": 2,
           },
           {
-            "active": True,
             "name": "tablename",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 3,
           },
           {
-            "active": True,
             "name": "usercode",
             "req": True,
             "type": "`$STRING`",
-            "index$": 4,
           },
         ],
         "name": "dataset",
@@ -81,7 +91,6 @@ def make_config():
             "name": "create",
             "points": [
               {
-                "active": True,
                 "args": {},
                 "kind": "http",
                 "method": "POST",
@@ -94,10 +103,8 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
-                "index$": 0,
               },
             ],
-            "key$": "create",
           },
         },
         "relations": {
@@ -107,60 +114,42 @@ def make_config():
       "dataset_fill": {
         "fields": [
           {
-            "active": True,
             "name": "append",
             "req": True,
             "type": "`$BOOLEAN`",
-            "index$": 0,
           },
           {
-            "active": True,
             "name": "columns",
             "req": True,
             "type": "`$ARRAY`",
-            "index$": 1,
           },
           {
-            "active": True,
             "name": "compressed",
             "req": True,
             "type": "`$BOOLEAN`",
-            "index$": 2,
           },
           {
-            "active": True,
             "name": "datasetcode",
             "req": True,
             "type": "`$STRING`",
-            "index$": 3,
           },
           {
-            "active": True,
             "name": "details",
-            "req": False,
             "type": "`$OBJECT`",
-            "index$": 4,
           },
           {
-            "active": True,
             "name": "insertdata",
             "req": True,
             "type": "`$STRING`",
-            "index$": 5,
           },
           {
-            "active": True,
             "name": "status",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 6,
           },
           {
-            "active": True,
             "name": "usercode",
             "req": True,
             "type": "`$STRING`",
-            "index$": 7,
           },
         ],
         "name": "dataset_fill",
@@ -170,7 +159,6 @@ def make_config():
             "name": "create",
             "points": [
               {
-                "active": True,
                 "args": {},
                 "kind": "http",
                 "method": "POST",
@@ -183,10 +171,8 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
-                "index$": 0,
               },
               {
-                "active": True,
                 "args": {},
                 "kind": "http",
                 "method": "POST",
@@ -199,10 +185,8 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
-                "index$": 1,
               },
             ],
-            "key$": "create",
           },
         },
         "relations": {
@@ -212,53 +196,32 @@ def make_config():
       "model_info": {
         "fields": [
           {
-            "active": True,
             "name": "code",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 0,
           },
           {
-            "active": True,
             "name": "created_at",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 1,
           },
           {
-            "active": True,
             "name": "dataset_code",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 2,
           },
           {
-            "active": True,
             "name": "model_name",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 3,
           },
           {
-            "active": True,
             "name": "name",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 4,
           },
           {
-            "active": True,
             "name": "properties",
-            "req": False,
             "type": "`$OBJECT`",
-            "index$": 5,
           },
           {
-            "active": True,
             "name": "updated_at",
-            "req": False,
             "type": "`$STRING`",
-            "index$": 6,
           },
         ],
         "name": "model_info",
@@ -268,17 +231,14 @@ def make_config():
             "name": "load",
             "points": [
               {
-                "active": True,
                 "args": {
                   "params": [
                     {
-                      "active": True,
                       "kind": "param",
                       "name": "model_code",
                       "orig": "model_code",
                       "reqd": True,
                       "type": "`$STRING`",
-                      "index$": 0,
                     },
                   ],
                 },
@@ -299,10 +259,8 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
-                "index$": 0,
               },
             ],
-            "key$": "load",
           },
         },
         "relations": {
@@ -316,25 +274,16 @@ def make_config():
       "model_result": {
         "fields": [
           {
-            "active": True,
             "name": "data",
-            "req": False,
             "type": "`$ARRAY`",
-            "index$": 0,
           },
           {
-            "active": True,
             "name": "page",
-            "req": False,
             "type": "`$INTEGER`",
-            "index$": 1,
           },
           {
-            "active": True,
             "name": "pagesize",
-            "req": False,
             "type": "`$INTEGER`",
-            "index$": 2,
           },
         ],
         "name": "model_result",
@@ -344,17 +293,14 @@ def make_config():
             "name": "create",
             "points": [
               {
-                "active": True,
                 "args": {
                   "params": [
                     {
-                      "active": True,
                       "kind": "param",
                       "name": "model_code",
                       "orig": "model_code",
                       "reqd": True,
                       "type": "`$STRING`",
-                      "index$": 0,
                     },
                   ],
                 },
@@ -375,10 +321,8 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body`",
                 },
-                "index$": 0,
               },
             ],
-            "key$": "create",
           },
         },
         "relations": {
@@ -392,14 +336,10 @@ def make_config():
       "prediction": {
         "fields": [
           {
-            "active": True,
             "name": "columns",
-            "req": False,
             "type": "`$ARRAY`",
-            "index$": 0,
           },
           {
-            "active": True,
             "name": "data",
             "op": {
               "create": {
@@ -407,9 +347,7 @@ def make_config():
                 "type": "`$OBJECT`",
               },
             },
-            "req": False,
             "type": "`$ARRAY`",
-            "index$": 1,
           },
         ],
         "name": "prediction",
@@ -419,17 +357,14 @@ def make_config():
             "name": "create",
             "points": [
               {
-                "active": True,
                 "args": {
                   "params": [
                     {
-                      "active": True,
                       "kind": "param",
                       "name": "model_code",
                       "orig": "model_code",
                       "reqd": True,
                       "type": "`$STRING`",
-                      "index$": 0,
                     },
                   ],
                 },
@@ -451,20 +386,16 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
-                "index$": 0,
               },
               {
-                "active": True,
                 "args": {
                   "params": [
                     {
-                      "active": True,
                       "kind": "param",
                       "name": "model_code",
                       "orig": "model_code",
                       "reqd": True,
                       "type": "`$STRING`",
-                      "index$": 0,
                     },
                   ],
                 },
@@ -486,10 +417,8 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
-                "index$": 1,
               },
             ],
-            "key$": "create",
           },
         },
         "relations": {

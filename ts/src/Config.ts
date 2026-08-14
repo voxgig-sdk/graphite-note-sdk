@@ -71,7 +71,6 @@ class Config {
     "dataset": {
       "fields": [
         {
-          "active": true,
           "name": "columns",
           "op": {
             "create": {
@@ -79,37 +78,25 @@ class Config {
               "type": "`$ARRAY`"
             }
           },
-          "req": false,
-          "type": "`$INTEGER`",
-          "index$": 0
+          "type": "`$INTEGER`"
         },
         {
-          "active": true,
           "name": "datasetcode",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 1
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "name",
           "req": true,
-          "type": "`$STRING`",
-          "index$": 2
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "tablename",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 3
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "usercode",
           "req": true,
-          "type": "`$STRING`",
-          "index$": 4
+          "type": "`$STRING`"
         }
       ],
       "name": "dataset",
@@ -119,7 +106,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "active": true,
               "args": {},
               "kind": "http",
               "method": "POST",
@@ -131,11 +117,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "create"
+          ]
         }
       },
       "relations": {
@@ -145,60 +129,42 @@ class Config {
     "dataset_fill": {
       "fields": [
         {
-          "active": true,
           "name": "append",
           "req": true,
-          "type": "`$BOOLEAN`",
-          "index$": 0
+          "type": "`$BOOLEAN`"
         },
         {
-          "active": true,
           "name": "columns",
           "req": true,
-          "type": "`$ARRAY`",
-          "index$": 1
+          "type": "`$ARRAY`"
         },
         {
-          "active": true,
           "name": "compressed",
           "req": true,
-          "type": "`$BOOLEAN`",
-          "index$": 2
+          "type": "`$BOOLEAN`"
         },
         {
-          "active": true,
           "name": "datasetcode",
           "req": true,
-          "type": "`$STRING`",
-          "index$": 3
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "details",
-          "req": false,
-          "type": "`$OBJECT`",
-          "index$": 4
+          "type": "`$OBJECT`"
         },
         {
-          "active": true,
           "name": "insertdata",
           "req": true,
-          "type": "`$STRING`",
-          "index$": 5
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "status",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 6
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "usercode",
           "req": true,
-          "type": "`$STRING`",
-          "index$": 7
+          "type": "`$STRING`"
         }
       ],
       "name": "dataset_fill",
@@ -208,7 +174,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "active": true,
               "args": {},
               "kind": "http",
               "method": "POST",
@@ -220,11 +185,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
-              },
-              "index$": 0
+              }
             },
             {
-              "active": true,
               "args": {},
               "kind": "http",
               "method": "POST",
@@ -236,11 +199,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
-              },
-              "index$": 1
+              }
             }
-          ],
-          "key$": "create"
+          ]
         }
       },
       "relations": {
@@ -250,53 +211,32 @@ class Config {
     "model_info": {
       "fields": [
         {
-          "active": true,
           "name": "code",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 0
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "created_at",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 1
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "dataset_code",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 2
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "model_name",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 3
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "name",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 4
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "properties",
-          "req": false,
-          "type": "`$OBJECT`",
-          "index$": 5
+          "type": "`$OBJECT`"
         },
         {
-          "active": true,
           "name": "updated_at",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 6
+          "type": "`$STRING`"
         }
       ],
       "name": "model_info",
@@ -306,17 +246,14 @@ class Config {
           "name": "load",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "kind": "param",
                     "name": "model_code",
                     "orig": "model_code",
                     "reqd": true,
-                    "type": "`$STRING`",
-                    "index$": 0
+                    "type": "`$STRING`"
                   }
                 ]
               },
@@ -336,11 +273,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "load"
+          ]
         }
       },
       "relations": {
@@ -354,25 +289,16 @@ class Config {
     "model_result": {
       "fields": [
         {
-          "active": true,
           "name": "data",
-          "req": false,
-          "type": "`$ARRAY`",
-          "index$": 0
+          "type": "`$ARRAY`"
         },
         {
-          "active": true,
           "name": "page",
-          "req": false,
-          "type": "`$INTEGER`",
-          "index$": 1
+          "type": "`$INTEGER`"
         },
         {
-          "active": true,
           "name": "pagesize",
-          "req": false,
-          "type": "`$INTEGER`",
-          "index$": 2
+          "type": "`$INTEGER`"
         }
       ],
       "name": "model_result",
@@ -382,17 +308,14 @@ class Config {
           "name": "create",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "kind": "param",
                     "name": "model_code",
                     "orig": "model_code",
                     "reqd": true,
-                    "type": "`$STRING`",
-                    "index$": 0
+                    "type": "`$STRING`"
                   }
                 ]
               },
@@ -412,11 +335,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "create"
+          ]
         }
       },
       "relations": {
@@ -430,14 +351,10 @@ class Config {
     "prediction": {
       "fields": [
         {
-          "active": true,
           "name": "columns",
-          "req": false,
-          "type": "`$ARRAY`",
-          "index$": 0
+          "type": "`$ARRAY`"
         },
         {
-          "active": true,
           "name": "data",
           "op": {
             "create": {
@@ -445,9 +362,7 @@ class Config {
               "type": "`$OBJECT`"
             }
           },
-          "req": false,
-          "type": "`$ARRAY`",
-          "index$": 1
+          "type": "`$ARRAY`"
         }
       ],
       "name": "prediction",
@@ -457,17 +372,14 @@ class Config {
           "name": "create",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "kind": "param",
                     "name": "model_code",
                     "orig": "model_code",
                     "reqd": true,
-                    "type": "`$STRING`",
-                    "index$": 0
+                    "type": "`$STRING`"
                   }
                 ]
               },
@@ -488,21 +400,17 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
-              },
-              "index$": 0
+              }
             },
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "kind": "param",
                     "name": "model_code",
                     "orig": "model_code",
                     "reqd": true,
-                    "type": "`$STRING`",
-                    "index$": 0
+                    "type": "`$STRING`"
                   }
                 ]
               },
@@ -523,11 +431,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
-              },
-              "index$": 1
+              }
             }
-          ],
-          "key$": "create"
+          ]
         }
       },
       "relations": {

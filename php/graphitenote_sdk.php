@@ -40,7 +40,7 @@ class GraphiteNoteSDK
         $utility = new GraphiteNoteUtility();
         $this->_utility = $utility;
 
-        $config = GraphiteNoteConfig::make_config();
+        $config = GraphiteNoteConfig::shared_config();
 
         $this->_rootctx = ($utility->make_context)([
             "client" => $this,

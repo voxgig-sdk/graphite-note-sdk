@@ -1,5 +1,12 @@
 package core
 
+import (
+	"sync"
+)
+
+// MakeConfig builds a fresh, fully materialised config map. Every call
+// rebuilds the whole structure, so prefer SharedConfig unless you need a
+// private copy you intend to mutate.
 func MakeConfig() map[string]any {
 	return map[string]any{
 		"main": map[string]any{
@@ -32,7 +39,6 @@ func MakeConfig() map[string]any {
 			"dataset": map[string]any{
 				"fields": []any{
 					map[string]any{
-						"active": true,
 						"name": "columns",
 						"op": map[string]any{
 							"create": map[string]any{
@@ -40,37 +46,25 @@ func MakeConfig() map[string]any {
 								"type": "`$ARRAY`",
 							},
 						},
-						"req": false,
 						"type": "`$INTEGER`",
-						"index$": 0,
 					},
 					map[string]any{
-						"active": true,
 						"name": "datasetcode",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 1,
 					},
 					map[string]any{
-						"active": true,
 						"name": "name",
 						"req": true,
 						"type": "`$STRING`",
-						"index$": 2,
 					},
 					map[string]any{
-						"active": true,
 						"name": "tablename",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 3,
 					},
 					map[string]any{
-						"active": true,
 						"name": "usercode",
 						"req": true,
 						"type": "`$STRING`",
-						"index$": 4,
 					},
 				},
 				"name": "dataset",
@@ -80,7 +74,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"active": true,
 								"args": map[string]any{},
 								"kind": "http",
 								"method": "POST",
@@ -93,7 +86,6 @@ func MakeConfig() map[string]any {
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"index$": 0,
 							},
 						},
 					},
@@ -105,60 +97,42 @@ func MakeConfig() map[string]any {
 			"dataset_fill": map[string]any{
 				"fields": []any{
 					map[string]any{
-						"active": true,
 						"name": "append",
 						"req": true,
 						"type": "`$BOOLEAN`",
-						"index$": 0,
 					},
 					map[string]any{
-						"active": true,
 						"name": "columns",
 						"req": true,
 						"type": "`$ARRAY`",
-						"index$": 1,
 					},
 					map[string]any{
-						"active": true,
 						"name": "compressed",
 						"req": true,
 						"type": "`$BOOLEAN`",
-						"index$": 2,
 					},
 					map[string]any{
-						"active": true,
 						"name": "datasetcode",
 						"req": true,
 						"type": "`$STRING`",
-						"index$": 3,
 					},
 					map[string]any{
-						"active": true,
 						"name": "details",
-						"req": false,
 						"type": "`$OBJECT`",
-						"index$": 4,
 					},
 					map[string]any{
-						"active": true,
 						"name": "insertdata",
 						"req": true,
 						"type": "`$STRING`",
-						"index$": 5,
 					},
 					map[string]any{
-						"active": true,
 						"name": "status",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 6,
 					},
 					map[string]any{
-						"active": true,
 						"name": "usercode",
 						"req": true,
 						"type": "`$STRING`",
-						"index$": 7,
 					},
 				},
 				"name": "dataset_fill",
@@ -168,7 +142,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"active": true,
 								"args": map[string]any{},
 								"kind": "http",
 								"method": "POST",
@@ -181,10 +154,8 @@ func MakeConfig() map[string]any {
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"index$": 0,
 							},
 							map[string]any{
-								"active": true,
 								"args": map[string]any{},
 								"kind": "http",
 								"method": "POST",
@@ -197,7 +168,6 @@ func MakeConfig() map[string]any {
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"index$": 1,
 							},
 						},
 					},
@@ -209,53 +179,32 @@ func MakeConfig() map[string]any {
 			"model_info": map[string]any{
 				"fields": []any{
 					map[string]any{
-						"active": true,
 						"name": "code",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 0,
 					},
 					map[string]any{
-						"active": true,
 						"name": "created_at",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 1,
 					},
 					map[string]any{
-						"active": true,
 						"name": "dataset_code",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 2,
 					},
 					map[string]any{
-						"active": true,
 						"name": "model_name",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 3,
 					},
 					map[string]any{
-						"active": true,
 						"name": "name",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 4,
 					},
 					map[string]any{
-						"active": true,
 						"name": "properties",
-						"req": false,
 						"type": "`$OBJECT`",
-						"index$": 5,
 					},
 					map[string]any{
-						"active": true,
 						"name": "updated_at",
-						"req": false,
 						"type": "`$STRING`",
-						"index$": 6,
 					},
 				},
 				"name": "model_info",
@@ -265,17 +214,14 @@ func MakeConfig() map[string]any {
 						"name": "load",
 						"points": []any{
 							map[string]any{
-								"active": true,
 								"args": map[string]any{
 									"params": []any{
 										map[string]any{
-											"active": true,
 											"kind": "param",
 											"name": "model_code",
 											"orig": "model_code",
 											"reqd": true,
 											"type": "`$STRING`",
-											"index$": 0,
 										},
 									},
 								},
@@ -296,7 +242,6 @@ func MakeConfig() map[string]any {
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"index$": 0,
 							},
 						},
 					},
@@ -312,25 +257,16 @@ func MakeConfig() map[string]any {
 			"model_result": map[string]any{
 				"fields": []any{
 					map[string]any{
-						"active": true,
 						"name": "data",
-						"req": false,
 						"type": "`$ARRAY`",
-						"index$": 0,
 					},
 					map[string]any{
-						"active": true,
 						"name": "page",
-						"req": false,
 						"type": "`$INTEGER`",
-						"index$": 1,
 					},
 					map[string]any{
-						"active": true,
 						"name": "pagesize",
-						"req": false,
 						"type": "`$INTEGER`",
-						"index$": 2,
 					},
 				},
 				"name": "model_result",
@@ -340,17 +276,14 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"active": true,
 								"args": map[string]any{
 									"params": []any{
 										map[string]any{
-											"active": true,
 											"kind": "param",
 											"name": "model_code",
 											"orig": "model_code",
 											"reqd": true,
 											"type": "`$STRING`",
-											"index$": 0,
 										},
 									},
 								},
@@ -371,7 +304,6 @@ func MakeConfig() map[string]any {
 									"req": "`reqdata`",
 									"res": "`body`",
 								},
-								"index$": 0,
 							},
 						},
 					},
@@ -387,14 +319,10 @@ func MakeConfig() map[string]any {
 			"prediction": map[string]any{
 				"fields": []any{
 					map[string]any{
-						"active": true,
 						"name": "columns",
-						"req": false,
 						"type": "`$ARRAY`",
-						"index$": 0,
 					},
 					map[string]any{
-						"active": true,
 						"name": "data",
 						"op": map[string]any{
 							"create": map[string]any{
@@ -402,9 +330,7 @@ func MakeConfig() map[string]any {
 								"type": "`$OBJECT`",
 							},
 						},
-						"req": false,
 						"type": "`$ARRAY`",
-						"index$": 1,
 					},
 				},
 				"name": "prediction",
@@ -414,17 +340,14 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"active": true,
 								"args": map[string]any{
 									"params": []any{
 										map[string]any{
-											"active": true,
 											"kind": "param",
 											"name": "model_code",
 											"orig": "model_code",
 											"reqd": true,
 											"type": "`$STRING`",
-											"index$": 0,
 										},
 									},
 								},
@@ -446,20 +369,16 @@ func MakeConfig() map[string]any {
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"index$": 0,
 							},
 							map[string]any{
-								"active": true,
 								"args": map[string]any{
 									"params": []any{
 										map[string]any{
-											"active": true,
 											"kind": "param",
 											"name": "model_code",
 											"orig": "model_code",
 											"reqd": true,
 											"type": "`$STRING`",
-											"index$": 0,
 										},
 									},
 								},
@@ -481,7 +400,6 @@ func MakeConfig() map[string]any {
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"index$": 1,
 							},
 						},
 					},
@@ -496,6 +414,24 @@ func MakeConfig() map[string]any {
 			},
 		},
 	}
+}
+
+var (
+	sharedConfigOnce sync.Once
+	sharedConfigVal  map[string]any
+)
+
+// SharedConfig returns the process-wide config, built once on first use.
+// The SDK reads the config on every request and never writes to it, so one
+// instance is shared by every client rather than rebuilt per client.
+//
+// The returned map is shared: treat it as read-only. Callers that need to
+// mutate should use MakeConfig, which always returns a fresh copy.
+func SharedConfig() map[string]any {
+	sharedConfigOnce.Do(func() {
+		sharedConfigVal = MakeConfig()
+	})
+	return sharedConfigVal
 }
 
 func makeFeature(name string) Feature {

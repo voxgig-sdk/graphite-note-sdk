@@ -28,7 +28,7 @@ class GraphiteNoteSDK
     utility = GraphiteNoteUtility.new
     @_utility = utility
 
-    config = GraphiteNoteConfig.make_config
+    config = GraphiteNoteConfig.shared_config
 
     @_rootctx = utility.make_context.call({
       "client" => self,
