@@ -1,0 +1,11 @@
+# SDK Targets.
+
+
+@"go.aon"
+@"go-cli.aon"
+@"go-mcp.aon"
+@"lua.aon"
+@"php.aon"
+@"py.aon"
+@"rb.aon"
+@"ts.aon"
