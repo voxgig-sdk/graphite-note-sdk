@@ -11,6 +11,9 @@ func MakeConfig() map[string]any {
 	return map[string]any{
 		"main": map[string]any{
 			"name": "GraphiteNote",
+			"slug": "graphite-note",
+			"version": "0.0.1",
+			"target": "go",
 		},
 		"feature": map[string]any{
 			"test": map[string]any{
@@ -46,24 +49,29 @@ func MakeConfig() map[string]any {
 								"type": "`$ARRAY`",
 							},
 						},
+						"short": "Number of columns created.",
 						"type": "`$INTEGER`",
 					},
 					map[string]any{
 						"name": "datasetcode",
+						"short": "Unique code assigned to the created dataset.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "name",
 						"req": true,
+						"short": "Human-readable dataset name.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "tablename",
+						"short": "Backing table name, e.g.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "usercode",
 						"req": true,
+						"short": "Unique code identifying the user.",
 						"type": "`$STRING`",
 					},
 				},
@@ -99,6 +107,7 @@ func MakeConfig() map[string]any {
 					map[string]any{
 						"name": "append",
 						"req": true,
+						"short": "True to append to existing rows; false to truncate the dataset first.",
 						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
@@ -109,6 +118,7 @@ func MakeConfig() map[string]any {
 					map[string]any{
 						"name": "compressed",
 						"req": true,
+						"short": "True when insert-data is gzip+base64; false when it is a JSON-escaped string.",
 						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
@@ -123,10 +133,12 @@ func MakeConfig() map[string]any {
 					map[string]any{
 						"name": "insertdata",
 						"req": true,
+						"short": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "status",
+						"short": "'success' on success.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
@@ -180,6 +192,7 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "code",
+						"short": "Model code (Settings tab, ID section).",
 						"type": "`$STRING`",
 					},
 					map[string]any{
@@ -188,18 +201,22 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"name": "dataset_code",
+						"short": "Code of the dataset the model is trained on.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "model_name",
+						"short": "Model type name, e.g.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "name",
+						"short": "User-given model name.",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "properties",
+						"short": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
@@ -262,10 +279,12 @@ func MakeConfig() map[string]any {
 					},
 					map[string]any{
 						"name": "page",
+						"short": "Page number for paginated results.",
 						"type": "`$INTEGER`",
 					},
 					map[string]any{
 						"name": "pagesize",
+						"short": "Rows per page.",
 						"type": "`$INTEGER`",
 					},
 				},
@@ -320,6 +339,7 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "columns",
+						"short": "Column names associated with each prediction row.",
 						"type": "`$ARRAY`",
 					},
 					map[string]any{

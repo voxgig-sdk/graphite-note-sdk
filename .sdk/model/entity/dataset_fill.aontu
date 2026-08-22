@@ -8,6 +8,7 @@ main: kit: entity: dataset_fill: {
     {
       name: "append"
       req: true
+      short: "True to append to existing rows; false to truncate the dataset first."
       type: "`$BOOLEAN`"
     }
     {
@@ -18,6 +19,7 @@ main: kit: entity: dataset_fill: {
     {
       name: "compressed"
       req: true
+      short: "True when insert-data is gzip+base64; false when it is a JSON-escaped string."
       type: "`$BOOLEAN`"
     }
     {
@@ -33,11 +35,13 @@ main: kit: entity: dataset_fill: {
     {
       name: "insertdata"
       req: true
+      short: "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true."
       type: "`$STRING`"
     }
     {
       name: "status"
       req: false
+      short: "'success' on success."
       type: "`$STRING`"
     }
     {

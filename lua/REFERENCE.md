@@ -107,11 +107,11 @@ local dataset = client:Dataset(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `number` | No |  |
-| `datasetcode` | `string` | No |  |
-| `name` | `string` | Yes |  |
-| `tablename` | `string` | No |  |
-| `usercode` | `string` | Yes |  |
+| `columns` | `number` | No | Number of columns created. |
+| `datasetcode` | `string` | No | Unique code assigned to the created dataset. |
+| `name` | `string` | Yes | Human-readable dataset name. |
+| `tablename` | `string` | No | Backing table name, e.g. |
+| `usercode` | `string` | Yes | Unique code identifying the user. |
 
 ### Field Usage by Operation
 
@@ -176,13 +176,13 @@ local dataset_fill = client:DatasetFill(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `append` | `boolean` | Yes |  |
+| `append` | `boolean` | Yes | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `table` | Yes |  |
-| `compressed` | `boolean` | Yes |  |
+| `compressed` | `boolean` | Yes | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `string` | Yes |  |
 | `details` | `table` | No |  |
-| `insertdata` | `string` | Yes |  |
-| `status` | `string` | No |  |
+| `insertdata` | `string` | Yes | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `string` | No | 'success' on success. |
 | `usercode` | `string` | Yes |  |
 
 ### Operations
@@ -242,12 +242,12 @@ local model_info = client:ModelInfo(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `code` | `string` | No |  |
+| `code` | `string` | No | Model code (Settings tab, ID section). |
 | `created_at` | `string` | No |  |
-| `dataset_code` | `string` | No |  |
-| `model_name` | `string` | No |  |
-| `name` | `string` | No |  |
-| `properties` | `table` | No |  |
+| `dataset_code` | `string` | No | Code of the dataset the model is trained on. |
+| `model_name` | `string` | No | Model type name, e.g. |
+| `name` | `string` | No | User-given model name. |
+| `properties` | `table` | No | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `string` | No |  |
 
 ### Operations
@@ -301,8 +301,8 @@ local model_result = client:ModelResult(nil)
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `data` | `table` | No |  |
-| `page` | `number` | No |  |
-| `pagesize` | `number` | No |  |
+| `page` | `number` | No | Page number for paginated results. |
+| `pagesize` | `number` | No | Rows per page. |
 
 ### Operations
 
@@ -356,7 +356,7 @@ local prediction = client:Prediction(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `table` | No |  |
+| `columns` | `table` | No | Column names associated with each prediction row. |
 | `data` | `table` | No |  |
 
 ### Field Usage by Operation

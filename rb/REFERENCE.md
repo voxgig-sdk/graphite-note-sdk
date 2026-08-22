@@ -110,11 +110,11 @@ dataset = client.Dataset
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `Integer` | No |  |
-| `datasetcode` | `String` | No |  |
-| `name` | `String` | Yes |  |
-| `tablename` | `String` | No |  |
-| `usercode` | `String` | Yes |  |
+| `columns` | `Integer` | No | Number of columns created. |
+| `datasetcode` | `String` | No | Unique code assigned to the created dataset. |
+| `name` | `String` | Yes | Human-readable dataset name. |
+| `tablename` | `String` | No | Backing table name, e.g. |
+| `usercode` | `String` | Yes | Unique code identifying the user. |
 
 ### Field Usage by Operation
 
@@ -179,13 +179,13 @@ dataset_fill = client.DatasetFill
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `append` | `Boolean` | Yes |  |
+| `append` | `Boolean` | Yes | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `Array` | Yes |  |
-| `compressed` | `Boolean` | Yes |  |
+| `compressed` | `Boolean` | Yes | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `String` | Yes |  |
 | `details` | `Hash` | No |  |
-| `insertdata` | `String` | Yes |  |
-| `status` | `String` | No |  |
+| `insertdata` | `String` | Yes | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `String` | No | 'success' on success. |
 | `usercode` | `String` | Yes |  |
 
 ### Operations
@@ -245,12 +245,12 @@ model_info = client.ModelInfo
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `code` | `String` | No |  |
+| `code` | `String` | No | Model code (Settings tab, ID section). |
 | `created_at` | `String` | No |  |
-| `dataset_code` | `String` | No |  |
-| `model_name` | `String` | No |  |
-| `name` | `String` | No |  |
-| `properties` | `Hash` | No |  |
+| `dataset_code` | `String` | No | Code of the dataset the model is trained on. |
+| `model_name` | `String` | No | Model type name, e.g. |
+| `name` | `String` | No | User-given model name. |
+| `properties` | `Hash` | No | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `String` | No |  |
 
 ### Operations
@@ -304,8 +304,8 @@ model_result = client.ModelResult
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `data` | `Array` | No |  |
-| `page` | `Integer` | No |  |
-| `pagesize` | `Integer` | No |  |
+| `page` | `Integer` | No | Page number for paginated results. |
+| `pagesize` | `Integer` | No | Rows per page. |
 
 ### Operations
 
@@ -359,7 +359,7 @@ prediction = client.Prediction
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `Array` | No |  |
+| `columns` | `Array` | No | Column names associated with each prediction row. |
 | `data` | `Array` | No |  |
 
 ### Field Usage by Operation

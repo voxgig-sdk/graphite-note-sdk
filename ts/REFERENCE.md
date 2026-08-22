@@ -165,11 +165,11 @@ const dataset = client.Dataset()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `number` | No |  |
-| `datasetcode` | `string` | No |  |
-| `name` | `string` | Yes |  |
-| `tablename` | `string` | No |  |
-| `usercode` | `string` | Yes |  |
+| `columns` | `number` | No | Number of columns created. |
+| `datasetcode` | `string` | No | Unique code assigned to the created dataset. |
+| `name` | `string` | Yes | Human-readable dataset name. |
+| `tablename` | `string` | No | Backing table name, e.g. |
+| `usercode` | `string` | Yes | Unique code identifying the user. |
 
 ### Field Usage by Operation
 
@@ -232,13 +232,13 @@ const dataset_fill = client.DatasetFill()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `append` | `boolean` | Yes |  |
+| `append` | `boolean` | Yes | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `any[]` | Yes |  |
-| `compressed` | `boolean` | Yes |  |
+| `compressed` | `boolean` | Yes | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `string` | Yes |  |
 | `details` | `Record<string, any>` | No |  |
-| `insertdata` | `string` | Yes |  |
-| `status` | `string` | No |  |
+| `insertdata` | `string` | Yes | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `string` | No | 'success' on success. |
 | `usercode` | `string` | Yes |  |
 
 ### Operations
@@ -296,12 +296,12 @@ const model_info = client.ModelInfo()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `code` | `string` | No |  |
+| `code` | `string` | No | Model code (Settings tab, ID section). |
 | `created_at` | `string` | No |  |
-| `dataset_code` | `string` | No |  |
-| `model_name` | `string` | No |  |
-| `name` | `string` | No |  |
-| `properties` | `Record<string, any>` | No |  |
+| `dataset_code` | `string` | No | Code of the dataset the model is trained on. |
+| `model_name` | `string` | No | Model type name, e.g. |
+| `name` | `string` | No | User-given model name. |
+| `properties` | `Record<string, any>` | No | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `string` | No |  |
 
 ### Operations
@@ -353,8 +353,8 @@ const model_result = client.ModelResult()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `data` | `any[]` | No |  |
-| `page` | `number` | No |  |
-| `pagesize` | `number` | No |  |
+| `page` | `number` | No | Page number for paginated results. |
+| `pagesize` | `number` | No | Rows per page. |
 
 ### Operations
 
@@ -406,7 +406,7 @@ const prediction = client.Prediction()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `any[]` | No |  |
+| `columns` | `any[]` | No | Column names associated with each prediction row. |
 | `data` | `any[]` | No |  |
 
 ### Field Usage by Operation

@@ -19,9 +19,20 @@ class Config {
     return fi
   }
 
+  // False for a feature added at runtime via options.extend (station's
+  // adopt path) - the constructor uses this to skip makeFeature for names
+  // no generated class backs.
+  hasFeature(this: any, fn: string) {
+    return null != FEATURE_CLASS[fn]
+  }
+
 
   main = {
     name: 'GraphiteNote',
+        slug: "graphite-note",
+    version: "0.0.1",
+    target: "ts",
+
   }
 
 
@@ -36,7 +47,7 @@ class Config {
 
 
   options = {
-    base: 'https://app.graphite-note.com/api',
+    base: "https://app.graphite-note.com/api",
 
     auth: {
       prefix: 'Bearer',
@@ -78,24 +89,29 @@ class Config {
               "type": "`$ARRAY`"
             }
           },
+          "short": "Number of columns created.",
           "type": "`$INTEGER`"
         },
         {
           "name": "datasetcode",
+          "short": "Unique code assigned to the created dataset.",
           "type": "`$STRING`"
         },
         {
           "name": "name",
           "req": true,
+          "short": "Human-readable dataset name.",
           "type": "`$STRING`"
         },
         {
           "name": "tablename",
+          "short": "Backing table name, e.g.",
           "type": "`$STRING`"
         },
         {
           "name": "usercode",
           "req": true,
+          "short": "Unique code identifying the user.",
           "type": "`$STRING`"
         }
       ],
@@ -131,6 +147,7 @@ class Config {
         {
           "name": "append",
           "req": true,
+          "short": "True to append to existing rows; false to truncate the dataset first.",
           "type": "`$BOOLEAN`"
         },
         {
@@ -141,6 +158,7 @@ class Config {
         {
           "name": "compressed",
           "req": true,
+          "short": "True when insert-data is gzip+base64; false when it is a JSON-escaped string.",
           "type": "`$BOOLEAN`"
         },
         {
@@ -155,10 +173,12 @@ class Config {
         {
           "name": "insertdata",
           "req": true,
+          "short": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true.",
           "type": "`$STRING`"
         },
         {
           "name": "status",
+          "short": "'success' on success.",
           "type": "`$STRING`"
         },
         {
@@ -212,6 +232,7 @@ class Config {
       "fields": [
         {
           "name": "code",
+          "short": "Model code (Settings tab, ID section).",
           "type": "`$STRING`"
         },
         {
@@ -220,18 +241,22 @@ class Config {
         },
         {
           "name": "dataset_code",
+          "short": "Code of the dataset the model is trained on.",
           "type": "`$STRING`"
         },
         {
           "name": "model_name",
+          "short": "Model type name, e.g.",
           "type": "`$STRING`"
         },
         {
           "name": "name",
+          "short": "User-given model name.",
           "type": "`$STRING`"
         },
         {
           "name": "properties",
+          "short": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
           "type": "`$OBJECT`"
         },
         {
@@ -294,10 +319,12 @@ class Config {
         },
         {
           "name": "page",
+          "short": "Page number for paginated results.",
           "type": "`$INTEGER`"
         },
         {
           "name": "pagesize",
+          "short": "Rows per page.",
           "type": "`$INTEGER`"
         }
       ],
@@ -352,6 +379,7 @@ class Config {
       "fields": [
         {
           "name": "columns",
+          "short": "Column names associated with each prediction row.",
           "type": "`$ARRAY`"
         },
         {

@@ -104,11 +104,11 @@ dataset = client.Dataset()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `int` | No |  |
-| `datasetcode` | `str` | No |  |
-| `name` | `str` | Yes |  |
-| `tablename` | `str` | No |  |
-| `usercode` | `str` | Yes |  |
+| `columns` | `int` | No | Number of columns created. |
+| `datasetcode` | `str` | No | Unique code assigned to the created dataset. |
+| `name` | `str` | Yes | Human-readable dataset name. |
+| `tablename` | `str` | No | Backing table name, e.g. |
+| `usercode` | `str` | Yes | Unique code identifying the user. |
 
 ### Field Usage by Operation
 
@@ -172,13 +172,13 @@ dataset_fill = client.DatasetFill()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `append` | `bool` | Yes |  |
+| `append` | `bool` | Yes | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `list` | Yes |  |
-| `compressed` | `bool` | Yes |  |
+| `compressed` | `bool` | Yes | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `str` | Yes |  |
 | `details` | `dict` | No |  |
-| `insertdata` | `str` | Yes |  |
-| `status` | `str` | No |  |
+| `insertdata` | `str` | Yes | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `str` | No | 'success' on success. |
 | `usercode` | `str` | Yes |  |
 
 ### Operations
@@ -237,12 +237,12 @@ model_info = client.ModelInfo()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `code` | `str` | No |  |
+| `code` | `str` | No | Model code (Settings tab, ID section). |
 | `created_at` | `str` | No |  |
-| `dataset_code` | `str` | No |  |
-| `model_name` | `str` | No |  |
-| `name` | `str` | No |  |
-| `properties` | `dict` | No |  |
+| `dataset_code` | `str` | No | Code of the dataset the model is trained on. |
+| `model_name` | `str` | No | Model type name, e.g. |
+| `name` | `str` | No | User-given model name. |
+| `properties` | `dict` | No | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `str` | No |  |
 
 ### Operations
@@ -295,8 +295,8 @@ model_result = client.ModelResult()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `data` | `list` | No |  |
-| `page` | `int` | No |  |
-| `pagesize` | `int` | No |  |
+| `page` | `int` | No | Page number for paginated results. |
+| `pagesize` | `int` | No | Rows per page. |
 
 ### Operations
 
@@ -349,7 +349,7 @@ prediction = client.Prediction()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `list` | No |  |
+| `columns` | `list` | No | Column names associated with each prediction row. |
 | `data` | `list` | No |  |
 
 ### Field Usage by Operation

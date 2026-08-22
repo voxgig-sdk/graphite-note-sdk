@@ -9,7 +9,7 @@ The API is exposed as capitalised, semantic **Entities** — e.g.
 instead of raw URL paths and query parameters. This keeps the surface
 predictable and low-friction for both humans and AI agents.
 
-> Other languages, the CLI, and MCP server live alongside this one — see
+> Also generated from this model: `go`, `go-cli`, `go-mcp`, `lua`, `php`, `py`, `rb` — see
 > the [top-level README](../README.md).
 
 
@@ -310,11 +310,11 @@ The `prepare()` method returns:
 
 | Field | Description |
 | --- | --- |
-| `columns` |  |
-| `datasetcode` |  |
-| `name` |  |
-| `tablename` |  |
-| `usercode` |  |
+| `columns` | Number of columns created. |
+| `datasetcode` | Unique code assigned to the created dataset. |
+| `name` | Human-readable dataset name. |
+| `tablename` | Backing table name, e.g. |
+| `usercode` | Unique code identifying the user. |
 
 Operations: create.
 
@@ -324,13 +324,13 @@ API path: `/dataset-create`
 
 | Field | Description |
 | --- | --- |
-| `append` |  |
+| `append` | True to append to existing rows; false to truncate the dataset first. |
 | `columns` |  |
-| `compressed` |  |
+| `compressed` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` |  |
 | `details` |  |
-| `insertdata` |  |
-| `status` |  |
+| `insertdata` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | 'success' on success. |
 | `usercode` |  |
 
 Operations: create.
@@ -341,12 +341,12 @@ API path: `/dataset-complete`
 
 | Field | Description |
 | --- | --- |
-| `code` |  |
+| `code` | Model code (Settings tab, ID section). |
 | `created_at` |  |
-| `dataset_code` |  |
-| `model_name` |  |
-| `name` |  |
-| `properties` |  |
+| `dataset_code` | Code of the dataset the model is trained on. |
+| `model_name` | Model type name, e.g. |
+| `name` | User-given model name. |
+| `properties` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` |  |
 
 Operations: load.
@@ -358,8 +358,8 @@ API path: `/model/fetch-model-info/{model_code}`
 | Field | Description |
 | --- | --- |
 | `data` |  |
-| `page` |  |
-| `pagesize` |  |
+| `page` | Page number for paginated results. |
+| `pagesize` | Rows per page. |
 
 Operations: create.
 
@@ -369,7 +369,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `columns` |  |
+| `columns` | Column names associated with each prediction row. |
 | `data` |  |
 
 Operations: create.
@@ -395,11 +395,11 @@ Create an instance: `const dataset = client.Dataset()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `number` |  |
-| `datasetcode` | `string` |  |
-| `name` | `string` |  |
-| `tablename` | `string` |  |
-| `usercode` | `string` |  |
+| `columns` | `number` | Number of columns created. |
+| `datasetcode` | `string` | Unique code assigned to the created dataset. |
+| `name` | `string` | Human-readable dataset name. |
+| `tablename` | `string` | Backing table name, e.g. |
+| `usercode` | `string` | Unique code identifying the user. |
 
 #### Example: Create
 
@@ -425,13 +425,13 @@ Create an instance: `const dataset_fill = client.DatasetFill()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `append` | `boolean` |  |
+| `append` | `boolean` | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `any[]` |  |
-| `compressed` | `boolean` |  |
+| `compressed` | `boolean` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `string` |  |
 | `details` | `Record<string, any>` |  |
-| `insertdata` | `string` |  |
-| `status` | `string` |  |
+| `insertdata` | `string` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `string` | 'success' on success. |
 | `usercode` | `string` |  |
 
 #### Example: Create
@@ -462,12 +462,12 @@ Create an instance: `const model_info = client.ModelInfo()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `code` | `string` |  |
+| `code` | `string` | Model code (Settings tab, ID section). |
 | `created_at` | `string` |  |
-| `dataset_code` | `string` |  |
-| `model_name` | `string` |  |
-| `name` | `string` |  |
-| `properties` | `Record<string, any>` |  |
+| `dataset_code` | `string` | Code of the dataset the model is trained on. |
+| `model_name` | `string` | Model type name, e.g. |
+| `name` | `string` | User-given model name. |
+| `properties` | `Record<string, any>` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `string` |  |
 
 #### Example: Load
@@ -492,8 +492,8 @@ Create an instance: `const model_result = client.ModelResult()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `data` | `any[]` |  |
-| `page` | `number` |  |
-| `pagesize` | `number` |  |
+| `page` | `number` | Page number for paginated results. |
+| `pagesize` | `number` | Rows per page. |
 
 #### Example: Create
 
@@ -518,7 +518,7 @@ Create an instance: `const prediction = client.Prediction()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `any[]` |  |
+| `columns` | `any[]` | Column names associated with each prediction row. |
 | `data` | `any[]` |  |
 
 #### Example: Create

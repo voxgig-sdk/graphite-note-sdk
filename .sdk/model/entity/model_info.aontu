@@ -8,6 +8,7 @@ main: kit: entity: model_info: {
     {
       name: "code"
       req: false
+      short: "Model code (Settings tab, ID section)."
       type: "`$STRING`"
     }
     {
@@ -18,21 +19,25 @@ main: kit: entity: model_info: {
     {
       name: "dataset_code"
       req: false
+      short: "Code of the dataset the model is trained on."
       type: "`$STRING`"
     }
     {
       name: "model_name"
       req: false
+      short: "Model type name, e.g."
       type: "`$STRING`"
     }
     {
       name: "name"
       req: false
+      short: "User-given model name."
       type: "`$STRING`"
     }
     {
       name: "properties"
       req: false
+      short: "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...)."
       type: "`$OBJECT`"
     }
     {

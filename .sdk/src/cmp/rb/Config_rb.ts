@@ -8,8 +8,12 @@ import {
   Fragment,
   Line,
   cmp,
+  configDefinition,
+  configReprSetting,
   each,
   isAuthActive,
+  isConfigData,
+  rawStringLiteral,
   resolveAuthPrefix,
   serverVariables,
 } from '@voxgig/sdkgen'
@@ -63,10 +67,20 @@ const Config = cmp(async function Config(props: any) {
         },\n`
     : ''
 
+  // The same config as an OBJECT, built by the shared helper so this target's
+  // literal and the data that replaces it above the threshold are the same
+  // config by construction. The JSON is what the threshold is measured on -
+  // emitted source size varies by language, the model does not.
+  // Passing the target name opts in to the main slug/version/target identity
+  // fields (station descriptor inputs) - the literal path below emits them
+  // too, keeping data and literal reps in step.
+  const { def: configDef, json: configJson } = configDefinition(model, target.name)
+  const asData = isConfigData(configJson, configReprSetting(model))
+
   File({ name: 'config.' + target.ext }, () => {
 
     Content(`# ${model.const.Name} SDK configuration
-
+${asData ? "\nrequire 'json'\n" : ''}
 module ${model.const.Name}Config
   # Return the process-wide config, built once on first use. The SDK reads
   # the config on every request and never writes to it, so one instance is
@@ -79,13 +93,46 @@ module ${model.const.Name}Config
   end
 
 
-  # Build a fresh, fully materialised config hash. Every call rebuilds the
+`)
+
+    // ABOVE THE THRESHOLD: emit the model as DATA.
+    //
+    // A hash literal makes the Ruby parser build a node per entry and the VM
+    // execute an instruction per entry on every load. A string constant is one
+    // token, and `JSON.parse` (a C extension) builds the hash far faster.
+    //
+    // `JSON.parse` yields exactly what the literal did - String keys, Integer
+    // for whole numbers, true/false/nil - so make_config's result is unchanged.
+    //
+    // A SINGLE-quoted literal, so the JSON survives verbatim: a double-quoted
+    // Ruby string would interpolate any `#{` the model happens to contain.
+    if (asData) {
+      Content(`  # THE API MODEL, EMBEDDED AS DATA (sdkgen rung L1).
+  #
+  # Emitted only above a size threshold, or when \`main.kit.config.repr\` pins
+  # it: for a small model the hash literal is smaller and far easier to read
+  # when debugging.
+  CONFIG_DATA = ${rawStringLiteral(configJson)}.freeze
+
+  # Parse a fresh, fully materialised config hash. Every call re-parses, so
+  # prefer shared_config unless you need a private copy you intend to mutate.
+  def self.make_config
+    JSON.parse(CONFIG_DATA)
+  end
+`)
+    }
+    else {
+
+    Content(`  # Build a fresh, fully materialised config hash. Every call rebuilds the
   # whole structure, so prefer shared_config unless you need a private copy
   # you intend to mutate.
   def self.make_config
     {
       "main" => {
         "name" => "${model.const.Name}",
+        "slug" => ${rbs(String(configDef.main.slug))},
+        "version" => ${rbs(String(configDef.main.version))},
+        "target" => ${rbs(String(configDef.main.target))},
       },
       "feature" => {
 `)
@@ -119,7 +166,10 @@ ${serverBlock}${authBlock}        "headers" => ${formatRubyHash(headers, 4)},
       }, true), a), {}), 3)},
     }
   end
+`)
+    }
 
+    Content(`
 
   def self.make_feature(name)
     require_relative 'features'

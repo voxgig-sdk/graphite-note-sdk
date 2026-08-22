@@ -20,9 +20,11 @@
         ],
         "headers": {
           "content-type": "application/json"
-        }
+        },
+        "repr": "auto"
       },
       "contributor": {},
+      "docs": {},
       "entity": {
         "dataset": {
           "active": true,
@@ -40,30 +42,35 @@
                 }
               },
               "req": false,
+              "short": "Number of columns created.",
               "type": "`$INTEGER`"
             },
             {
               "active": true,
               "name": "datasetcode",
               "req": false,
+              "short": "Unique code assigned to the created dataset.",
               "type": "`$STRING`"
             },
             {
               "active": true,
               "name": "name",
               "req": true,
+              "short": "Human-readable dataset name.",
               "type": "`$STRING`"
             },
             {
               "active": true,
               "name": "tablename",
               "req": false,
+              "short": "Backing table name, e.g.",
               "type": "`$STRING`"
             },
             {
               "active": true,
               "name": "usercode",
               "req": true,
+              "short": "Unique code identifying the user.",
               "type": "`$STRING`"
             }
           ],
@@ -105,6 +112,7 @@
               "active": true,
               "name": "append",
               "req": true,
+              "short": "True to append to existing rows; false to truncate the dataset first.",
               "type": "`$BOOLEAN`"
             },
             {
@@ -117,6 +125,7 @@
               "active": true,
               "name": "compressed",
               "req": true,
+              "short": "True when insert-data is gzip+base64; false when it is a JSON-escaped string.",
               "type": "`$BOOLEAN`"
             },
             {
@@ -135,12 +144,14 @@
               "active": true,
               "name": "insertdata",
               "req": true,
+              "short": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true.",
               "type": "`$STRING`"
             },
             {
               "active": true,
               "name": "status",
               "req": false,
+              "short": "'success' on success.",
               "type": "`$STRING`"
             },
             {
@@ -203,6 +214,7 @@
               "active": true,
               "name": "code",
               "req": false,
+              "short": "Model code (Settings tab, ID section).",
               "type": "`$STRING`"
             },
             {
@@ -215,24 +227,28 @@
               "active": true,
               "name": "dataset_code",
               "req": false,
+              "short": "Code of the dataset the model is trained on.",
               "type": "`$STRING`"
             },
             {
               "active": true,
               "name": "model_name",
               "req": false,
+              "short": "Model type name, e.g.",
               "type": "`$STRING`"
             },
             {
               "active": true,
               "name": "name",
               "req": false,
+              "short": "User-given model name.",
               "type": "`$STRING`"
             },
             {
               "active": true,
               "name": "properties",
               "req": false,
+              "short": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
               "type": "`$OBJECT`"
             },
             {
@@ -307,12 +323,14 @@
               "active": true,
               "name": "page",
               "req": false,
+              "short": "Page number for paginated results.",
               "type": "`$INTEGER`"
             },
             {
               "active": true,
               "name": "pagesize",
               "req": false,
+              "short": "Rows per page.",
               "type": "`$INTEGER`"
             }
           ],
@@ -375,6 +393,7 @@
               "active": true,
               "name": "columns",
               "req": false,
+              "short": "Column names associated with each prediction row.",
               "type": "`$ARRAY`"
             },
             {
@@ -477,6 +496,7 @@
       "feature": {
         "test": {
           "active": true,
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "config": {
             "options": {
               "active": false
@@ -537,6 +557,8 @@
             }
           },
           "name": "test",
+          "origname": "",
+          "package": "@voxgig/sdkgen",
           "target": {
             "go": {
               "deps": {}
@@ -725,6 +747,7 @@
             "name": "",
             "url": ""
           },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "comment": {
             "line": "//"
           },
@@ -743,12 +766,14 @@
             "path": ""
           },
           "name": "go",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "publish": {
             "registry": {
               "active": false,
@@ -782,6 +807,7 @@
             "name": "",
             "url": ""
           },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "comment": {
             "line": "//"
           },
@@ -798,12 +824,14 @@
             "path": ""
           },
           "name": "go-cli",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "phase": {
             "agentguide": {
               "active": false
@@ -853,6 +881,7 @@
             "name": "",
             "url": ""
           },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "comment": {
             "line": "//"
           },
@@ -869,12 +898,14 @@
             "path": ""
           },
           "name": "go-mcp",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "phase": {
             "agentguide": {
               "active": false
@@ -924,6 +955,7 @@
             "name": "",
             "url": ""
           },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "comment": {
             "line": "--"
           },
@@ -946,12 +978,14 @@
             "path": ""
           },
           "name": "lua",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "publish": {
             "registry": {
               "active": false,
@@ -985,6 +1019,7 @@
             "name": "",
             "url": ""
           },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "comment": {
             "line": "//"
           },
@@ -1001,12 +1036,14 @@
             "path": ""
           },
           "name": "php",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "publish": {
             "registry": {
               "active": false,
@@ -1040,6 +1077,7 @@
             "name": "",
             "url": ""
           },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "comment": {
             "line": "#"
           },
@@ -1062,12 +1100,14 @@
             "path": ""
           },
           "name": "py",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "publish": {
             "registry": {
               "active": false,
@@ -1101,6 +1141,7 @@
             "name": "",
             "url": ""
           },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
           "comment": {
             "line": "#"
           },
@@ -1128,12 +1169,14 @@
             "path": ""
           },
           "name": "rb",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "publish": {
             "registry": {
               "active": false,
@@ -1200,12 +1243,14 @@
             "path": ""
           },
           "name": "ts",
+          "origname": "",
           "output": {
             "adopt": false,
             "path": "",
             "repo": "",
             "sdkrel": ""
           },
+          "package": "@voxgig/sdkgen",
           "publish": {
             "registry": {
               "active": false,

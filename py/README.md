@@ -260,11 +260,11 @@ On error, `ok` is `False` and `err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `columns` |  |
-| `datasetcode` |  |
-| `name` |  |
-| `tablename` |  |
-| `usercode` |  |
+| `columns` | Number of columns created. |
+| `datasetcode` | Unique code assigned to the created dataset. |
+| `name` | Human-readable dataset name. |
+| `tablename` | Backing table name, e.g. |
+| `usercode` | Unique code identifying the user. |
 
 Operations: Create.
 
@@ -274,13 +274,13 @@ API path: `/dataset-create`
 
 | Field | Description |
 | --- | --- |
-| `append` |  |
+| `append` | True to append to existing rows; false to truncate the dataset first. |
 | `columns` |  |
-| `compressed` |  |
+| `compressed` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` |  |
 | `details` |  |
-| `insertdata` |  |
-| `status` |  |
+| `insertdata` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | 'success' on success. |
 | `usercode` |  |
 
 Operations: Create.
@@ -291,12 +291,12 @@ API path: `/dataset-complete`
 
 | Field | Description |
 | --- | --- |
-| `code` |  |
+| `code` | Model code (Settings tab, ID section). |
 | `created_at` |  |
-| `dataset_code` |  |
-| `model_name` |  |
-| `name` |  |
-| `properties` |  |
+| `dataset_code` | Code of the dataset the model is trained on. |
+| `model_name` | Model type name, e.g. |
+| `name` | User-given model name. |
+| `properties` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` |  |
 
 Operations: Load.
@@ -308,8 +308,8 @@ API path: `/model/fetch-model-info/{model_code}`
 | Field | Description |
 | --- | --- |
 | `data` |  |
-| `page` |  |
-| `pagesize` |  |
+| `page` | Page number for paginated results. |
+| `pagesize` | Rows per page. |
 
 Operations: Create.
 
@@ -319,7 +319,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `columns` |  |
+| `columns` | Column names associated with each prediction row. |
 | `data` |  |
 
 Operations: Create.
@@ -345,11 +345,11 @@ Create an instance: `dataset = client.Dataset()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `int` |  |
-| `datasetcode` | `str` |  |
-| `name` | `str` |  |
-| `tablename` | `str` |  |
-| `usercode` | `str` |  |
+| `columns` | `int` | Number of columns created. |
+| `datasetcode` | `str` | Unique code assigned to the created dataset. |
+| `name` | `str` | Human-readable dataset name. |
+| `tablename` | `str` | Backing table name, e.g. |
+| `usercode` | `str` | Unique code identifying the user. |
 
 #### Example: Create
 
@@ -375,13 +375,13 @@ Create an instance: `dataset_fill = client.DatasetFill()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `append` | `bool` |  |
+| `append` | `bool` | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `list` |  |
-| `compressed` | `bool` |  |
+| `compressed` | `bool` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `str` |  |
 | `details` | `dict` |  |
-| `insertdata` | `str` |  |
-| `status` | `str` |  |
+| `insertdata` | `str` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `str` | 'success' on success. |
 | `usercode` | `str` |  |
 
 #### Example: Create
@@ -412,12 +412,12 @@ Create an instance: `model_info = client.ModelInfo()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `code` | `str` |  |
+| `code` | `str` | Model code (Settings tab, ID section). |
 | `created_at` | `str` |  |
-| `dataset_code` | `str` |  |
-| `model_name` | `str` |  |
-| `name` | `str` |  |
-| `properties` | `dict` |  |
+| `dataset_code` | `str` | Code of the dataset the model is trained on. |
+| `model_name` | `str` | Model type name, e.g. |
+| `name` | `str` | User-given model name. |
+| `properties` | `dict` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `str` |  |
 
 #### Example: Load
@@ -442,8 +442,8 @@ Create an instance: `model_result = client.ModelResult()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `data` | `list` |  |
-| `page` | `int` |  |
-| `pagesize` | `int` |  |
+| `page` | `int` | Page number for paginated results. |
+| `pagesize` | `int` | Rows per page. |
 
 #### Example: Create
 
@@ -468,7 +468,7 @@ Create an instance: `prediction = client.Prediction()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `list` |  |
+| `columns` | `list` | Column names associated with each prediction row. |
 | `data` | `list` |  |
 
 #### Example: Create

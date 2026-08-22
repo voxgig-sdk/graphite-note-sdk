@@ -115,11 +115,11 @@ fmt.Println(dataset.GetName()) // "dataset"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `int` | No |  |
-| `datasetcode` | `string` | No |  |
-| `name` | `string` | Yes |  |
-| `tablename` | `string` | No |  |
-| `usercode` | `string` | Yes |  |
+| `columns` | `int` | No | Number of columns created. |
+| `datasetcode` | `string` | No | Unique code assigned to the created dataset. |
+| `name` | `string` | Yes | Human-readable dataset name. |
+| `tablename` | `string` | No | Backing table name, e.g. |
+| `usercode` | `string` | Yes | Unique code identifying the user. |
 
 ### Field Usage by Operation
 
@@ -183,13 +183,13 @@ fmt.Println(datasetFill.GetName()) // "dataset_fill"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `append` | `bool` | Yes |  |
+| `append` | `bool` | Yes | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `[]any` | Yes |  |
-| `compressed` | `bool` | Yes |  |
+| `compressed` | `bool` | Yes | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `string` | Yes |  |
 | `details` | `map[string]any` | No |  |
-| `insertdata` | `string` | Yes |  |
-| `status` | `string` | No |  |
+| `insertdata` | `string` | Yes | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `string` | No | 'success' on success. |
 | `usercode` | `string` | Yes |  |
 
 ### Operations
@@ -248,12 +248,12 @@ fmt.Println(modelInfo.GetName()) // "model_info"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `code` | `string` | No |  |
+| `code` | `string` | No | Model code (Settings tab, ID section). |
 | `created_at` | `string` | No |  |
-| `dataset_code` | `string` | No |  |
-| `model_name` | `string` | No |  |
-| `name` | `string` | No |  |
-| `properties` | `map[string]any` | No |  |
+| `dataset_code` | `string` | No | Code of the dataset the model is trained on. |
+| `model_name` | `string` | No | Model type name, e.g. |
+| `name` | `string` | No | User-given model name. |
+| `properties` | `map[string]any` | No | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `string` | No |  |
 
 ### Operations
@@ -306,8 +306,8 @@ fmt.Println(modelResult.GetName()) // "model_result"
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `data` | `[]any` | No |  |
-| `page` | `int` | No |  |
-| `pagesize` | `int` | No |  |
+| `page` | `int` | No | Page number for paginated results. |
+| `pagesize` | `int` | No | Rows per page. |
 
 ### Operations
 
@@ -360,7 +360,7 @@ fmt.Println(prediction.GetName()) // "prediction"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `columns` | `[]any` | No |  |
+| `columns` | `[]any` | No | Column names associated with each prediction row. |
 | `data` | `[]any` | No |  |
 
 ### Field Usage by Operation

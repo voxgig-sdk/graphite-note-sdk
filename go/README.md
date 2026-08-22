@@ -6,7 +6,7 @@ The Golang SDK for the GraphiteNote API — an entity-oriented client using stan
 
 It exposes the API as capitalised, semantic **Entities** — e.g. `client.Dataset(nil)` — each with the same small set of operations (`Load`, `Create`) instead of raw URL paths and query strings. You call meaning, not endpoints, which keeps the cognitive load low.
 
-> Other languages, the CLI, and MCP server live alongside this one — see
+> Also generated from this model: `go-cli`, `go-mcp`, `lua`, `php`, `py`, `rb`, `ts` — see
 > the [top-level README](../README.md).
 
 
@@ -268,11 +268,11 @@ Only `Direct()` returns a response envelope — a `map[string]any` with
 
 | Field | Description |
 | --- | --- |
-| `"columns"` |  |
-| `"datasetcode"` |  |
-| `"name"` |  |
-| `"tablename"` |  |
-| `"usercode"` |  |
+| `"columns"` | Number of columns created. |
+| `"datasetcode"` | Unique code assigned to the created dataset. |
+| `"name"` | Human-readable dataset name. |
+| `"tablename"` | Backing table name, e.g. |
+| `"usercode"` | Unique code identifying the user. |
 
 Operations: Create.
 
@@ -282,13 +282,13 @@ API path: `/dataset-create`
 
 | Field | Description |
 | --- | --- |
-| `"append"` |  |
+| `"append"` | True to append to existing rows; false to truncate the dataset first. |
 | `"columns"` |  |
-| `"compressed"` |  |
+| `"compressed"` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `"datasetcode"` |  |
 | `"details"` |  |
-| `"insertdata"` |  |
-| `"status"` |  |
+| `"insertdata"` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `"status"` | 'success' on success. |
 | `"usercode"` |  |
 
 Operations: Create.
@@ -299,12 +299,12 @@ API path: `/dataset-complete`
 
 | Field | Description |
 | --- | --- |
-| `"code"` |  |
+| `"code"` | Model code (Settings tab, ID section). |
 | `"created_at"` |  |
-| `"dataset_code"` |  |
-| `"model_name"` |  |
-| `"name"` |  |
-| `"properties"` |  |
+| `"dataset_code"` | Code of the dataset the model is trained on. |
+| `"model_name"` | Model type name, e.g. |
+| `"name"` | User-given model name. |
+| `"properties"` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `"updated_at"` |  |
 
 Operations: Load.
@@ -316,8 +316,8 @@ API path: `/model/fetch-model-info/{model_code}`
 | Field | Description |
 | --- | --- |
 | `"data"` |  |
-| `"page"` |  |
-| `"pagesize"` |  |
+| `"page"` | Page number for paginated results. |
+| `"pagesize"` | Rows per page. |
 
 Operations: Create.
 
@@ -327,7 +327,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `"columns"` |  |
+| `"columns"` | Column names associated with each prediction row. |
 | `"data"` |  |
 
 Operations: Create.
@@ -353,11 +353,11 @@ Create an instance: `dataset := client.Dataset(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `int` |  |
-| `datasetcode` | `string` |  |
-| `name` | `string` |  |
-| `tablename` | `string` |  |
-| `usercode` | `string` |  |
+| `columns` | `int` | Number of columns created. |
+| `datasetcode` | `string` | Unique code assigned to the created dataset. |
+| `name` | `string` | Human-readable dataset name. |
+| `tablename` | `string` | Backing table name, e.g. |
+| `usercode` | `string` | Unique code identifying the user. |
 
 #### Example: Create
 
@@ -387,13 +387,13 @@ Create an instance: `datasetFill := client.DatasetFill(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `append` | `bool` |  |
+| `append` | `bool` | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `[]any` |  |
-| `compressed` | `bool` |  |
+| `compressed` | `bool` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `string` |  |
 | `details` | `map[string]any` |  |
-| `insertdata` | `string` |  |
-| `status` | `string` |  |
+| `insertdata` | `string` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `string` | 'success' on success. |
 | `usercode` | `string` |  |
 
 #### Example: Create
@@ -428,12 +428,12 @@ Create an instance: `modelInfo := client.ModelInfo(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `code` | `string` |  |
+| `code` | `string` | Model code (Settings tab, ID section). |
 | `created_at` | `string` |  |
-| `dataset_code` | `string` |  |
-| `model_name` | `string` |  |
-| `name` | `string` |  |
-| `properties` | `map[string]any` |  |
+| `dataset_code` | `string` | Code of the dataset the model is trained on. |
+| `model_name` | `string` | Model type name, e.g. |
+| `name` | `string` | User-given model name. |
+| `properties` | `map[string]any` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `string` |  |
 
 #### Example: Load
@@ -462,8 +462,8 @@ Create an instance: `modelResult := client.ModelResult(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `data` | `[]any` |  |
-| `page` | `int` |  |
-| `pagesize` | `int` |  |
+| `page` | `int` | Page number for paginated results. |
+| `pagesize` | `int` | Rows per page. |
 
 #### Example: Create
 
@@ -492,7 +492,7 @@ Create an instance: `prediction := client.Prediction(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `[]any` |  |
+| `columns` | `[]any` | Column names associated with each prediction row. |
 | `data` | `[]any` |  |
 
 #### Example: Create

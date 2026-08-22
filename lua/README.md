@@ -245,11 +245,11 @@ Only `direct()` returns a response envelope — a `table` with `ok`,
 
 | Field | Description |
 | --- | --- |
-| `columns` |  |
-| `datasetcode` |  |
-| `name` |  |
-| `tablename` |  |
-| `usercode` |  |
+| `columns` | Number of columns created. |
+| `datasetcode` | Unique code assigned to the created dataset. |
+| `name` | Human-readable dataset name. |
+| `tablename` | Backing table name, e.g. |
+| `usercode` | Unique code identifying the user. |
 
 Operations: Create.
 
@@ -259,13 +259,13 @@ API path: `/dataset-create`
 
 | Field | Description |
 | --- | --- |
-| `append` |  |
+| `append` | True to append to existing rows; false to truncate the dataset first. |
 | `columns` |  |
-| `compressed` |  |
+| `compressed` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` |  |
 | `details` |  |
-| `insertdata` |  |
-| `status` |  |
+| `insertdata` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | 'success' on success. |
 | `usercode` |  |
 
 Operations: Create.
@@ -276,12 +276,12 @@ API path: `/dataset-complete`
 
 | Field | Description |
 | --- | --- |
-| `code` |  |
+| `code` | Model code (Settings tab, ID section). |
 | `created_at` |  |
-| `dataset_code` |  |
-| `model_name` |  |
-| `name` |  |
-| `properties` |  |
+| `dataset_code` | Code of the dataset the model is trained on. |
+| `model_name` | Model type name, e.g. |
+| `name` | User-given model name. |
+| `properties` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` |  |
 
 Operations: Load.
@@ -293,8 +293,8 @@ API path: `/model/fetch-model-info/{model_code}`
 | Field | Description |
 | --- | --- |
 | `data` |  |
-| `page` |  |
-| `pagesize` |  |
+| `page` | Page number for paginated results. |
+| `pagesize` | Rows per page. |
 
 Operations: Create.
 
@@ -304,7 +304,7 @@ API path: `/model/fetch-result/{model_code}`
 
 | Field | Description |
 | --- | --- |
-| `columns` |  |
+| `columns` | Column names associated with each prediction row. |
 | `data` |  |
 
 Operations: Create.
@@ -330,11 +330,11 @@ Create an instance: `local dataset = client:Dataset(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `number` |  |
-| `datasetcode` | `string` |  |
-| `name` | `string` |  |
-| `tablename` | `string` |  |
-| `usercode` | `string` |  |
+| `columns` | `number` | Number of columns created. |
+| `datasetcode` | `string` | Unique code assigned to the created dataset. |
+| `name` | `string` | Human-readable dataset name. |
+| `tablename` | `string` | Backing table name, e.g. |
+| `usercode` | `string` | Unique code identifying the user. |
 
 #### Example: Create
 
@@ -360,13 +360,13 @@ Create an instance: `local dataset_fill = client:DatasetFill(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `append` | `boolean` |  |
+| `append` | `boolean` | True to append to existing rows; false to truncate the dataset first. |
 | `columns` | `table` |  |
-| `compressed` | `boolean` |  |
+| `compressed` | `boolean` | True when insert-data is gzip+base64; false when it is a JSON-escaped string. |
 | `datasetcode` | `string` |  |
 | `details` | `table` |  |
-| `insertdata` | `string` |  |
-| `status` | `string` |  |
+| `insertdata` | `string` | The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. |
+| `status` | `string` | 'success' on success. |
 | `usercode` | `string` |  |
 
 #### Example: Create
@@ -397,12 +397,12 @@ Create an instance: `local model_info = client:ModelInfo(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `code` | `string` |  |
+| `code` | `string` | Model code (Settings tab, ID section). |
 | `created_at` | `string` |  |
-| `dataset_code` | `string` |  |
-| `model_name` | `string` |  |
-| `name` | `string` |  |
-| `properties` | `table` |  |
+| `dataset_code` | `string` | Code of the dataset the model is trained on. |
+| `model_name` | `string` | Model type name, e.g. |
+| `name` | `string` | User-given model name. |
+| `properties` | `table` | Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...). |
 | `updated_at` | `string` |  |
 
 #### Example: Load
@@ -427,8 +427,8 @@ Create an instance: `local model_result = client:ModelResult(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `data` | `table` |  |
-| `page` | `number` |  |
-| `pagesize` | `number` |  |
+| `page` | `number` | Page number for paginated results. |
+| `pagesize` | `number` | Rows per page. |
 
 #### Example: Create
 
@@ -453,7 +453,7 @@ Create an instance: `local prediction = client:Prediction(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `columns` | `table` |  |
+| `columns` | `table` | Column names associated with each prediction row. |
 | `data` | `table` |  |
 
 #### Example: Create

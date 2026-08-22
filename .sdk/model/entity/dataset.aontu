@@ -14,26 +14,31 @@ main: kit: entity: dataset: {
         }
       }
       req: false
+      short: "Number of columns created."
       type: "`$INTEGER`"
     }
     {
       name: "datasetcode"
       req: false
+      short: "Unique code assigned to the created dataset."
       type: "`$STRING`"
     }
     {
       name: "name"
       req: true
+      short: "Human-readable dataset name."
       type: "`$STRING`"
     }
     {
       name: "tablename"
       req: false
+      short: "Backing table name, e.g."
       type: "`$STRING`"
     }
     {
       name: "usercode"
       req: true
+      short: "Unique code identifying the user."
       type: "`$STRING`"
     }
   ]

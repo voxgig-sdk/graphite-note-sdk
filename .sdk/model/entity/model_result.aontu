@@ -13,11 +13,13 @@ main: kit: entity: model_result: {
     {
       name: "page"
       req: false
+      short: "Page number for paginated results."
       type: "`$INTEGER`"
     }
     {
       name: "pagesize"
       req: false
+      short: "Rows per page."
       type: "`$INTEGER`"
     }
   ]
