@@ -1,6 +1,15 @@
 {
+  "NAME": "GRAPHITE-NOTE",
+  "Name": "GraphiteNote",
   "def": "graphite-note-openapi.json",
   "main": {
+    "api": {
+      "entity": {},
+      "guide": {}
+    },
+    "custom": {
+      "plurals": {}
+    },
     "def": {
       "desc": ""
     },
@@ -1288,5 +1297,8 @@
     }
   },
   "name": "graphite-note",
+  "name-": "graphite-note",
+  "name_": "graphite_note",
+  "name__orig": "graphite-note",
   "origin": "voxgig-sdk"
 }
