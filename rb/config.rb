@@ -28,6 +28,7 @@ module GraphiteNoteConfig
           "options" => {
             "active" => false,
           },
+          "transport" => "base",
         },
       },
       "options" => {
