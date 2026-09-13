@@ -1,6 +1,14 @@
 # GraphiteNote SDK configuration
 
 
+# The sekreto plugin DEFINITIONS the model selected per feature, imported
+# above by name from the modules the catalogue's active `plugin.def`
+# entries declare. Handed to each feature (secrets builds its Sekreto
+# with them): a provider kind not listed here is unknown to that SDK.
+FEATURE_PLUGINS = {
+}
+
+
 _shared_config = None
 
 
@@ -104,14 +112,19 @@ def make_config():
                 "kind": "http",
                 "method": "POST",
                 "orig": "/dataset-create",
-                "parts": [
-                  "dataset-create",
+                "segments": [
+                  {
+                    "lit": "dataset-create",
+                  },
                 ],
                 "select": {},
                 "transform": {
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
+                "parts": [
+                  "dataset-create",
+                ],
               },
             ],
           },
@@ -176,28 +189,38 @@ def make_config():
                 "kind": "http",
                 "method": "POST",
                 "orig": "/dataset-complete",
-                "parts": [
-                  "dataset-complete",
+                "segments": [
+                  {
+                    "lit": "dataset-complete",
+                  },
                 ],
                 "select": {},
                 "transform": {
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
+                "parts": [
+                  "dataset-complete",
+                ],
               },
               {
                 "args": {},
                 "kind": "http",
                 "method": "POST",
                 "orig": "/dataset-fill",
-                "parts": [
-                  "dataset-fill",
+                "segments": [
+                  {
+                    "lit": "dataset-fill",
+                  },
                 ],
                 "select": {},
                 "transform": {
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
+                "parts": [
+                  "dataset-fill",
+                ],
               },
             ],
           },
@@ -214,6 +237,7 @@ def make_config():
             "type": "`$STRING`",
           },
           {
+            "format": "date-time",
             "name": "created_at",
             "type": "`$STRING`",
           },
@@ -238,6 +262,7 @@ def make_config():
             "type": "`$OBJECT`",
           },
           {
+            "format": "date-time",
             "name": "updated_at",
             "type": "`$STRING`",
           },
@@ -263,10 +288,16 @@ def make_config():
                 "kind": "http",
                 "method": "GET",
                 "orig": "/model/fetch-model-info/{model_code}",
-                "parts": [
-                  "model",
-                  "fetch-model-info",
-                  "{model_code}",
+                "segments": [
+                  {
+                    "lit": "model",
+                  },
+                  {
+                    "lit": "fetch-model-info",
+                  },
+                  {
+                    "var": "model_code",
+                  },
                 ],
                 "select": {
                   "exist": [
@@ -277,6 +308,11 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
+                "parts": [
+                  "model",
+                  "fetch-model-info",
+                  "{model_code}",
+                ],
               },
             ],
           },
@@ -327,10 +363,16 @@ def make_config():
                 "kind": "http",
                 "method": "POST",
                 "orig": "/model/fetch-result/{model_code}",
-                "parts": [
-                  "model",
-                  "fetch-result",
-                  "{model_code}",
+                "segments": [
+                  {
+                    "lit": "model",
+                  },
+                  {
+                    "lit": "fetch-result",
+                  },
+                  {
+                    "var": "model_code",
+                  },
                 ],
                 "select": {
                   "exist": [
@@ -341,6 +383,11 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body`",
                 },
+                "parts": [
+                  "model",
+                  "fetch-result",
+                  "{model_code}",
+                ],
               },
             ],
           },
@@ -392,11 +439,19 @@ def make_config():
                 "kind": "http",
                 "method": "POST",
                 "orig": "/v1/prediction/model/{model_code}",
-                "parts": [
-                  "v1",
-                  "prediction",
-                  "model",
-                  "{model_code}",
+                "segments": [
+                  {
+                    "lit": "v1",
+                  },
+                  {
+                    "lit": "prediction",
+                  },
+                  {
+                    "lit": "model",
+                  },
+                  {
+                    "var": "model_code",
+                  },
                 ],
                 "select": {
                   "exist": [
@@ -407,6 +462,12 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
+                "parts": [
+                  "v1",
+                  "prediction",
+                  "model",
+                  "{model_code}",
+                ],
               },
               {
                 "args": {
@@ -423,11 +484,19 @@ def make_config():
                 "kind": "http",
                 "method": "POST",
                 "orig": "/v2/prediction/model/{model_code}",
-                "parts": [
-                  "v2",
-                  "prediction",
-                  "model",
-                  "{model_code}",
+                "segments": [
+                  {
+                    "lit": "v2",
+                  },
+                  {
+                    "lit": "prediction",
+                  },
+                  {
+                    "lit": "model",
+                  },
+                  {
+                    "var": "model_code",
+                  },
                 ],
                 "select": {
                   "exist": [
@@ -438,6 +507,12 @@ def make_config():
                   "req": "`reqdata`",
                   "res": "`body.data`",
                 },
+                "parts": [
+                  "v2",
+                  "prediction",
+                  "model",
+                  "{model_code}",
+                ],
               },
             ],
           },

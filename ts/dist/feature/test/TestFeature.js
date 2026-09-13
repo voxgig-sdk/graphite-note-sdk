@@ -13,6 +13,7 @@ const S_NOT_FOUND = 'Not found';
 // against the API's real param names, never a bare 'id' the API itself
 // does not use.
 function ownIdField(config, getpath, entityName) {
+    let fallback = '';
     for (const opname of ['load', 'remove', 'update']) {
         const points = getpath(config, ['entity', entityName, 'op', opname, 'points']) || [];
         const canonical = points.filter((pt) => null == (pt && pt.select && pt.select['$action']));
@@ -27,9 +28,58 @@ function ownIdField(config, getpath, entityName) {
                 best = pt;
         }
         const parts = (best && best.parts) || [];
-        const last = [...parts].reverse().find((p) => p.startsWith('{'));
-        if (null != last)
-            return last.slice(1, -1);
+        // THE LAST PART, not the last param anywhere in the path. A record route
+        // ENDS in its key: /orgs/{org}/private-registries/{secret_name} does,
+        // /orgs/{org}/private-registries/public-key does not. Reading the last
+        // param wherever it fell returned `{org}` for that second path — a PARENT
+        // reference — and the seeding walk then stamped the record's own key over
+        // org_id, destroying the ORG01 the fixture set and the test looks up from
+        // idmap. github's private_registry failed its update with a 404 that named
+        // nothing to do with orgs.
+        //
+        // A point that does not end in a param says nothing about this entity's
+        // key, so move on to the next op rather than guess from it.
+        const lastPart = 0 < parts.length ? String(parts[parts.length - 1]) : '';
+        if (lastPart.startsWith('{'))
+            return lastPart.slice(1, -1);
+        // No path param at all (or the route ends in a literal, e.g.
+        // /orgs/{org}/private-registries/public-key): a single required QUERY
+        // param can still be the record's own key (e.g. GET /result?trace_id=).
+        const query = (best && best.args && best.args.query) || [];
+        const reqdQuery = query.filter((q) => false !== q.reqd);
+        if (1 === reqdQuery.length)
+            return String(reqdQuery[0].name);
+        // The last path parameter of a literal-terminal route is remembered as
+        // a LAST RESORT, but not returned yet — see below.
+        if ('' === fallback) {
+            for (let i = parts.length - 1; 0 <= i; i--) {
+                const part = String(parts[i]);
+                if (part.startsWith('{')) {
+                    fallback = part.slice(1, -1);
+                    break;
+                }
+            }
+        }
+    }
+    // ONLY AFTER EVERY OP, because an op whose routes all end in a literal
+    // says nothing while another op may still name the key outright.
+    // github's `private_registry` reads
+    // `/orgs/{org}/private-registries/public-key` under `load` and writes
+    // `/orgs/{org}/private-registries/{secret_name}` under `update`:
+    // returning the load route's last parameter made the key `org`, and its
+    // update answered 404 for want of a registry named after an
+    // organisation.
+    //
+    // Reached at all only by an entity with no record-terminal route
+    // anywhere — github's `copilot` is read from
+    // `/orgs/{org_id}/members/{username}/copilot`, whose key is plainly
+    // `username`. Abstaining left the mock stamping no key on a created
+    // record while the provider addressed it by `username`, so the load
+    // straight after a create found nothing. The provider's recordKey has
+    // always used this fallback; matching it removes a disagreement rather
+    // than adding a guess.
+    if ('' !== fallback) {
+        return fallback;
     }
     return 'id';
 }
@@ -290,16 +340,87 @@ class TestFeature extends BaseFeature_1.BaseFeature {
                 point = cand;
             }
         }
-        const reqd = transform(select(getpath(point, ['args', 'params']), { reqd: true }), ['`$EACH`', '', '`$KEY.name`']);
+        // Path AND query: a path-only read misses a query-addressed record
+        // (e.g. GET /result?trace_id=), which has no path param at all.
+        const reqdParams = transform(select(getpath(point, ['args', 'params']), { reqd: true }), ['`$EACH`', '', '`$KEY.name`']);
+        const reqdQuery = transform(select(getpath(point, ['args', 'query']), { reqd: true }), ['`$EACH`', '', '`$KEY.name`']);
+        const reqd = [...(reqdParams || []), ...(reqdQuery || [])];
         const qand = [];
         const q = { '`$AND`': qand };
-        for (let k of keysof(args)) {
+        // WHERE A PATH PARAMETER'S VALUE ACTUALLY LIVES IN A RECORD.
+        //
+        // A request addresses a record by path parameter; a stored record carries
+        // whatever the API's response carries. Those are not always the same
+        // name, and are not always at the same depth: github addresses a repo by
+        // `{owner}/{repo}` and returns the owner as an OBJECT (`owner.login`)
+        // with the repository under `name`. Matching by parameter name alone
+        // found nothing for such a record, so a seeded composite record was
+        // unfindable and every read of it came back 404.
+        //
+        // `id.from` in the model says where each parameter is carried, as a
+        // dotted path. `select` matches a NESTED query shape but not a dotted
+        // key, so the path is expanded into one — `owner.login` becomes
+        // `{ owner: { login: value } }`.
+        const idfrom = getpath(ctx.config, [
+            'entity', getprop(ctx.entity, 'name'), 'id', 'from'
+        ]) || {};
+        const nest = (path, value) => {
+            const keys = String(path).split('.');
+            let out = value;
+            for (let i = keys.length - 1; 0 <= i; i--) {
+                out = { [keys[i]]: out };
+            }
+            return out;
+        };
+        // THE COMPOSITE PARTS FROM THE ENTITY MATCH TOO.
+        //
+        // A path parameter does not have to travel with the body. The seneca
+        // provider puts a composite record's parts in the ENTITY MATCH and
+        // leaves the body as the caller wrote it, because a path parameter is
+        // not a field — so `update`, which builds its query from `reqdata`,
+        // never looked at them. The query then matched every repo and
+        // `Repo({match:{owner,repo}}).update(...)` answered 404 while the same
+        // call with the parts in the body succeeded.
+        //
+        // EXACTLY THE PARTS, and only when nothing else addresses the record.
+        //
+        // Not every key the match holds: the match ACCRETES across calls on one
+        // entity instance, so after a create and an update it carries that
+        // record's parent scope as well — and the create branch below stamps the
+        // record's OWN key over the field it was seeded with, so a later read
+        // constrained on an accreted value finds nothing. Twenty-five of this
+        // SDK's own entity tests failed that way.
+        //
+        // And not when the call already carries an `id`: a direct id IS the
+        // address, and an accreted part then only narrows it wrongly — this
+        // SDK's own activity test updates `id: ACTIVITY00` on an entity whose
+        // match still holds the `repo` a previous list used.
+        const match = ctx.match || {};
+        const names = [...keysof(args)];
+        if (null == getprop(args, 'id')) {
+            for (const part of (getpath(ctx.config, [
+                'entity', getprop(ctx.entity, 'name'), 'id', 'parts'
+            ]) || [])) {
+                const pname = String(part);
+                if (!names.includes(pname) && null != getprop(match, pname)) {
+                    names.push(pname);
+                }
+            }
+        }
+        for (let k of names) {
             if ('id' === k || !isempty(select(reqd, k))) {
                 const v = param(ctx, k);
                 const ka = getprop(op.alias, k);
                 let qor = [{ [k]: v }];
                 if (null != ka) {
                     qor.push({ [ka]: v });
+                }
+                // An ALTERNATIVE, never a replacement: the parameter name still
+                // matches a record that happens to carry it flat, so a seed written
+                // either way is found. `$OR` is what makes that safe.
+                const kf = getprop(idfrom, k);
+                if (null != kf && k !== kf) {
+                    qor.push(nest(kf, v));
                 }
                 qor = { '`$OR`': qor };
                 qand.push(qor);

@@ -118,14 +118,22 @@ func model_infoDirectSetup(mockres any) *model_infoDirectSetupResult {
 	env := envOverride(map[string]any{
 		"GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID": map[string]any{},
 		"GRAPHITE_NOTE_TEST_LIVE":    "FALSE",
-		"GRAPHITE_NOTE_APIKEY":       "NONE",
+		"GRAPHITE_NOTE_APIKEY":       "",
 	})
 
 	live := env["GRAPHITE_NOTE_TEST_LIVE"] == "TRUE"
 
 	if live {
-		mergedOpts := map[string]any{
+		// sdk-test-control.json's test.client.options seeds the live
+		// client; the generated fields below overwrite anything they name.
+		mergedOpts := map[string]any{}
+		for k, v := range liveClientOptions() {
+			mergedOpts[k] = v
+		}
+		for k, v := range map[string]any{
 			"apikey": env["GRAPHITE_NOTE_APIKEY"],
+		} {
+			mergedOpts[k] = v
 		}
 		client := sdk.NewGraphiteNoteSDK(mergedOpts)
 

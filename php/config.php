@@ -109,13 +109,18 @@ class GraphiteNoteConfig
                   'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/dataset-create',
-                  'parts' => [
-                    'dataset-create',
+                  'segments' => [
+                    [
+                      'lit' => 'dataset-create',
+                    ],
                   ],
                   'select' => [],
                   'transform' => [
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
+                  ],
+                  'parts' => [
+                    'dataset-create',
                   ],
                 ],
               ],
@@ -181,13 +186,18 @@ class GraphiteNoteConfig
                   'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/dataset-complete',
-                  'parts' => [
-                    'dataset-complete',
+                  'segments' => [
+                    [
+                      'lit' => 'dataset-complete',
+                    ],
                   ],
                   'select' => [],
                   'transform' => [
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
+                  ],
+                  'parts' => [
+                    'dataset-complete',
                   ],
                 ],
                 [
@@ -195,13 +205,18 @@ class GraphiteNoteConfig
                   'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/dataset-fill',
-                  'parts' => [
-                    'dataset-fill',
+                  'segments' => [
+                    [
+                      'lit' => 'dataset-fill',
+                    ],
                   ],
                   'select' => [],
                   'transform' => [
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
+                  ],
+                  'parts' => [
+                    'dataset-fill',
                   ],
                 ],
               ],
@@ -219,6 +234,7 @@ class GraphiteNoteConfig
               'type' => '`$STRING`',
             ],
             [
+              'format' => 'date-time',
               'name' => 'created_at',
               'type' => '`$STRING`',
             ],
@@ -243,6 +259,7 @@ class GraphiteNoteConfig
               'type' => '`$OBJECT`',
             ],
             [
+              'format' => 'date-time',
               'name' => 'updated_at',
               'type' => '`$STRING`',
             ],
@@ -268,10 +285,16 @@ class GraphiteNoteConfig
                   'kind' => 'http',
                   'method' => 'GET',
                   'orig' => '/model/fetch-model-info/{model_code}',
-                  'parts' => [
-                    'model',
-                    'fetch-model-info',
-                    '{model_code}',
+                  'segments' => [
+                    [
+                      'lit' => 'model',
+                    ],
+                    [
+                      'lit' => 'fetch-model-info',
+                    ],
+                    [
+                      'var' => 'model_code',
+                    ],
                   ],
                   'select' => [
                     'exist' => [
@@ -281,6 +304,11 @@ class GraphiteNoteConfig
                   'transform' => [
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
+                  ],
+                  'parts' => [
+                    'model',
+                    'fetch-model-info',
+                    '{model_code}',
                   ],
                 ],
               ],
@@ -332,10 +360,16 @@ class GraphiteNoteConfig
                   'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/model/fetch-result/{model_code}',
-                  'parts' => [
-                    'model',
-                    'fetch-result',
-                    '{model_code}',
+                  'segments' => [
+                    [
+                      'lit' => 'model',
+                    ],
+                    [
+                      'lit' => 'fetch-result',
+                    ],
+                    [
+                      'var' => 'model_code',
+                    ],
                   ],
                   'select' => [
                     'exist' => [
@@ -345,6 +379,11 @@ class GraphiteNoteConfig
                   'transform' => [
                     'req' => '`reqdata`',
                     'res' => '`body`',
+                  ],
+                  'parts' => [
+                    'model',
+                    'fetch-result',
+                    '{model_code}',
                   ],
                 ],
               ],
@@ -397,11 +436,19 @@ class GraphiteNoteConfig
                   'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/v1/prediction/model/{model_code}',
-                  'parts' => [
-                    'v1',
-                    'prediction',
-                    'model',
-                    '{model_code}',
+                  'segments' => [
+                    [
+                      'lit' => 'v1',
+                    ],
+                    [
+                      'lit' => 'prediction',
+                    ],
+                    [
+                      'lit' => 'model',
+                    ],
+                    [
+                      'var' => 'model_code',
+                    ],
                   ],
                   'select' => [
                     'exist' => [
@@ -411,6 +458,12 @@ class GraphiteNoteConfig
                   'transform' => [
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
+                  ],
+                  'parts' => [
+                    'v1',
+                    'prediction',
+                    'model',
+                    '{model_code}',
                   ],
                 ],
                 [
@@ -428,11 +481,19 @@ class GraphiteNoteConfig
                   'kind' => 'http',
                   'method' => 'POST',
                   'orig' => '/v2/prediction/model/{model_code}',
-                  'parts' => [
-                    'v2',
-                    'prediction',
-                    'model',
-                    '{model_code}',
+                  'segments' => [
+                    [
+                      'lit' => 'v2',
+                    ],
+                    [
+                      'lit' => 'prediction',
+                    ],
+                    [
+                      'lit' => 'model',
+                    ],
+                    [
+                      'var' => 'model_code',
+                    ],
                   ],
                   'select' => [
                     'exist' => [
@@ -442,6 +503,12 @@ class GraphiteNoteConfig
                   'transform' => [
                     'req' => '`reqdata`',
                     'res' => '`body.data`',
+                  ],
+                  'parts' => [
+                    'v2',
+                    'prediction',
+                    'model',
+                    '{model_code}',
                   ],
                 ],
               ],

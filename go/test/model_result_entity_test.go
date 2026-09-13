@@ -52,7 +52,7 @@ func TestModelResultEntity(t *testing.T) {
 		// CREATE
 		modelResultRef01Ent := client.ModelResult(nil)
 		modelResultRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath([]any{"new", "model_result"}, setup.data), "model_result_ref01"))
+			vs.GetPath(setup.data, []any{"new", "model_result"}), "model_result_ref01"))
 		modelResultRef01Data["model_code"] = setup.idmap["model_code01"]
 
 		modelResultRef01DataResult, err := modelResultRef01Ent.Create(modelResultRef01Data, nil)
@@ -91,7 +91,7 @@ func model_resultBasicSetup(extra map[string]any) *entityTestSetup {
 	client := sdk.TestSDK(options, extra)
 
 	// Generate idmap via transform, matching TS pattern.
-	idmap := vs.Transform(
+	idmap, _ := vs.Transform(
 		[]any{"model_result01", "model_result02", "model_result03", "fetch_result01", "fetch_result02", "fetch_result03", "model_code01"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
@@ -111,7 +111,7 @@ func model_resultBasicSetup(extra map[string]any) *entityTestSetup {
 		"GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID": idmap,
 		"GRAPHITE_NOTE_TEST_LIVE":      "FALSE",
 		"GRAPHITE_NOTE_TEST_EXPLAIN":   "FALSE",
-		"GRAPHITE_NOTE_APIKEY":         "NONE",
+		"GRAPHITE_NOTE_APIKEY":         "",
 	})
 
 	idmapResolved := core.ToMapAny(env["GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID"])
@@ -120,11 +120,23 @@ func model_resultBasicSetup(extra map[string]any) *entityTestSetup {
 	}
 
 	if env["GRAPHITE_NOTE_TEST_LIVE"] == "TRUE" {
+		// An empty map, not a nil one: Merge returns nil when its last entry
+		// is nil, and BasicSetup is normally called with no extras - so a
+		// bare nil silently discarded the apikey and server values below.
+		extraOpts := extra
+		if extraOpts == nil {
+			extraOpts = map[string]any{}
+		}
+
 		mergedOpts := vs.Merge([]any{
+			// liveClientOptions() FIRST, so the generated fields below win:
+			// sdk-test-control.json's test.client.options adds to the live
+			// client, it does not redirect it.
+			liveClientOptions(),
 			map[string]any{
 				"apikey": env["GRAPHITE_NOTE_APIKEY"],
 			},
-			extra,
+			extraOpts,
 		})
 		client = sdk.NewGraphiteNoteSDK(core.ToMapAny(mergedOpts))
 	}

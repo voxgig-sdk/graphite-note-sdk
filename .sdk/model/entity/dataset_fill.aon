@@ -59,8 +59,10 @@ main: kit: entity: dataset_fill: {
         {
           method: "POST"
           orig: "/dataset-complete"
-          parts: [
-            "dataset-complete"
+          segments: [
+            {
+              lit: "dataset-complete"
+            }
           ]
           transform: {
             req: "`reqdata`"
@@ -70,8 +72,10 @@ main: kit: entity: dataset_fill: {
         {
           method: "POST"
           orig: "/dataset-fill"
-          parts: [
-            "dataset-fill"
+          segments: [
+            {
+              lit: "dataset-fill"
+            }
           ]
           transform: {
             req: "`reqdata`"

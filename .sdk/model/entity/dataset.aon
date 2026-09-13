@@ -51,8 +51,10 @@ main: kit: entity: dataset: {
         {
           method: "POST"
           orig: "/dataset-create"
-          parts: [
-            "dataset-create"
+          segments: [
+            {
+              lit: "dataset-create"
+            }
           ]
           transform: {
             req: "`reqdata`"

@@ -27,10 +27,39 @@ class GraphiteNoteMakeOptions
     {
         $options = $ctx->options ?? [];
 
+        // Merge custom utility overrides.
+        //
+        // A key naming a real utility member REPLACES it; anything else is
+        // attached as a custom extra. This mirrors ts, where the utility is an
+        // open object and one setprop does both.
+        //
+        // Without the replace half this was a no-op: every entry went to
+        // `utility->custom`, which nothing reads, so a caller passing
+        // `'utility' => ['fetcher' => $myTransport]` - the documented way to
+        // script the transport, and the seam the shared feature corpus runs
+        // on - was silently ignored while ts and js honoured it.
+        //
+        // Option keys are camelCase, as ts spells them; members here are
+        // snake_case. Converting rather than listing keeps the mapping to one
+        // rule, so a utility added later is overridable without touching this.
         $custom_utils = \Voxgig\Struct\Struct::getprop($options, 'utility');
         if ((is_array($custom_utils) || is_object($custom_utils)) && $ctx->utility) {
+            $utility = $ctx->utility;
             foreach ((array)$custom_utils as $k => $v) {
-                $ctx->utility->custom[$k] = $v;
+                // Public utility names are camelCase and carry no underscore,
+                // so an underscore means the caller named something of their
+                // own - possibly the INTERNAL spelling of a real member.
+                // `make_error` must stay an extension in `custom`; replacing
+                // the pipeline function with it (ts, js and go all keep it)
+                // would break the error path on the next request, silently.
+                $public_name = false === strpos((string)$k, '_');
+                $member = strtolower(preg_replace('/([A-Z])/', '_$1', (string)$k));
+                if ($public_name && 'custom' !== $member
+                    && property_exists($utility, $member)) {
+                    $utility->$member = $v;
+                } else {
+                    $utility->custom[$k] = $v;
+                }
             }
         }
 
@@ -65,10 +94,29 @@ class GraphiteNoteMakeOptions
             }
         }
 
+        // `auth: null` is the documented way to disable auth outright, and
+        // prepareAuth honours it before it ever reads the apikey. It cannot
+        // survive validate: depending on the struct port a stored null is
+        // either REPLACED by the optspec default - transmitting the
+        // credential the caller withheld - or REJECTED outright. Withhold the
+        // key for validate, then put the null back. Same fix as ts/js/go
+        // makeOptions.
+        //
+        // Suppliedness cannot be recovered after validate, hence here, and it
+        // must tell an ABSENT auth from a present null: array_key_exists
+        // rather than isset, which is false for both.
+        $authsuppressed = is_array($options)
+            && array_key_exists('auth', $options)
+            && null === $options['auth'];
+
         $opts = \Voxgig\Struct\Struct::clone($options);
         $opts = self::to_array_deep($opts);
         if (!is_array($opts)) {
             $opts = [];
+        }
+
+        if ($authsuppressed) {
+            unset($opts['auth']);
         }
 
         // Feature add-order. options['feature'] may be given as an ordered LIST
@@ -101,10 +149,11 @@ class GraphiteNoteMakeOptions
 
         $optspec = [
             'apikey' => '',
+            'secret' => '',
             'base' => 'http://localhost:8000',
             'prefix' => '',
             'suffix' => '',
-            'auth' => ['prefix' => ''],
+            'auth' => ['prefix' => '', 'basic' => false],
             'headers' => ['`$CHILD`' => '`$STRING`'],
             'allow' => [
                 'method' => 'GET,PUT,POST,PATCH,DELETE,OPTIONS',
@@ -132,6 +181,11 @@ class GraphiteNoteMakeOptions
         $opts = self::to_array_deep($validated);
         if (!is_array($opts)) {
             $opts = [];
+        }
+
+        // Restore the suppression the optspec default would otherwise erase.
+        if ($authsuppressed) {
+            $opts['auth'] = null;
         }
 
         // Reattach the station binding handle held aside above (the feature

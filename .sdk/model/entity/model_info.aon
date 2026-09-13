@@ -12,6 +12,7 @@ main: kit: entity: model_info: {
       type: "`$STRING`"
     }
     {
+      format: "date-time"
       name: "created_at"
       req: false
       type: "`$STRING`"
@@ -41,6 +42,7 @@ main: kit: entity: model_info: {
       type: "`$OBJECT`"
     }
     {
+      format: "date-time"
       name: "updated_at"
       req: false
       type: "`$STRING`"
@@ -66,10 +68,16 @@ main: kit: entity: model_info: {
           }
           method: "GET"
           orig: "/model/fetch-model-info/{model_code}"
-          parts: [
-            "model"
-            "fetch-model-info"
-            "{model_code}"
+          segments: [
+            {
+              lit: "model"
+            }
+            {
+              lit: "fetch-model-info"
+            }
+            {
+              var: "model_code"
+            }
           ]
           select: {
             exist: [

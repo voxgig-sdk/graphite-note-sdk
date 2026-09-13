@@ -76,7 +76,7 @@ def dataset_basic_setup(extra)
     "GRAPHITE_NOTE_TEST_DATASET_ENTID" => idmap,
     "GRAPHITE_NOTE_TEST_LIVE" => "FALSE",
     "GRAPHITE_NOTE_TEST_EXPLAIN" => "FALSE",
-    "GRAPHITE_NOTE_APIKEY" => "NONE",
+    "GRAPHITE_NOTE_APIKEY" => "",
   })
 
   idmap_resolved = Helpers.to_map(
@@ -87,6 +87,9 @@ def dataset_basic_setup(extra)
 
   if env["GRAPHITE_NOTE_TEST_LIVE"] == "TRUE"
     merged_opts = Vs.merge([
+      # FIRST, so the generated fields below win: sdk-test-control.json's
+      # test.client.options adds to the live client, it does not redirect it.
+      Runner.live_client_options,
       {
         "apikey" => env["GRAPHITE_NOTE_APIKEY"],
       },

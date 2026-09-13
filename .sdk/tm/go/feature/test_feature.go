@@ -13,7 +13,7 @@ import (
 
 // The `body.<key>` form of an op's response transform: the mock wraps its
 // payload in <key> so the transform can unwrap it again.
-var envelopeResRe = regexp.MustCompile("^`body\\.([^`.]+)`$")
+var envelopeResRe = regexp.MustCompile("^`body\\.(.+)`$")
 
 type TestFeature struct {
 	BaseFeature
@@ -78,7 +78,14 @@ func (f *TestFeature) Init(ctx *core.Context, options map[string]any) {
 			if m == nil {
 				return data
 			}
-			return map[string]any{m[1]: data}
+			// Multi-segment on purpose: GraphQL ops unwrap body.data.<field>
+			// (and body.data.<field>.<entity> for mutations), not just one level.
+			segs := strings.Split(m[1], ".")
+			out := data
+			for i := len(segs) - 1; 0 <= i; i-- {
+				out = map[string]any{segs[i]: out}
+			}
+			return out
 		}
 
 		respond := func(status int, data any, extra map[string]any) map[string]any {
@@ -316,7 +323,7 @@ func (f *TestFeature) buildArgs(ctx *core.Context, op *core.Operation, args map[
 	// back to, so the seed-data query is built from the endpoint the request
 	// will actually be sent to: a terminal `{id}` marks a record route, and
 	// failing that the shallower path wins.
-	points := vs.GetPath([]any{"entity", ctx.Entity.GetName(), "op", opname, "points"}, ctx.Config)
+	points := vs.GetPath(ctx.Config, []any{"entity", ctx.Entity.GetName(), "op", opname, "points"})
 	point := vs.GetElem(points, 0)
 	if plist, ok := points.([]any); ok {
 		partsLen := func(p any) int {
@@ -346,10 +353,21 @@ func (f *TestFeature) buildArgs(ctx *core.Context, op *core.Operation, args map[
 		}
 	}
 
-	// Get required params.
-	paramsPath := vs.GetPath([]any{"args", "params"}, point)
+	// Path AND query: a path-only read misses a query-addressed record
+	// (e.g. GET /result?trace_id=), which has no path param at all.
+	paramsPath := vs.GetPath(point, []any{"args", "params"})
 	reqdParams := vs.Select(paramsPath, map[string]any{"reqd": true})
-	reqd := vs.Transform(reqdParams, []any{"`$EACH`", "", "`$KEY.name`"})
+	// The error return Transform gained in struct go 0.1.3 is discarded
+	// DELIBERATELY here, unlike in transform_request/response: these two
+	// transform a spec the SDK itself built from the point definition, not
+	// user data, so an error means a generator bug rather than something a
+	// caller can act on — and buildArgs has no error seam to route it
+	// through. An empty result is the conservative outcome: no required
+	// fields, which is what an absent spec already produces.
+	reqdFromParams, _ := vs.Transform(reqdParams, []any{"`$EACH`", "", "`$KEY.name`"})
+	queryPath := vs.GetPath(point, []any{"args", "query"})
+	reqdQuery := vs.Select(queryPath, map[string]any{"reqd": true})
+	reqdFromQuery, _ := vs.Transform(reqdQuery, []any{"`$EACH`", "", "`$KEY.name`"})
 
 	qand := []any{}
 	q := map[string]any{"`$AND`": &qand}
@@ -357,8 +375,8 @@ func (f *TestFeature) buildArgs(ctx *core.Context, op *core.Operation, args map[
 	if args != nil {
 		for _, key := range vs.KeysOf(args) {
 			isId := key == "id"
-			selected := vs.Select(reqd, key)
-			isReqd := !vs.IsEmpty(selected)
+			isReqd := !vs.IsEmpty(vs.Select(reqdFromParams, key)) ||
+				!vs.IsEmpty(vs.Select(reqdFromQuery, key))
 
 			if isId || isReqd {
 				v := ctx.Utility.Param(ctx, key)

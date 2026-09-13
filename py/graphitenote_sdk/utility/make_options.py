@@ -4,16 +4,57 @@ from __future__ import annotations
 from graphitenote_sdk.utility.voxgig_struct import voxgig_struct as vs
 
 
+
+def _util_member(key):
+    """Public camelCase option key -> snake_case utility member name.
+
+    Returns None for a key that is NOT a public name. Public utility names are
+    camelCase and contain no underscore, so an underscore means the caller
+    named something of their own - possibly the INTERNAL spelling of a real
+    member. `make_error` must stay an extension in `custom`; replacing the
+    pipeline function with it (ts, js and go all keep it) would break the
+    error path on the next request, silently.
+    """
+    if "_" in key:
+        return None
+    out = []
+    for ch in key:
+        if ch.isupper():
+            out.append("_")
+            out.append(ch.lower())
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
 def make_options_util(ctx):
     options = ctx.options or {}
 
     # Merge custom utility overrides.
+    #
+    # A key naming a real utility member REPLACES it; anything else is
+    # attached as a custom extra. This mirrors ts, where the utility is an
+    # open object and one setprop does both.
+    #
+    # Without the replace half this was a no-op: every entry went to
+    # `utility.custom`, which nothing reads, so a caller passing
+    # `utility={"fetcher": my_transport}` - the documented way to script the
+    # transport, and the seam the shared feature corpus runs on - was
+    # silently ignored while ts and js honoured it.
+    #
+    # Option keys are camelCase, as ts spells them; members here are
+    # snake_case. Converting rather than listing keeps the mapping to one
+    # rule, so a utility added later is overridable without touching this.
     custom_utils = vs.getprop(options, "utility")
     if isinstance(custom_utils, dict):
         utility = ctx.utility
         if utility is not None:
             for key, val in custom_utils.items():
-                utility.custom[key] = val
+                member = _util_member(key)
+                if member is not None and member != "custom" and hasattr(utility, member):
+                    setattr(utility, member, val)
+                else:
+                    utility.custom[key] = val
 
     # Feature INSTANCES supplied at construction (the station adopt path)
     # are consumed by the constructor's feature-add loop straight from the
@@ -24,9 +65,25 @@ def make_options_util(ctx):
     if isinstance(options, dict) and options.get("extend") is not None:
         options = {k: v for k, v in options.items() if k != "extend"}
 
+    # `auth: None` is the documented way to disable auth outright, and
+    # prepare_auth honours it before it ever reads the apikey. It cannot
+    # survive validate: depending on the struct port a stored null is either
+    # REPLACED by the optspec default — transmitting the credential the
+    # caller withheld — or REJECTED outright. Withhold the key for validate,
+    # then put the null back. Same fix as ts/js/go make_options.
+    #
+    # Suppliedness cannot be recovered after validate, hence here, and it
+    # must tell an ABSENT auth from a present None: only the latter is a
+    # suppression.
+    authsuppressed = (
+        isinstance(options, dict) and "auth" in options and options["auth"] is None)
+
     opts = vs.clone(options)
     if not isinstance(opts, dict):
         opts = {}
+
+    if authsuppressed:
+        opts.pop("auth", None)
 
     # Feature add-order. options["feature"] may be given as an ordered LIST of
     # {name, active, ...opts} entries (the list position IS the order in which
@@ -56,11 +113,13 @@ def make_options_util(ctx):
 
     optspec = {
         "apikey": "",
+        "secret": "",
         "base": "http://localhost:8000",
         "prefix": "",
         "suffix": "",
         "auth": {
             "prefix": "",
+            "basic": False,
         },
         "headers": {
             "`$CHILD`": "`$STRING`",
@@ -118,6 +177,10 @@ def make_options_util(ctx):
     if not isinstance(validated, dict):
         validated = {}
     opts = validated
+
+    # Restore the suppression the optspec default would otherwise erase.
+    if authsuppressed:
+        opts["auth"] = None
 
     # Resolve a templated base URL (e.g. https://{tenant_id}.hanko.io).
     # Every placeholder must resolve to a non-empty value: from

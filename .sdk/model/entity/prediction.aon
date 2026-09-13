@@ -43,11 +43,19 @@ main: kit: entity: prediction: {
           }
           method: "POST"
           orig: "/v1/prediction/model/{model_code}"
-          parts: [
-            "v1"
-            "prediction"
-            "model"
-            "{model_code}"
+          segments: [
+            {
+              lit: "v1"
+            }
+            {
+              lit: "prediction"
+            }
+            {
+              lit: "model"
+            }
+            {
+              var: "model_code"
+            }
           ]
           select: {
             exist: [
@@ -73,11 +81,19 @@ main: kit: entity: prediction: {
           }
           method: "POST"
           orig: "/v2/prediction/model/{model_code}"
-          parts: [
-            "v2"
-            "prediction"
-            "model"
-            "{model_code}"
+          segments: [
+            {
+              lit: "v2"
+            }
+            {
+              lit: "prediction"
+            }
+            {
+              lit: "model"
+            }
+            {
+              var: "model_code"
+            }
           ]
           select: {
             exist: [

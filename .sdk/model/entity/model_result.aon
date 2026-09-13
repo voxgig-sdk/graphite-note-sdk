@@ -43,10 +43,16 @@ main: kit: entity: model_result: {
           }
           method: "POST"
           orig: "/model/fetch-result/{model_code}"
-          parts: [
-            "model"
-            "fetch-result"
-            "{model_code}"
+          segments: [
+            {
+              lit: "model"
+            }
+            {
+              lit: "fetch-result"
+            }
+            {
+              var: "model_code"
+            }
           ]
           select: {
             exist: [

@@ -68,15 +68,18 @@ def _model_info_direct_setup(mockres):
     env = runner.env_override({
         "GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID": {},
         "GRAPHITE_NOTE_TEST_LIVE": "FALSE",
-        "GRAPHITE_NOTE_APIKEY": "NONE",
+        "GRAPHITE_NOTE_APIKEY": "",
     })
 
     live = env.get("GRAPHITE_NOTE_TEST_LIVE") == "TRUE"
 
     if live:
-        merged_opts = {
+        # sdk-test-control.json's test.client.options seeds the live
+        # client; the generated fields below overwrite anything they name.
+        merged_opts = dict(runner.live_client_options())
+        merged_opts.update({
             "apikey": env.get("GRAPHITE_NOTE_APIKEY"),
-        }
+        })
         client = GraphiteNoteSDK(merged_opts)
         return {
             "client": client,

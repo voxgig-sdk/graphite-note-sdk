@@ -52,7 +52,7 @@ func TestDatasetFillEntity(t *testing.T) {
 		// CREATE
 		datasetFillRef01Ent := client.DatasetFill(nil)
 		datasetFillRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath([]any{"new", "dataset_fill"}, setup.data), "dataset_fill_ref01"))
+			vs.GetPath(setup.data, []any{"new", "dataset_fill"}), "dataset_fill_ref01"))
 
 		datasetFillRef01DataResult, err := datasetFillRef01Ent.Create(datasetFillRef01Data, nil)
 		if err != nil {
@@ -90,7 +90,7 @@ func dataset_fillBasicSetup(extra map[string]any) *entityTestSetup {
 	client := sdk.TestSDK(options, extra)
 
 	// Generate idmap via transform, matching TS pattern.
-	idmap := vs.Transform(
+	idmap, _ := vs.Transform(
 		[]any{"dataset_fill01", "dataset_fill02", "dataset_fill03"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
@@ -110,7 +110,7 @@ func dataset_fillBasicSetup(extra map[string]any) *entityTestSetup {
 		"GRAPHITE_NOTE_TEST_DATASET_FILL_ENTID": idmap,
 		"GRAPHITE_NOTE_TEST_LIVE":      "FALSE",
 		"GRAPHITE_NOTE_TEST_EXPLAIN":   "FALSE",
-		"GRAPHITE_NOTE_APIKEY":         "NONE",
+		"GRAPHITE_NOTE_APIKEY":         "",
 	})
 
 	idmapResolved := core.ToMapAny(env["GRAPHITE_NOTE_TEST_DATASET_FILL_ENTID"])
@@ -119,11 +119,23 @@ func dataset_fillBasicSetup(extra map[string]any) *entityTestSetup {
 	}
 
 	if env["GRAPHITE_NOTE_TEST_LIVE"] == "TRUE" {
+		// An empty map, not a nil one: Merge returns nil when its last entry
+		// is nil, and BasicSetup is normally called with no extras - so a
+		// bare nil silently discarded the apikey and server values below.
+		extraOpts := extra
+		if extraOpts == nil {
+			extraOpts = map[string]any{}
+		}
+
 		mergedOpts := vs.Merge([]any{
+			// liveClientOptions() FIRST, so the generated fields below win:
+			// sdk-test-control.json's test.client.options adds to the live
+			// client, it does not redirect it.
+			liveClientOptions(),
 			map[string]any{
 				"apikey": env["GRAPHITE_NOTE_APIKEY"],
 			},
-			extra,
+			extraOpts,
 		})
 		client = sdk.NewGraphiteNoteSDK(core.ToMapAny(mergedOpts))
 	}
