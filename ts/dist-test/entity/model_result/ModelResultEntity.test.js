@@ -40,6 +40,8 @@ const node_path_1 = __importDefault(require("node:path"));
 const Fs = __importStar(require("node:fs"));
 const node_test_1 = require("node:test");
 const node_assert_1 = __importDefault(require("node:assert"));
+const live_runner_1 = require("../../live-runner");
+const live_entity_1 = require("../../live-entity");
 const __1 = require("../../..");
 const utility_1 = require("../../utility");
 // AFTER the imports on purpose: TypeScript hoists `import` above any
@@ -59,16 +61,12 @@ const utility_1 = require("../../utility");
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.GRAPHITE_NOTE_TEST_LIVE;
         for (const op of ['create']) {
-            if ((0, utility_1.maybeSkipControl)(t, 'entityOp', 'model_result.' + op, live))
+            if (!live && (0, utility_1.maybeSkipControl)(t, 'entityOp', 'model_result.' + op, live))
                 return;
         }
         const setup = basicSetup();
-        // The basic flow consumes synthetic IDs and field values from the
-        // fixture (entity TestData.json). Those don't exist on the live API.
-        // Skip live runs unless the user provided a real ENTID env override.
-        if (setup.syntheticOnly) {
-            t.skip('live entity test uses synthetic IDs from fixture — set GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID JSON to run live');
-            return;
+        if (setup.live) {
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": [{ "active": true, "name": "data", "req": false, "type": "`$ARRAY`", "index$": 0 }, { "active": true, "name": "page", "req": false, "short": "Page number for paginated results.", "type": "`$INTEGER`", "index$": 1 }, { "active": true, "name": "pagesize", "req": false, "short": "Rows per page.", "type": "`$INTEGER`", "index$": 2 }], "name": "model_result", "op": { "create": { "input": "data", "name": "create", "points": [{ "active": true, "args": { "params": [{ "active": true, "kind": "param", "name": "model_code", "orig": "model_code", "reqd": true, "type": "`$STRING`", "index$": 0 }] }, "contract": { "id": "POST /model/fetch-result/{model_code}", "json": "{\"operationId\":\"FetchModelResults\",\"parameters\":[{\"description\":\"The model's code: open the model, Settings tab, ID section.\",\"in\":\"path\",\"name\":\"model_code\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"description\":\"Pagination for model result retrieval. Response carries X-Page and X-Page-Size headers.\",\"properties\":{\"page\":{\"description\":\"Page number for paginated results. Defaults to 1.\",\"type\":\"integer\"},\"page-size\":{\"description\":\"Rows per page. Defaults to 10000.\",\"type\":\"integer\"}},\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"data\":{\"items\":{\"additionalProperties\":true,\"description\":\"One row of a model's result table; remaining keys mirror the dataset's columns.\",\"properties\":{\"id\":{\"description\":\"Row id within the result table.\",\"type\":\"integer\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"A page of result rows.\",\"headers\":{\"X-Page\":{\"description\":\"The current page number.\",\"schema\":{\"type\":\"integer\"}},\"X-Page-Size\":{\"description\":\"Rows returned per page.\",\"schema\":{\"type\":\"integer\"}}}},\"429\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"description\":\"Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.\",\"properties\":{\"message\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Rate limit exceeded (tenant 10/min, global 200/min).\"}},\"security\":[{\"BearerTokenAuth\":[]}],\"securitySchemes\":{\"BearerTokenAuth\":{\"description\":\"Tenant token from the Graphite Note app's Account Info page.\",\"scheme\":\"bearer\",\"type\":\"http\"}},\"securitySource\":\"definition\"}", "source": "openapi3", "version": 1 }, "kind": "http", "method": "POST", "orig": "/model/fetch-result/{model_code}", "segments": [{ "lit": "model" }, { "lit": "fetch-result" }, { "var": "model_code" }], "select": { "exist": ["model_code"] }, "transform": { "req": "`reqdata`", "res": "`body`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [["fetch_result"]] }, "key$": "model_result", "name__orig": "model_result", "Name": "ModelResult", "name_": "model_result", "name-": "model-result", "NAME": "MODEL_RESULT", "index$": 3 }, { "active": true, "entity": "model_result", "key$": "BasicModelResultFlow", "kind": "basic", "name": "BasicModelResultFlow", "param": {}, "step": [{ "active": true, "data": {}, "input": { "ref": "model_result_ref01" }, "match": { "model_code": "model_code01" }, "op": "create", "spec": [], "valid": [], "index$": 0 }] }, 'ModelResult');
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -102,12 +100,6 @@ function basicSetup(extra) {
                 '`$VAL`': ['`$FORMAT`', 'upper', '`$COPY`']
             }]
     });
-    // Detect whether the user provided a real ENTID JSON via env var. The
-    // basic flow consumes synthetic IDs from the fixture file; without an
-    // override those synthetic IDs reach the live API and 4xx. Surface this
-    // to the test so it can skip rather than fail.
-    const idmapEnvVal = process.env['GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID'];
-    const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{');
     const env = (0, utility_1.envOverride)({
         'GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID': idmap,
         'GRAPHITE_NOTE_TEST_LIVE': 'FALSE',
@@ -116,7 +108,13 @@ function basicSetup(extra) {
     });
     idmap = env['GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID'];
     const live = 'TRUE' === env.GRAPHITE_NOTE_TEST_LIVE;
+    const transport = (0, live_runner_1.createLiveTransport)();
     if (live) {
+        const rawIds = process.env['GRAPHITE_NOTE_TEST_MODEL_RESULT_ENTID'];
+        idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {};
+        if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+            throw new Error('Live ENTID must be a JSON object');
+        }
         client = new __1.GraphiteNoteSDK(merge([
             // FIRST, so the generated fields below win: sdk-test-control.json's
             // test.client.options adds to the live client, it does not redirect it.
@@ -129,7 +127,8 @@ function basicSetup(extra) {
             // argument at all - so a bare 'extra' silently discarded the apikey
             // and server values above and handed the SDK undefined. Harmless
             // while there was nothing in that object; not harmless now.
-            extra || {}
+            extra || {},
+            { system: { fetch: transport.fetch } }
         ]));
     }
     const setup = {
@@ -141,7 +140,7 @@ function basicSetup(extra) {
         data: entityData,
         explain: 'TRUE' === env.GRAPHITE_NOTE_TEST_EXPLAIN,
         live,
-        syntheticOnly: live && !idmapOverridden,
+        transport,
         now: Date.now(),
     };
     return setup;

@@ -103,7 +103,14 @@ function GraphiteNoteSDK.new(options)
 
   utility.feature_hook(self._rootctx, "PostConstruct")
 
-    -- feature: test
+    -- feature: debug
+  -- feature: idempotency
+  -- feature: metrics
+  -- feature: paging
+  -- feature: ratelimit
+  -- feature: retry
+  -- feature: test
+  -- feature: timeout
 
 
   return self

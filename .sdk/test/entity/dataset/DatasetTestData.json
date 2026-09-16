@@ -2,7 +2,7 @@
   "existing": {
     "dataset": {
       "DATASET00": {
-        "columns": "s32",
+        "columns": 50,
         "datasetcode": "s33",
         "name": "s34",
         "tablename": "s35",
@@ -10,7 +10,7 @@
         "id": "DATASET00"
       },
       "DATASET01": {
-        "columns": "s64",
+        "columns": 100,
         "datasetcode": "s65",
         "name": "s66",
         "tablename": "s67",
@@ -18,7 +18,7 @@
         "id": "DATASET01"
       },
       "DATASET02": {
-        "columns": "s96",
+        "columns": 150,
         "datasetcode": "s97",
         "name": "s98",
         "tablename": "s99",
@@ -30,11 +30,151 @@
   "new": {
     "dataset": {
       "dataset_ref01": {
-        "columns": "sc8",
+        "columns": 200,
         "datasetcode": "sc9",
         "name": "sca",
         "tablename": "scb",
         "usercode": "scc"
+      }
+    }
+  },
+  "requests": {
+    "POST /dataset-create": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "CreateDataset",
+        "parameters": [],
+        "protocol": "http",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "columns": {
+                    "items": {
+                      "description": "One column of a dataset's structure.",
+                      "properties": {
+                        "alias": {
+                          "description": "Display alias for the column.",
+                          "type": "string"
+                        },
+                        "format": {
+                          "description": "Optional display format, e.g. '#,###.##' for numeric or 'Y-d-m H:i:s' for datetime.",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Column name as it appears in the source data.",
+                          "type": "string"
+                        },
+                        "subtype": {
+                          "enum": [
+                            "text",
+                            "numeric",
+                            "date",
+                            "datetime"
+                          ],
+                          "type": "string"
+                        },
+                        "type": {
+                          "enum": [
+                            "measure",
+                            "dimension"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "alias",
+                        "type",
+                        "subtype"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "name": {
+                    "description": "Human-readable dataset name.",
+                    "type": "string"
+                  },
+                  "user-code": {
+                    "description": "Unique code identifying the user.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "user-code",
+                  "name",
+                  "columns"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "description": "A created dataset.",
+                      "properties": {
+                        "columns": {
+                          "description": "Number of columns created.",
+                          "type": "integer"
+                        },
+                        "dataset-code": {
+                          "description": "Unique code assigned to the created dataset.",
+                          "type": "string"
+                        },
+                        "table-name": {
+                          "description": "Backing table name, e.g. dataset_csv_<code>.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min)."
+          }
+        },
+        "security": [
+          {
+            "BearerTokenAuth": []
+          }
+        ],
+        "securitySchemes": {
+          "BearerTokenAuth": {
+            "description": "Tenant token from the Graphite Note app's Account Info page.",
+            "scheme": "bearer",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
       }
     }
   }

@@ -28,5 +28,309 @@
         "data": []
       }
     }
+  },
+  "requests": {
+    "POST /v1/prediction/model/{model_code}": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "PredictV1",
+        "parameters": [
+          {
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "in": "path",
+            "name": "model_code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "predict_values": {
+                        "description": "Either an array of prediction rows (each row an array of alias/selectedValue objects — Binary/Multiclass Classification and Regression models), or a single timeseries object (startDate/endDate/sequenceID[/daysData] — Timeseries models).",
+                        "oneOf": [
+                          {
+                            "description": "Classification/regression rows.",
+                            "items": {
+                              "items": {
+                                "description": "v1 alias-based feature value. One object per feature; every feature used in training must be present.",
+                                "properties": {
+                                  "alias": {
+                                    "description": "Input column name as defined during model training.",
+                                    "type": "string"
+                                  },
+                                  "selectedValue": {
+                                    "description": "The value submitted for prediction."
+                                  }
+                                },
+                                "required": [
+                                  "alias",
+                                  "selectedValue"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "properties": {
+                              "daysData": {
+                                "description": "Required ONLY for models trained with regressors: one entry per date, every regressor per entry.",
+                                "items": {
+                                  "additionalProperties": true,
+                                  "description": "One day of regressor values for a regressor-trained timeseries model. Beyond `date`, include EVERY regressor column used in training (e.g. promotion, price) as additional properties.",
+                                  "properties": {
+                                    "date": {
+                                      "description": "Date the regressor values apply to (YYYY-MM-DD).",
+                                      "format": "date",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "endDate": {
+                                "description": "End of prediction window (YYYY-MM-DD), inclusive.",
+                                "format": "date",
+                                "type": "string"
+                              },
+                              "sequenceID": {
+                                "description": "Identifies the specific time series to forecast (product, store, region); 'n/a' if unused.",
+                                "type": "string"
+                              },
+                              "startDate": {
+                                "description": "Start of prediction window (YYYY-MM-DD); must align to model frequency.",
+                                "format": "date",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "startDate",
+                              "endDate",
+                              "sequenceID"
+                            ],
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "predict_values"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "description": "Classification/regression prediction results.",
+                      "properties": {
+                        "columns": {
+                          "description": "Column names associated with each prediction row.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "data": {
+                          "items": {
+                            "additionalProperties": true,
+                            "description": "One prediction result row: the input attributes echoed back, the predicted Label, and per-class probability scores as Score_<CLASS> keys (e.g. Score_YES: 0.1045 = 10.45%).",
+                            "properties": {
+                              "Label": {
+                                "description": "Predicted label (classification models).",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Prediction results. Timeseries models answer {data: [TimeseriesPoint...]} instead."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min)."
+          }
+        },
+        "security": [
+          {
+            "BearerTokenAuth": []
+          }
+        ],
+        "securitySchemes": {
+          "BearerTokenAuth": {
+            "description": "Tenant token from the Graphite Note app's Account Info page.",
+            "scheme": "bearer",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
+      }
+    },
+    "POST /v2/prediction/model/{model_code}": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "PredictV2",
+        "parameters": [
+          {
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "in": "path",
+            "name": "model_code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "predict_values": {
+                        "items": {
+                          "additionalProperties": true,
+                          "description": "One prediction row: keys are the EXACT column names used during model training, values are the inputs. All training features are required; extra identifier fields (Lead ID, Customer ID) are passed through unchanged and echoed in the response.",
+                          "properties": {},
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "predict_values"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "description": "Classification/regression prediction results.",
+                      "properties": {
+                        "columns": {
+                          "description": "Column names associated with each prediction row.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "data": {
+                          "items": {
+                            "additionalProperties": true,
+                            "description": "One prediction result row: the input attributes echoed back, the predicted Label, and per-class probability scores as Score_<CLASS> keys (e.g. Score_YES: 0.1045 = 10.45%).",
+                            "properties": {
+                              "Label": {
+                                "description": "Predicted label (classification models).",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min)."
+          }
+        },
+        "security": [
+          {
+            "BearerTokenAuth": []
+          }
+        ],
+        "securitySchemes": {
+          "BearerTokenAuth": {
+            "description": "Tenant token from the Graphite Note app's Account Info page.",
+            "scheme": "bearer",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
+      }
+    }
   }
 }

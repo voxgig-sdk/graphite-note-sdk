@@ -48,5 +48,105 @@
         "updated_at": "s11e"
       }
     }
+  },
+  "requests": {
+    "GET /model/fetch-model-info/{model_code}": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "FetchModelInfo",
+        "parameters": [
+          {
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "in": "path",
+            "name": "model_code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "description": "Metadata for a model created in Graphite Note.",
+                      "properties": {
+                        "code": {
+                          "description": "Model code (Settings tab, ID section).",
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "format": "date-time",
+                          "type": "string"
+                        },
+                        "dataset_code": {
+                          "description": "Code of the dataset the model is trained on.",
+                          "type": "string"
+                        },
+                        "model_name": {
+                          "description": "Model type name, e.g. 'RFM Customer Segmentation'.",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "User-given model name.",
+                          "type": "string"
+                        },
+                        "properties": {
+                          "additionalProperties": true,
+                          "description": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
+                          "properties": {},
+                          "type": "object"
+                        },
+                        "updated_at": {
+                          "format": "date-time",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min)."
+          }
+        },
+        "security": [
+          {
+            "BearerTokenAuth": []
+          }
+        ],
+        "securitySchemes": {
+          "BearerTokenAuth": {
+            "description": "Tenant token from the Graphite Note app's Account Info page.",
+            "scheme": "bearer",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
+      }
+    }
   }
 }

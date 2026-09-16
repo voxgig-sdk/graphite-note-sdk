@@ -12,7 +12,7 @@ Learn more about Voxgig SDKs at [voxgig.com/sdk](https://voxgig.com/sdk/).
 
 > TypeScript, Python, PHP, Golang, Ruby, Lua SDKs, a CLI with an interactive REPL, and an MCP server for AI agents — all generated from one OpenAPI spec by [@voxgig/sdkgen](https://github.com/voxgig/sdkgen).
 
-> **Features:** `test` — opt-in,
+> **Features:** `debug`, `idempotency`, `metrics`, `paging`, `ratelimit`, `retry`, `test`, `timeout` — opt-in,
 > inactive until switched on, and configured per client. See the Features
 > section of any SDK README below for what each one does.
 
@@ -348,7 +348,14 @@ forking the SDK.
 
 | Feature | Purpose |
 | --- | --- |
+| **DebugFeature** | Request/response capture ring buffer for debugging |
+| **IdempotencyFeature** | Idempotency keys for safe retries of mutating operations |
+| **MetricsFeature** | Statistics capture: per-operation counters and latency |
+| **PagingFeature** | Pagination signals for list operations |
+| **RatelimitFeature** | Client-side rate limiting via a token bucket |
+| **RetryFeature** | Automatic retry of transient failures with exponential backoff |
 | **TestFeature** | In-memory mock transport for testing without a live server |
+| **TimeoutFeature** | Per-request timeout with transport abort |
 
 Pass custom features via the `extend` option at construction time.
 

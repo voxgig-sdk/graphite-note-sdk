@@ -12,15 +12,139 @@ func MakeConfig() map[string]any {
 		"main": map[string]any{
 			"name": "GraphiteNote",
 			"slug": "graphite-note",
-			"version": "0.1.1",
+			"version": "0.0.1",
 			"target": "go",
 		},
 		"feature": map[string]any{
+			"debug": map[string]any{
+				"options": map[string]any{
+					"active": false,
+					"max": 100,
+					"redact": []any{
+						"authorization",
+						"cookie",
+						"set-cookie",
+						"api-key",
+						"apikey",
+						"x-api-key",
+						"idempotency-key",
+					},
+				},
+				"optspec": map[string]any{
+					"now": "`$FUNCTION`",
+					"onEntry": "`$FUNCTION`",
+				},
+				"strict": false,
+				"transport": "none",
+			},
+			"idempotency": map[string]any{
+				"options": map[string]any{
+					"active": false,
+					"header": "Idempotency-Key",
+					"methods": []any{
+						"POST",
+						"PUT",
+						"PATCH",
+						"DELETE",
+					},
+					"ops": []any{
+						"create",
+						"update",
+						"remove",
+					},
+				},
+				"optspec": map[string]any{
+					"keygen": "`$FUNCTION`",
+				},
+				"strict": false,
+				"transport": "none",
+			},
+			"metrics": map[string]any{
+				"options": map[string]any{
+					"active": false,
+				},
+				"optspec": map[string]any{
+					"now": "`$FUNCTION`",
+				},
+				"strict": false,
+				"transport": "none",
+			},
+			"paging": map[string]any{
+				"options": map[string]any{
+					"active": false,
+					"afterVar": "after",
+					"cursorParam": "cursor",
+					"firstVar": "first",
+					"limitParam": "limit",
+					"pageParam": "page",
+					"startPage": 1,
+				},
+				"optspec": map[string]any{
+					"limit": "`$NUMBER`",
+					"ops": "`$LIST`",
+				},
+				"strict": false,
+				"transport": "none",
+			},
+			"ratelimit": map[string]any{
+				"options": map[string]any{
+					"active": false,
+					"burst": 5,
+					"rate": 5,
+				},
+				"optspec": map[string]any{
+					"now": "`$FUNCTION`",
+					"sleep": "`$FUNCTION`",
+				},
+				"strict": false,
+				"transport": "wrap",
+			},
+			"retry": map[string]any{
+				"options": map[string]any{
+					"active": false,
+					"factor": 2,
+					"maxDelay": 2000,
+					"minDelay": 50,
+					"retries": 2,
+					"statuses": []any{
+						408,
+						425,
+						429,
+						500,
+						502,
+						503,
+						504,
+					},
+				},
+				"optspec": map[string]any{
+					"jitter": "`$BOOLEAN`",
+					"sleep": "`$FUNCTION`",
+				},
+				"strict": false,
+				"transport": "wrap",
+			},
 			"test": map[string]any{
 				"options": map[string]any{
 					"active": false,
 				},
+				"optspec": map[string]any{
+					"entity": "`$MAP`",
+					"net": "`$MAP`",
+				},
+				"strict": false,
 				"transport": "base",
+			},
+			"timeout": map[string]any{
+				"options": map[string]any{
+					"active": false,
+					"ms": 30000,
+				},
+				"optspec": map[string]any{
+					"clearTimer": "`$FUNCTION`",
+					"setTimer": "`$FUNCTION`",
+				},
+				"strict": false,
+				"transport": "wrap",
 			},
 		},
 		"options": map[string]any{
@@ -535,9 +659,37 @@ func SharedConfig() map[string]any {
 
 func makeFeature(name string) Feature {
 	switch name {
+	case "debug":
+		if NewDebugFeatureFunc != nil {
+			return NewDebugFeatureFunc()
+		}
+	case "idempotency":
+		if NewIdempotencyFeatureFunc != nil {
+			return NewIdempotencyFeatureFunc()
+		}
+	case "metrics":
+		if NewMetricsFeatureFunc != nil {
+			return NewMetricsFeatureFunc()
+		}
+	case "paging":
+		if NewPagingFeatureFunc != nil {
+			return NewPagingFeatureFunc()
+		}
+	case "ratelimit":
+		if NewRatelimitFeatureFunc != nil {
+			return NewRatelimitFeatureFunc()
+		}
+	case "retry":
+		if NewRetryFeatureFunc != nil {
+			return NewRetryFeatureFunc()
+		}
 	case "test":
 		if NewTestFeatureFunc != nil {
 			return NewTestFeatureFunc()
+		}
+	case "timeout":
+		if NewTimeoutFeatureFunc != nil {
+			return NewTimeoutFeatureFunc()
 		}
 	default:
 		if NewBaseFeatureFunc != nil {

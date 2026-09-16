@@ -43,7 +43,14 @@ the runtime under `.sdk/tm/py/feature/` and regenerate.
 
 | Feature | Runtime file | Active hooks |
 | --- | --- | --- |
+| **debug** — Request/response capture ring buffer for debugging | `feature/debug_feature.py` | `PreDone`, `PreRequest`, `PreResponse`, `PreUnexpected` |
+| **idempotency** — Idempotency keys for safe retries of mutating operations | `feature/idempotency_feature.py` | `PreRequest` |
+| **metrics** — Statistics capture: per-operation counters and latency | `feature/metrics_feature.py` | `PreDone`, `PrePoint`, `PreUnexpected` |
+| **paging** — Pagination signals for list operations | `feature/paging_feature.py` | `PreRequest`, `PreResult` |
+| **ratelimit** — Client-side rate limiting via a token bucket | `feature/ratelimit_feature.py` | — |
+| **retry** — Automatic retry of transient failures with exponential backoff | `feature/retry_feature.py` | — |
 | **test** — In-memory mock transport for testing without a live server | `feature/test_feature.py` | `GetData`, `GetMatch`, `PostConstruct`, `PostConstructEntity`, `PrePoint`, `PreRequest`, `PreResponse`, `PreResult`, `PreSpec`, `SetData`, `SetMatch` |
+| **timeout** — Per-request timeout with transport abort | `feature/timeout_feature.py` | — |
 
 ---
 

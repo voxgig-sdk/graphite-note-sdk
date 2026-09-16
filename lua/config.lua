@@ -8,15 +8,139 @@ local function make_config()
     main = {
       name = "GraphiteNote",
       slug = "graphite-note",
-      version = "0.1.1",
+      version = "0.0.1",
       target = "lua",
     },
     feature = {
+      ["debug"] = {
+        ["options"] = {
+          ["active"] = false,
+          ["max"] = 100,
+          ["redact"] = {
+            "authorization",
+            "cookie",
+            "set-cookie",
+            "api-key",
+            "apikey",
+            "x-api-key",
+            "idempotency-key",
+          },
+        },
+        ["optspec"] = {
+          ["now"] = "`$FUNCTION`",
+          ["onEntry"] = "`$FUNCTION`",
+        },
+        ["strict"] = false,
+        ["transport"] = "none",
+      },
+      ["idempotency"] = {
+        ["options"] = {
+          ["active"] = false,
+          ["header"] = "Idempotency-Key",
+          ["methods"] = {
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+          },
+          ["ops"] = {
+            "create",
+            "update",
+            "remove",
+          },
+        },
+        ["optspec"] = {
+          ["keygen"] = "`$FUNCTION`",
+        },
+        ["strict"] = false,
+        ["transport"] = "none",
+      },
+      ["metrics"] = {
+        ["options"] = {
+          ["active"] = false,
+        },
+        ["optspec"] = {
+          ["now"] = "`$FUNCTION`",
+        },
+        ["strict"] = false,
+        ["transport"] = "none",
+      },
+      ["paging"] = {
+        ["options"] = {
+          ["active"] = false,
+          ["afterVar"] = "after",
+          ["cursorParam"] = "cursor",
+          ["firstVar"] = "first",
+          ["limitParam"] = "limit",
+          ["pageParam"] = "page",
+          ["startPage"] = 1,
+        },
+        ["optspec"] = {
+          ["limit"] = "`$NUMBER`",
+          ["ops"] = "`$LIST`",
+        },
+        ["strict"] = false,
+        ["transport"] = "none",
+      },
+      ["ratelimit"] = {
+        ["options"] = {
+          ["active"] = false,
+          ["burst"] = 5,
+          ["rate"] = 5,
+        },
+        ["optspec"] = {
+          ["now"] = "`$FUNCTION`",
+          ["sleep"] = "`$FUNCTION`",
+        },
+        ["strict"] = false,
+        ["transport"] = "wrap",
+      },
+      ["retry"] = {
+        ["options"] = {
+          ["active"] = false,
+          ["factor"] = 2,
+          ["maxDelay"] = 2000,
+          ["minDelay"] = 50,
+          ["retries"] = 2,
+          ["statuses"] = {
+            408,
+            425,
+            429,
+            500,
+            502,
+            503,
+            504,
+          },
+        },
+        ["optspec"] = {
+          ["jitter"] = "`$BOOLEAN`",
+          ["sleep"] = "`$FUNCTION`",
+        },
+        ["strict"] = false,
+        ["transport"] = "wrap",
+      },
       ["test"] = {
         ["options"] = {
           ["active"] = false,
         },
+        ["optspec"] = {
+          ["entity"] = "`$MAP`",
+          ["net"] = "`$MAP`",
+        },
+        ["strict"] = false,
         ["transport"] = "base",
+      },
+      ["timeout"] = {
+        ["options"] = {
+          ["active"] = false,
+          ["ms"] = 30000,
+        },
+        ["optspec"] = {
+          ["clearTimer"] = "`$FUNCTION`",
+          ["setTimer"] = "`$FUNCTION`",
+        },
+        ["strict"] = false,
+        ["transport"] = "wrap",
       },
     },
     options = {

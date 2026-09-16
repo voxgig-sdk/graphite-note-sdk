@@ -40,6 +40,8 @@ const node_path_1 = __importDefault(require("node:path"));
 const Fs = __importStar(require("node:fs"));
 const node_test_1 = require("node:test");
 const node_assert_1 = __importDefault(require("node:assert"));
+const live_runner_1 = require("../../live-runner");
+const live_entity_1 = require("../../live-entity");
 const __1 = require("../../..");
 const utility_1 = require("../../utility");
 // AFTER the imports on purpose: TypeScript hoists `import` above any
@@ -59,16 +61,12 @@ const utility_1 = require("../../utility");
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.GRAPHITE_NOTE_TEST_LIVE;
         for (const op of ['create']) {
-            if ((0, utility_1.maybeSkipControl)(t, 'entityOp', 'dataset.' + op, live))
+            if (!live && (0, utility_1.maybeSkipControl)(t, 'entityOp', 'dataset.' + op, live))
                 return;
         }
         const setup = basicSetup();
-        // The basic flow consumes synthetic IDs and field values from the
-        // fixture (entity TestData.json). Those don't exist on the live API.
-        // Skip live runs unless the user provided a real ENTID env override.
-        if (setup.syntheticOnly) {
-            t.skip('live entity test uses synthetic IDs from fixture — set GRAPHITE_NOTE_TEST_DATASET_ENTID JSON to run live');
-            return;
+        if (setup.live) {
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": [{ "active": true, "name": "columns", "op": { "create": { "req": true, "type": "`$ARRAY`" } }, "req": false, "short": "Number of columns created.", "type": "`$INTEGER`", "index$": 0 }, { "active": true, "name": "datasetcode", "req": false, "short": "Unique code assigned to the created dataset.", "type": "`$STRING`", "index$": 1 }, { "active": true, "name": "name", "req": true, "short": "Human-readable dataset name.", "type": "`$STRING`", "index$": 2 }, { "active": true, "name": "tablename", "req": false, "short": "Backing table name, e.g.", "type": "`$STRING`", "index$": 3 }, { "active": true, "name": "usercode", "req": true, "short": "Unique code identifying the user.", "type": "`$STRING`", "index$": 4 }], "name": "dataset", "op": { "create": { "input": "data", "name": "create", "points": [{ "active": true, "args": {}, "contract": { "id": "POST /dataset-create", "json": "{\"operationId\":\"CreateDataset\",\"parameters\":[],\"protocol\":\"http\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"columns\":{\"items\":{\"description\":\"One column of a dataset's structure.\",\"properties\":{\"alias\":{\"description\":\"Display alias for the column.\",\"type\":\"string\"},\"format\":{\"description\":\"Optional display format, e.g. '#,###.##' for numeric or 'Y-d-m H:i:s' for datetime.\",\"type\":\"string\"},\"name\":{\"description\":\"Column name as it appears in the source data.\",\"type\":\"string\"},\"subtype\":{\"enum\":[\"text\",\"numeric\",\"date\",\"datetime\"],\"type\":\"string\"},\"type\":{\"enum\":[\"measure\",\"dimension\"],\"type\":\"string\"}},\"required\":[\"name\",\"alias\",\"type\",\"subtype\"],\"type\":\"object\"},\"type\":\"array\"},\"name\":{\"description\":\"Human-readable dataset name.\",\"type\":\"string\"},\"user-code\":{\"description\":\"Unique code identifying the user.\",\"type\":\"string\"}},\"required\":[\"user-code\",\"name\",\"columns\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"data\":{\"description\":\"A created dataset.\",\"properties\":{\"columns\":{\"description\":\"Number of columns created.\",\"type\":\"integer\"},\"dataset-code\":{\"description\":\"Unique code assigned to the created dataset.\",\"type\":\"string\"},\"table-name\":{\"description\":\"Backing table name, e.g. dataset_csv_<code>.\",\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Success.\"},\"429\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"description\":\"Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.\",\"properties\":{\"message\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Rate limit exceeded (tenant 10/min, global 200/min).\"}},\"security\":[{\"BearerTokenAuth\":[]}],\"securitySchemes\":{\"BearerTokenAuth\":{\"description\":\"Tenant token from the Graphite Note app's Account Info page.\",\"scheme\":\"bearer\",\"type\":\"http\"}},\"securitySource\":\"definition\"}", "source": "openapi3", "version": 1 }, "kind": "http", "method": "POST", "orig": "/dataset-create", "segments": [{ "lit": "dataset-create" }], "select": {}, "transform": { "req": "`reqdata`", "res": "`body.data`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [] }, "key$": "dataset", "name__orig": "dataset", "Name": "Dataset", "name_": "dataset", "name-": "dataset", "NAME": "DATASET", "index$": 0 }, { "active": true, "entity": "dataset", "key$": "BasicDatasetFlow", "kind": "basic", "name": "BasicDatasetFlow", "param": {}, "step": [{ "active": true, "data": {}, "input": { "ref": "dataset_ref01" }, "match": {}, "op": "create", "spec": [], "valid": [], "index$": 0 }] }, 'Dataset');
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -101,12 +99,6 @@ function basicSetup(extra) {
                 '`$VAL`': ['`$FORMAT`', 'upper', '`$COPY`']
             }]
     });
-    // Detect whether the user provided a real ENTID JSON via env var. The
-    // basic flow consumes synthetic IDs from the fixture file; without an
-    // override those synthetic IDs reach the live API and 4xx. Surface this
-    // to the test so it can skip rather than fail.
-    const idmapEnvVal = process.env['GRAPHITE_NOTE_TEST_DATASET_ENTID'];
-    const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{');
     const env = (0, utility_1.envOverride)({
         'GRAPHITE_NOTE_TEST_DATASET_ENTID': idmap,
         'GRAPHITE_NOTE_TEST_LIVE': 'FALSE',
@@ -115,7 +107,13 @@ function basicSetup(extra) {
     });
     idmap = env['GRAPHITE_NOTE_TEST_DATASET_ENTID'];
     const live = 'TRUE' === env.GRAPHITE_NOTE_TEST_LIVE;
+    const transport = (0, live_runner_1.createLiveTransport)();
     if (live) {
+        const rawIds = process.env['GRAPHITE_NOTE_TEST_DATASET_ENTID'];
+        idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {};
+        if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+            throw new Error('Live ENTID must be a JSON object');
+        }
         client = new __1.GraphiteNoteSDK(merge([
             // FIRST, so the generated fields below win: sdk-test-control.json's
             // test.client.options adds to the live client, it does not redirect it.
@@ -128,7 +126,8 @@ function basicSetup(extra) {
             // argument at all - so a bare 'extra' silently discarded the apikey
             // and server values above and handed the SDK undefined. Harmless
             // while there was nothing in that object; not harmless now.
-            extra || {}
+            extra || {},
+            { system: { fetch: transport.fetch } }
         ]));
     }
     const setup = {
@@ -140,7 +139,7 @@ function basicSetup(extra) {
         data: entityData,
         explain: 'TRUE' === env.GRAPHITE_NOTE_TEST_EXPLAIN,
         live,
-        syntheticOnly: live && !idmapOverridden,
+        transport,
         now: Date.now(),
     };
     return setup;

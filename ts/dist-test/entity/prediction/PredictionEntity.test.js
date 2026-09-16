@@ -40,6 +40,8 @@ const node_path_1 = __importDefault(require("node:path"));
 const Fs = __importStar(require("node:fs"));
 const node_test_1 = require("node:test");
 const node_assert_1 = __importDefault(require("node:assert"));
+const live_runner_1 = require("../../live-runner");
+const live_entity_1 = require("../../live-entity");
 const __1 = require("../../..");
 const utility_1 = require("../../utility");
 // AFTER the imports on purpose: TypeScript hoists `import` above any
@@ -59,16 +61,12 @@ const utility_1 = require("../../utility");
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.GRAPHITE_NOTE_TEST_LIVE;
         for (const op of ['create']) {
-            if ((0, utility_1.maybeSkipControl)(t, 'entityOp', 'prediction.' + op, live))
+            if (!live && (0, utility_1.maybeSkipControl)(t, 'entityOp', 'prediction.' + op, live))
                 return;
         }
         const setup = basicSetup();
-        // The basic flow consumes synthetic IDs and field values from the
-        // fixture (entity TestData.json). Those don't exist on the live API.
-        // Skip live runs unless the user provided a real ENTID env override.
-        if (setup.syntheticOnly) {
-            t.skip('live entity test uses synthetic IDs from fixture — set GRAPHITE_NOTE_TEST_PREDICTION_ENTID JSON to run live');
-            return;
+        if (setup.live) {
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": [{ "active": true, "name": "columns", "req": false, "short": "Column names associated with each prediction row.", "type": "`$ARRAY`", "index$": 0 }, { "active": true, "name": "data", "op": { "create": { "req": true, "type": "`$OBJECT`" } }, "req": false, "type": "`$ARRAY`", "index$": 1 }], "name": "prediction", "op": { "create": { "input": "data", "name": "create", "points": [{ "active": true, "args": { "params": [{ "active": true, "kind": "param", "name": "model_code", "orig": "model_code", "reqd": true, "type": "`$STRING`", "index$": 0 }] }, "contract": { "id": "POST /v1/prediction/model/{model_code}", "json": "{\"operationId\":\"PredictV1\",\"parameters\":[{\"description\":\"The model's code: open the model, Settings tab, ID section.\",\"in\":\"path\",\"name\":\"model_code\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"data\":{\"properties\":{\"predict_values\":{\"description\":\"Either an array of prediction rows (each row an array of alias/selectedValue objects — Binary/Multiclass Classification and Regression models), or a single timeseries object (startDate/endDate/sequenceID[/daysData] — Timeseries models).\",\"oneOf\":[{\"description\":\"Classification/regression rows.\",\"items\":{\"items\":{\"description\":\"v1 alias-based feature value. One object per feature; every feature used in training must be present.\",\"properties\":{\"alias\":{\"description\":\"Input column name as defined during model training.\",\"type\":\"string\"},\"selectedValue\":{\"description\":\"The value submitted for prediction.\"}},\"required\":[\"alias\",\"selectedValue\"],\"type\":\"object\"},\"type\":\"array\"},\"type\":\"array\"},{\"properties\":{\"daysData\":{\"description\":\"Required ONLY for models trained with regressors: one entry per date, every regressor per entry.\",\"items\":{\"additionalProperties\":true,\"description\":\"One day of regressor values for a regressor-trained timeseries model. Beyond `date`, include EVERY regressor column used in training (e.g. promotion, price) as additional properties.\",\"properties\":{\"date\":{\"description\":\"Date the regressor values apply to (YYYY-MM-DD).\",\"format\":\"date\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"},\"endDate\":{\"description\":\"End of prediction window (YYYY-MM-DD), inclusive.\",\"format\":\"date\",\"type\":\"string\"},\"sequenceID\":{\"description\":\"Identifies the specific time series to forecast (product, store, region); 'n/a' if unused.\",\"type\":\"string\"},\"startDate\":{\"description\":\"Start of prediction window (YYYY-MM-DD); must align to model frequency.\",\"format\":\"date\",\"type\":\"string\"}},\"required\":[\"startDate\",\"endDate\",\"sequenceID\"],\"type\":\"object\"}]}},\"required\":[\"predict_values\"],\"type\":\"object\"}},\"required\":[\"data\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"data\":{\"description\":\"Classification/regression prediction results.\",\"properties\":{\"columns\":{\"description\":\"Column names associated with each prediction row.\",\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"data\":{\"items\":{\"additionalProperties\":true,\"description\":\"One prediction result row: the input attributes echoed back, the predicted Label, and per-class probability scores as Score_<CLASS> keys (e.g. Score_YES: 0.1045 = 10.45%).\",\"properties\":{\"Label\":{\"description\":\"Predicted label (classification models).\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Prediction results. Timeseries models answer {data: [TimeseriesPoint...]} instead.\"},\"429\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"description\":\"Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.\",\"properties\":{\"message\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Rate limit exceeded (tenant 10/min, global 200/min).\"}},\"security\":[{\"BearerTokenAuth\":[]}],\"securitySchemes\":{\"BearerTokenAuth\":{\"description\":\"Tenant token from the Graphite Note app's Account Info page.\",\"scheme\":\"bearer\",\"type\":\"http\"}},\"securitySource\":\"definition\"}", "source": "openapi3", "version": 1 }, "kind": "http", "method": "POST", "orig": "/v1/prediction/model/{model_code}", "segments": [{ "lit": "v1" }, { "lit": "prediction" }, { "lit": "model" }, { "var": "model_code" }], "select": { "exist": ["model_code"] }, "transform": { "req": "`reqdata`", "res": "`body.data`" }, "index$": 0 }, { "active": true, "args": { "params": [{ "active": true, "kind": "param", "name": "model_code", "orig": "model_code", "reqd": true, "type": "`$STRING`", "index$": 0 }] }, "contract": { "id": "POST /v2/prediction/model/{model_code}", "json": "{\"operationId\":\"PredictV2\",\"parameters\":[{\"description\":\"The model's code: open the model, Settings tab, ID section.\",\"in\":\"path\",\"name\":\"model_code\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"data\":{\"properties\":{\"predict_values\":{\"items\":{\"additionalProperties\":true,\"description\":\"One prediction row: keys are the EXACT column names used during model training, values are the inputs. All training features are required; extra identifier fields (Lead ID, Customer ID) are passed through unchanged and echoed in the response.\",\"properties\":{},\"type\":\"object\"},\"type\":\"array\"}},\"required\":[\"predict_values\"],\"type\":\"object\"}},\"required\":[\"data\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"data\":{\"description\":\"Classification/regression prediction results.\",\"properties\":{\"columns\":{\"description\":\"Column names associated with each prediction row.\",\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"data\":{\"items\":{\"additionalProperties\":true,\"description\":\"One prediction result row: the input attributes echoed back, the predicted Label, and per-class probability scores as Score_<CLASS> keys (e.g. Score_YES: 0.1045 = 10.45%).\",\"properties\":{\"Label\":{\"description\":\"Predicted label (classification models).\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Success.\"},\"429\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"description\":\"Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.\",\"properties\":{\"message\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Rate limit exceeded (tenant 10/min, global 200/min).\"}},\"security\":[{\"BearerTokenAuth\":[]}],\"securitySchemes\":{\"BearerTokenAuth\":{\"description\":\"Tenant token from the Graphite Note app's Account Info page.\",\"scheme\":\"bearer\",\"type\":\"http\"}},\"securitySource\":\"definition\"}", "source": "openapi3", "version": 1 }, "kind": "http", "method": "POST", "orig": "/v2/prediction/model/{model_code}", "segments": [{ "lit": "v2" }, { "lit": "prediction" }, { "lit": "model" }, { "var": "model_code" }], "select": { "exist": ["model_code"] }, "transform": { "req": "`reqdata`", "res": "`body.data`" }, "index$": 1 }], "key$": "create" } }, "relations": { "ancestors": [["model"]] }, "key$": "prediction", "name__orig": "prediction", "Name": "Prediction", "name_": "prediction", "name-": "prediction", "NAME": "PREDICTION", "index$": 4 }, { "active": true, "entity": "prediction", "key$": "BasicPredictionFlow", "kind": "basic", "name": "BasicPredictionFlow", "param": {}, "step": [{ "active": true, "data": {}, "input": { "ref": "prediction_ref01" }, "match": { "model_code": "model_code01" }, "op": "create", "spec": [], "valid": [], "index$": 0 }] }, 'Prediction');
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -102,12 +100,6 @@ function basicSetup(extra) {
                 '`$VAL`': ['`$FORMAT`', 'upper', '`$COPY`']
             }]
     });
-    // Detect whether the user provided a real ENTID JSON via env var. The
-    // basic flow consumes synthetic IDs from the fixture file; without an
-    // override those synthetic IDs reach the live API and 4xx. Surface this
-    // to the test so it can skip rather than fail.
-    const idmapEnvVal = process.env['GRAPHITE_NOTE_TEST_PREDICTION_ENTID'];
-    const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{');
     const env = (0, utility_1.envOverride)({
         'GRAPHITE_NOTE_TEST_PREDICTION_ENTID': idmap,
         'GRAPHITE_NOTE_TEST_LIVE': 'FALSE',
@@ -116,7 +108,13 @@ function basicSetup(extra) {
     });
     idmap = env['GRAPHITE_NOTE_TEST_PREDICTION_ENTID'];
     const live = 'TRUE' === env.GRAPHITE_NOTE_TEST_LIVE;
+    const transport = (0, live_runner_1.createLiveTransport)();
     if (live) {
+        const rawIds = process.env['GRAPHITE_NOTE_TEST_PREDICTION_ENTID'];
+        idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {};
+        if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+            throw new Error('Live ENTID must be a JSON object');
+        }
         client = new __1.GraphiteNoteSDK(merge([
             // FIRST, so the generated fields below win: sdk-test-control.json's
             // test.client.options adds to the live client, it does not redirect it.
@@ -129,7 +127,8 @@ function basicSetup(extra) {
             // argument at all - so a bare 'extra' silently discarded the apikey
             // and server values above and handed the SDK undefined. Harmless
             // while there was nothing in that object; not harmless now.
-            extra || {}
+            extra || {},
+            { system: { fetch: transport.fetch } }
         ]));
     }
     const setup = {
@@ -141,7 +140,7 @@ function basicSetup(extra) {
         data: entityData,
         explain: 'TRUE' === env.GRAPHITE_NOTE_TEST_EXPLAIN,
         live,
-        syntheticOnly: live && !idmapOverridden,
+        transport,
         now: Date.now(),
     };
     return setup;

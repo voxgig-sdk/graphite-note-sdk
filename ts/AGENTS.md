@@ -37,7 +37,14 @@ component.* After editing a component run `npm run build` before
 
 ## Features in this target
 
+- [`debug`](./src/feature/debug/AGENTS.md) — Request/response capture ring buffer for debugging
+- [`idempotency`](./src/feature/idempotency/AGENTS.md) — Idempotency keys for safe retries of mutating operations
+- [`metrics`](./src/feature/metrics/AGENTS.md) — Statistics capture: per-operation counters and latency
+- [`paging`](./src/feature/paging/AGENTS.md) — Pagination signals for list operations
+- [`ratelimit`](./src/feature/ratelimit/AGENTS.md) — Client-side rate limiting via a token bucket
+- [`retry`](./src/feature/retry/AGENTS.md) — Automatic retry of transient failures with exponential backoff
 - [`test`](./src/feature/test/AGENTS.md) — In-memory mock transport for testing without a live server
+- [`timeout`](./src/feature/timeout/AGENTS.md) — Per-request timeout with transport abort
 
 Each feature's runtime and its own guide live in `src/feature/<name>/`.
 

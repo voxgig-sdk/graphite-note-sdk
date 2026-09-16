@@ -5,6 +5,8 @@ import * as Fs from 'node:fs'
 
 import { test, describe, afterEach } from 'node:test'
 import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
 
 
 import { GraphiteNoteSDK, BaseFeature, stdutil } from '../../..'
@@ -47,16 +49,13 @@ describe('ModelInfoEntity', async () => {
 
     const live = 'TRUE' === process.env.GRAPHITE_NOTE_TEST_LIVE
     for (const op of ['load']) {
-      if (maybeSkipControl(t, 'entityOp', 'model_info.' + op, live)) return
+      if (!live && maybeSkipControl(t, 'entityOp', 'model_info.' + op, live)) return
     }
 
+    
     const setup = basicSetup()
-    // The basic flow consumes synthetic IDs and field values from the
-    // fixture (entity TestData.json). Those don't exist on the live API.
-    // Skip live runs unless the user provided a real ENTID env override.
-    if (setup.syntheticOnly) {
-      t.skip('live entity test uses synthetic IDs from fixture — set GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID JSON to run live')
-      return
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"code","req":false,"short":"Model code (Settings tab, ID section).","type":"`$STRING`","index$":0},{"active":true,"format":"date-time","name":"created_at","req":false,"type":"`$STRING`","index$":1},{"active":true,"name":"dataset_code","req":false,"short":"Code of the dataset the model is trained on.","type":"`$STRING`","index$":2},{"active":true,"name":"model_name","req":false,"short":"Model type name, e.g.","type":"`$STRING`","index$":3},{"active":true,"name":"name","req":false,"short":"User-given model name.","type":"`$STRING`","index$":4},{"active":true,"name":"properties","req":false,"short":"Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).","type":"`$OBJECT`","index$":5},{"active":true,"format":"date-time","name":"updated_at","req":false,"type":"`$STRING`","index$":6}],"name":"model_info","op":{"load":{"input":"data","name":"load","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"model_code","orig":"model_code","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"GET /model/fetch-model-info/{model_code}","json":"{\"operationId\":\"FetchModelInfo\",\"parameters\":[{\"description\":\"The model's code: open the model, Settings tab, ID section.\",\"in\":\"path\",\"name\":\"model_code\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"data\":{\"description\":\"Metadata for a model created in Graphite Note.\",\"properties\":{\"code\":{\"description\":\"Model code (Settings tab, ID section).\",\"type\":\"string\"},\"created_at\":{\"format\":\"date-time\",\"type\":\"string\"},\"dataset_code\":{\"description\":\"Code of the dataset the model is trained on.\",\"type\":\"string\"},\"model_name\":{\"description\":\"Model type name, e.g. 'RFM Customer Segmentation'.\",\"type\":\"string\"},\"name\":{\"description\":\"User-given model name.\",\"type\":\"string\"},\"properties\":{\"additionalProperties\":true,\"description\":\"Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).\",\"properties\":{},\"type\":\"object\"},\"updated_at\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Success.\"},\"429\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"description\":\"Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.\",\"properties\":{\"message\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Rate limit exceeded (tenant 10/min, global 200/min).\"}},\"security\":[{\"BearerTokenAuth\":[]}],\"securitySchemes\":{\"BearerTokenAuth\":{\"description\":\"Tenant token from the Graphite Note app's Account Info page.\",\"scheme\":\"bearer\",\"type\":\"http\"}},\"securitySource\":\"definition\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/model/fetch-model-info/{model_code}","segments":[{"lit":"model"},{"lit":"fetch-model-info"},{"var":"model_code"}],"select":{"exist":["model_code"]},"transform":{"req":"`reqdata`","res":"`body.data`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[["fetch_model_info"]]},"key$":"model_info","name__orig":"model_info","Name":"ModelInfo","name_":"model_info","name-":"model-info","NAME":"MODEL_INFO","index$":2}, {"active":true,"entity":"model_info","key$":"BasicModelInfoFlow","kind":"basic","name":"BasicModelInfoFlow","param":{},"step":[{"active":true,"data":{},"input":{"ref":"model_info_ref01","srcdatavar":"model_info_ref01_data","suffix":"_dt0"},"match":{"id":"model_info01"},"op":"load","spec":[],"valid":[{"apply":"TextFieldMark","def":{"mark":"Mark01-model_info_ref01"}}],"index$":0}]}, 'ModelInfo')
     }
     const client = setup.client
     const struct = setup.struct
@@ -107,13 +106,6 @@ function basicSetup(extra?: any) {
       }]
     })
 
-  // Detect whether the user provided a real ENTID JSON via env var. The
-  // basic flow consumes synthetic IDs from the fixture file; without an
-  // override those synthetic IDs reach the live API and 4xx. Surface this
-  // to the test so it can skip rather than fail.
-  const idmapEnvVal = process.env['GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID']
-  const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{')
-
   const env = envOverride({
     'GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID': idmap,
     'GRAPHITE_NOTE_TEST_LIVE': 'FALSE',
@@ -125,7 +117,13 @@ function basicSetup(extra?: any) {
 
   const live = 'TRUE' === env.GRAPHITE_NOTE_TEST_LIVE
 
+  const transport = createLiveTransport()
   if (live) {
+    const rawIds = process.env['GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
     client = new GraphiteNoteSDK(merge([
       // FIRST, so the generated fields below win: sdk-test-control.json's
       // test.client.options adds to the live client, it does not redirect it.
@@ -138,7 +136,8 @@ function basicSetup(extra?: any) {
       // argument at all - so a bare 'extra' silently discarded the apikey
       // and server values above and handed the SDK undefined. Harmless
       // while there was nothing in that object; not harmless now.
-      extra || {}
+      extra || {},
+      { system: { fetch: transport.fetch } }
     ]))
   }
 
@@ -151,7 +150,7 @@ function basicSetup(extra?: any) {
     data: entityData,
     explain: 'TRUE' === env.GRAPHITE_NOTE_TEST_EXPLAIN,
     live,
-    syntheticOnly: live && !idmapOverridden,
+    transport,
     now: Date.now(),
   }
 

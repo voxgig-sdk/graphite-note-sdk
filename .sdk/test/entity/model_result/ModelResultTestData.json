@@ -3,22 +3,22 @@
     "model_result": {
       "MODEL_RESULT00": {
         "data": [],
-        "page": "s1f",
-        "pagesize": "s20",
+        "page": 31,
+        "pagesize": 32,
         "model_code": "MODEL_CODE01",
         "id": "MODEL_RESULT00"
       },
       "MODEL_RESULT01": {
         "data": [],
-        "page": "s3d",
-        "pagesize": "s3e",
+        "page": 61,
+        "pagesize": 62,
         "model_code": "MODEL_CODE01",
         "id": "MODEL_RESULT01"
       },
       "MODEL_RESULT02": {
         "data": [],
-        "page": "s5b",
-        "pagesize": "s5c",
+        "page": 91,
+        "pagesize": 92,
         "model_code": "MODEL_CODE01",
         "id": "MODEL_RESULT02"
       }
@@ -28,8 +28,121 @@
     "model_result": {
       "model_result_ref01": {
         "data": [],
-        "page": "s79",
-        "pagesize": "s7a"
+        "page": 121,
+        "pagesize": 122
+      }
+    }
+  },
+  "requests": {
+    "POST /model/fetch-result/{model_code}": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "FetchModelResults",
+        "parameters": [
+          {
+            "description": "The model's code: open the model, Settings tab, ID section.",
+            "in": "path",
+            "name": "model_code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "Pagination for model result retrieval. Response carries X-Page and X-Page-Size headers.",
+                "properties": {
+                  "page": {
+                    "description": "Page number for paginated results. Defaults to 1.",
+                    "type": "integer"
+                  },
+                  "page-size": {
+                    "description": "Rows per page. Defaults to 10000.",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "One row of a model's result table; remaining keys mirror the dataset's columns.",
+                        "properties": {
+                          "id": {
+                            "description": "Row id within the result table.",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "A page of result rows.",
+            "headers": {
+              "X-Page": {
+                "description": "The current page number.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-Page-Size": {
+                "description": "Rows returned per page.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min)."
+          }
+        },
+        "security": [
+          {
+            "BearerTokenAuth": []
+          }
+        ],
+        "securitySchemes": {
+          "BearerTokenAuth": {
+            "description": "Tenant token from the Graphite Note app's Account Info page.",
+            "scheme": "bearer",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
       }
     }
   }

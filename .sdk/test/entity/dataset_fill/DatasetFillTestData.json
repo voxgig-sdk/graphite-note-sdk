@@ -49,5 +49,257 @@
         "usercode": "s147"
       }
     }
+  },
+  "requests": {
+    "POST /dataset-complete": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "CompleteDataset",
+        "parameters": [],
+        "protocol": "http",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "Signals the end of dataset insertion: triggers final dataset shape calculation and post-processing.",
+                "properties": {
+                  "dataset-code": {
+                    "type": "string"
+                  },
+                  "user-code": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "user-code",
+                  "dataset-code"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "details": {
+                          "properties": {
+                            "dataset-code": {
+                              "type": "string"
+                            },
+                            "rows-count": {
+                              "description": "Total rows in the dataset after the operation.",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "status": {
+                          "description": "'success' on success.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min)."
+          }
+        },
+        "security": [
+          {
+            "BearerTokenAuth": []
+          }
+        ],
+        "securitySchemes": {
+          "BearerTokenAuth": {
+            "description": "Tenant token from the Graphite Note app's Account Info page.",
+            "scheme": "bearer",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
+      }
+    },
+    "POST /dataset-fill": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "FillDataset",
+        "parameters": [],
+        "protocol": "http",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "append": {
+                    "description": "True to append to existing rows; false to truncate the dataset first.",
+                    "type": "boolean"
+                  },
+                  "columns": {
+                    "items": {
+                      "description": "One column of a dataset's structure.",
+                      "properties": {
+                        "alias": {
+                          "description": "Display alias for the column.",
+                          "type": "string"
+                        },
+                        "format": {
+                          "description": "Optional display format, e.g. '#,###.##' for numeric or 'Y-d-m H:i:s' for datetime.",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Column name as it appears in the source data.",
+                          "type": "string"
+                        },
+                        "subtype": {
+                          "enum": [
+                            "text",
+                            "numeric",
+                            "date",
+                            "datetime"
+                          ],
+                          "type": "string"
+                        },
+                        "type": {
+                          "enum": [
+                            "measure",
+                            "dimension"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "alias",
+                        "type",
+                        "subtype"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "compressed": {
+                    "description": "True when insert-data is gzip+base64; false when it is a JSON-escaped string.",
+                    "type": "boolean"
+                  },
+                  "dataset-code": {
+                    "type": "string"
+                  },
+                  "insert-data": {
+                    "description": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true. Batch large datasets (e.g. 10,000 rows per call).",
+                    "type": "string"
+                  },
+                  "user-code": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "user-code",
+                  "dataset-code",
+                  "columns",
+                  "insert-data",
+                  "compressed",
+                  "append"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "details": {
+                          "properties": {
+                            "dataset-code": {
+                              "type": "string"
+                            },
+                            "rows-count": {
+                              "description": "Total rows in the dataset after the operation.",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "status": {
+                          "description": "'success' on success.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Error payload. Notable statuses: 429 rate limit (tenant 10/min, global 200/min); custom 44x business errors — 441 subscription plan limit, 442 email exists, 443 free trial finished, 445 model creation limit.",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (tenant 10/min, global 200/min)."
+          }
+        },
+        "security": [
+          {
+            "BearerTokenAuth": []
+          }
+        ],
+        "securitySchemes": {
+          "BearerTokenAuth": {
+            "description": "Tenant token from the Graphite Note app's Account Info page.",
+            "scheme": "bearer",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
+      }
+    }
   }
 }

@@ -1,10 +1,10 @@
 package = "voxgig-sdk-graphite-note"
-version = "0.1.1-1"
+version = "0.0.1-1"
 source = {
   -- git+https (GitHub dropped git:// in 2022); pin the install to the release
   -- tag pushed by `make publish`, and point at the lua/ subdir of the monorepo.
   url = "git+https://github.com/voxgig-sdk/graphite-note-sdk.git",
-  tag = "lua/v0.1.1",
+  tag = "lua/v0.0.1",
   dir = "graphite-note-sdk/lua"
 }
 description = {
@@ -27,6 +27,13 @@ build = {
     ["config_plugins"] = "config_plugins.lua",
     ["features"] = "features.lua",
     ["feature.base_feature"] = "feature/base_feature.lua",
+    ["feature.debug_feature"] = "feature/debug_feature.lua",
+    ["feature.idempotency_feature"] = "feature/idempotency_feature.lua",
+    ["feature.metrics_feature"] = "feature/metrics_feature.lua",
+    ["feature.paging_feature"] = "feature/paging_feature.lua",
+    ["feature.ratelimit_feature"] = "feature/ratelimit_feature.lua",
+    ["feature.retry_feature"] = "feature/retry_feature.lua",
     ["feature.test_feature"] = "feature/test_feature.lua",
+    ["feature.timeout_feature"] = "feature/timeout_feature.lua",
   }
 }

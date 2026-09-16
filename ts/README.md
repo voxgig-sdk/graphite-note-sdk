@@ -201,6 +201,11 @@ Then run:
 cd ts && npm test
 ```
 
+Live entity tests continue independent operations after errors and attempt
+supported cleanup. Their final result reports failures and missing prerequisites
+after the remaining work completes. The model and test inputs determine which
+API operations the generated scenarios cover.
+
 
 ## Reference
 
@@ -531,7 +536,7 @@ const prediction = await client.Prediction().create({
 
 ## Features
 
-This SDK ships 1 optional features. Each is **inactive until you
+This SDK ships 8 optional features. Each is **inactive until you
 switch it on**, so an SDK you have not configured behaves exactly as if none of
 them existed — no retries, no cache, no logging, no measurable overhead.
 
@@ -540,7 +545,105 @@ above:
 
 | Feature | What it does |
 |---|---|
+| [`debug`](#debug) | Request/response capture ring buffer for debugging |
+| [`idempotency`](#idempotency) | Idempotency keys for safe retries of mutating operations |
+| [`metrics`](#metrics) | Statistics capture: per-operation counters and latency |
+| [`paging`](#paging) | Pagination signals for list operations |
+| [`ratelimit`](#ratelimit) | Client-side rate limiting via a token bucket |
+| [`retry`](#retry) | Automatic retry of transient failures with exponential backoff |
 | [`test`](#test) | In-memory mock transport for testing without a live server |
+| [`timeout`](#timeout) | Per-request timeout with transport abort |
+
+> **Order matters for `ratelimit`, `retry`, `timeout`.** These wrap the
+> transport, so each one wraps whatever is already installed: the order you
+> activate them in IS the nesting order. Activating them as an ordered list
+> rather than a map is what fixes that order.
+
+### debug
+
+Request/response capture ring buffer for debugging.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `max` | `100` |
+| `redact` | `['authorization', 'cookie', 'set-cookie', 'api-key', 'apikey', 'x-api-key', 'idempotency-key']` |
+
+Set `feature.debug.active` to enable it, then override any of the options above.
+
+### idempotency
+
+Idempotency keys for safe retries of mutating operations.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `header` | `'Idempotency-Key'` |
+| `methods` | `['POST', 'PUT', 'PATCH', 'DELETE']` |
+| `ops` | `['create', 'update', 'remove']` |
+
+Set `feature.idempotency.active` to enable it, then override any of the options above.
+
+### metrics
+
+Statistics capture: per-operation counters and latency.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+
+Set `feature.metrics.active` to enable it, then override any of the options above.
+
+### paging
+
+Pagination signals for list operations.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `afterVar` | `'after'` |
+| `cursorParam` | `'cursor'` |
+| `firstVar` | `'first'` |
+| `limitParam` | `'limit'` |
+| `pageParam` | `'page'` |
+| `startPage` | `1` |
+
+Set `feature.paging.active` to enable it, then override any of the options above.
+
+### ratelimit
+
+Client-side rate limiting via a token bucket.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `burst` | `5` |
+| `rate` | `5` |
+
+Set `feature.ratelimit.active` to enable it, then override any of the options above.
+
+`ratelimit` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
+
+### retry
+
+Automatic retry of transient failures with exponential backoff.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `factor` | `2` |
+| `maxDelay` | `2000` |
+| `minDelay` | `50` |
+| `retries` | `2` |
+| `statuses` | `[408, 425, 429, 500, 502, 503, 504]` |
+
+Set `feature.retry.active` to enable it, then override any of the options above.
+
+`retry` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
 
 ### test
 
@@ -551,6 +654,21 @@ In-memory mock transport for testing without a live server.
 | `active` | `false` |
 
 Set `feature.test.active` to enable it, then override any of the options above.
+
+### timeout
+
+Per-request timeout with transport abort.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `ms` | `30000` |
+
+Set `feature.timeout.active` to enable it, then override any of the options above.
+
+`timeout` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
 
 
 ## Advanced
@@ -591,7 +709,14 @@ a function that receives the context.
 
 The SDK ships with built-in features:
 
+- **DebugFeature**: Request/response capture ring buffer for debugging
+- **IdempotencyFeature**: Idempotency keys for safe retries of mutating operations
+- **MetricsFeature**: Statistics capture: per-operation counters and latency
+- **PagingFeature**: Pagination signals for list operations
+- **RatelimitFeature**: Client-side rate limiting via a token bucket
+- **RetryFeature**: Automatic retry of transient failures with exponential backoff
 - **TestFeature**: In-memory mock transport for testing without a live server
+- **TimeoutFeature**: Per-request timeout with transport abort
 
 Features are initialized in order. Hooks fire in the order features
 were added, so later features can override earlier ones.

@@ -22,15 +22,3 @@
 # A published package name that does not follow the derivation:
 #
 #   main: kit: target: ts: publish: registry: package: '@scope/name'
-# --- cedar: release version (written by cedar-regen.sh, do not hand-edit)
-# Per target, because sdkgen keys the version per target; identical across
-# them because cedar tags a repo at one version.
-main: kit: target: 'go': publish: version: '0.1.1'
-main: kit: target: 'go-cli': publish: version: '0.1.1'
-main: kit: target: 'go-mcp': publish: version: '0.1.1'
-main: kit: target: 'lua': publish: version: '0.1.1'
-main: kit: target: 'php': publish: version: '0.1.1'
-main: kit: target: 'py': publish: version: '0.1.1'
-main: kit: target: 'rb': publish: version: '0.1.1'
-main: kit: target: 'ts': publish: version: '0.1.1'
-# --- end cedar: release version
