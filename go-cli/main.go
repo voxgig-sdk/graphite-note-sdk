@@ -20,7 +20,7 @@ import (
 const prompt = "graphite-note"
 
 // entitiesHelp is the space-separated entity list shown by /help.
-const entitiesHelp = "dataset dataset_fill model_info model_result prediction"
+const entitiesHelp = "dataset dataset_complete dataset_fill model_info model_result prediction"
 
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))

@@ -20,7 +20,7 @@ local SDK_MODULE = "graphite-note_sdk"
 -- A test-mode client seeded with a fixture for every entity. The constructor
 -- of each runnable snippet is rewritten to this form so the offline mock has
 -- data to return.
-local TEST_SEED = '{ entity = { ["dataset"] = { ["test01"] = { id = "test01" } }, ["dataset_fill"] = { ["test01"] = { id = "test01" } }, ["model_info"] = { ["test01"] = { id = "test01" } }, ["model_result"] = { ["test01"] = { id = "test01" } }, ["prediction"] = { ["test01"] = { id = "test01" } } } }'
+local TEST_SEED = '{ entity = { ["dataset"] = { ["test01"] = { id = "test01" } }, ["dataset_complete"] = { ["test01"] = { id = "test01" } }, ["dataset_fill"] = { ["test01"] = { id = "test01" } }, ["model_info"] = { ["test01"] = { id = "test01" } }, ["model_result"] = { ["test01"] = { id = "test01" } }, ["prediction"] = { ["test01"] = { id = "test01" } } } }'
 local TEST_CTOR = "sdk.test(" .. TEST_SEED .. ")"
 
 local function script_dir()

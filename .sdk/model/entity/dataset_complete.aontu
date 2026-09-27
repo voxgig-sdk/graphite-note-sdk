@@ -1,0 +1,64 @@
+# Entity: dataset_complete
+
+main: kit: entity: dataset_complete: {
+
+  alias: field: {}
+
+  fields: {
+    datasetcode: {
+      h: "Datasetcode"
+      n: "datasetcode"
+      r: true
+      t: "`$STRING`"
+    }
+    details: {
+      h: "Details"
+      n: "details"
+      r: false
+      t: "`$OBJECT`"
+    }
+    status: {
+      h: "Status"
+      n: "status"
+      r: false
+      sh: "'success' on success."
+      t: "`$STRING`"
+    }
+    usercode: {
+      h: "Usercode"
+      n: "usercode"
+      r: true
+      t: "`$STRING`"
+    }
+  }
+
+  name: "dataset_complete"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST /dataset-complete"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/dataset-complete"
+          s: [
+            {
+              lit: "dataset-complete"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

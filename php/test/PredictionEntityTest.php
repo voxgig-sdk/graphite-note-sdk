@@ -66,7 +66,7 @@ function prediction_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["prediction01", "prediction02", "prediction03", "model01", "model02", "model03", "model_code01"] as $k) {
+    foreach (["prediction01", "prediction02", "prediction03", "model_code01"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 

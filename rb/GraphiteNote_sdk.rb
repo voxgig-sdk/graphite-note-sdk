@@ -296,6 +296,13 @@ class GraphiteNoteSDK
   end
 
 
+  # Canonical facade: client.DatasetComplete.list / client.DatasetComplete.load({ "id" => ... })
+  def DatasetComplete(data = nil)
+    require_relative 'entity/dataset_complete_entity'
+    DatasetCompleteEntity.new(self, data)
+  end
+
+
   # Canonical facade: client.DatasetFill.list / client.DatasetFill.load({ "id" => ... })
   def DatasetFill(data = nil)
     require_relative 'entity/dataset_fill_entity'

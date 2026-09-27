@@ -22,6 +22,8 @@ var NewTimeoutFeatureFunc func() Feature
 
 var NewDatasetEntityFunc func(client *GraphiteNoteSDK, entopts map[string]any) GraphiteNoteEntity
 
+var NewDatasetCompleteEntityFunc func(client *GraphiteNoteSDK, entopts map[string]any) GraphiteNoteEntity
+
 var NewDatasetFillEntityFunc func(client *GraphiteNoteSDK, entopts map[string]any) GraphiteNoteEntity
 
 var NewModelInfoEntityFunc func(client *GraphiteNoteSDK, entopts map[string]any) GraphiteNoteEntity

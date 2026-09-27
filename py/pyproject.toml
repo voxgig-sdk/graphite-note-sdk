@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "voxgig-sdk-graphite-note"
-version = "0.0.1"
+name = "voxgig-sdk-graphite-note-sdk"
+version = "0.1.1"
 description = "Unofficial generated Python SDK for the Graphite Note public API. Not affiliated with or endorsed by the upstream API provider."
 readme = "README.md"
 license = "MIT"

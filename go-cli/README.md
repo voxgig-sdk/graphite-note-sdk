@@ -94,7 +94,7 @@ make build-all   # linux/darwin/windows x amd64/arm64, under dist/<os>-<arch>/
 ### Discover the available entities
 
 `/help` in the REPL prints the full entity list, or see [Entities](#entities)
-below — this SDK exposes 5 entities.
+below — this SDK exposes 6 entities.
 
 ## Reference
 
@@ -147,9 +147,9 @@ Meta-commands use the `/` prefix (everything else on a line is evaluated as boru
 
 ### Entities
 
-The 5 entities this SDK exposes (any is valid as `<entity>`):
+The 6 entities this SDK exposes (any is valid as `<entity>`):
 
-dataset dataset_fill model_info model_result prediction
+dataset dataset_complete dataset_fill model_info model_result prediction
 
 ## Explanation
 

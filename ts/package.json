@@ -1,6 +1,6 @@
 {
-  "name": "@voxgig-sdk/graphite-note",
-  "version": "0.0.1",
+  "name": "@voxgig-sdk/graphite-note-sdk",
+  "version": "0.1.1",
   "description": "Unofficial generated TypeScript SDK for the Graphite Note public API. Not affiliated with or endorsed by the upstream API provider.",
   "keywords": [
     "voxgig",
@@ -23,7 +23,8 @@
   "types": "dist/GraphiteNoteSDK.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "scripts": {
     "pretest": "npm run build",

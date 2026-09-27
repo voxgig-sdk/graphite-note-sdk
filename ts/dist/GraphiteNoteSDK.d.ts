@@ -1,4 +1,5 @@
 import { DatasetEntity } from './entity/DatasetEntity';
+import { DatasetCompleteEntity } from './entity/DatasetCompleteEntity';
 import { DatasetFillEntity } from './entity/DatasetFillEntity';
 import { ModelInfoEntity } from './entity/ModelInfoEntity';
 import { ModelResultEntity } from './entity/ModelResultEntity';
@@ -49,6 +50,7 @@ declare class GraphiteNoteSDK {
     }>;
     graphql(query: string, variables?: any, ctrl?: any): Promise<any>;
     Dataset(entopts?: Record<string, any>): DatasetEntity;
+    DatasetComplete(entopts?: Record<string, any>): DatasetCompleteEntity;
     DatasetFill(entopts?: Record<string, any>): DatasetFillEntity;
     ModelInfo(entopts?: Record<string, any>): ModelInfoEntity;
     ModelResult(entopts?: Record<string, any>): ModelResultEntity;

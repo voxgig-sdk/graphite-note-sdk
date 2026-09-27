@@ -1,0 +1,110 @@
+# Entity: model_info
+
+main: kit: entity: model_info: {
+
+  alias: field: {}
+
+  fields: {
+    code: {
+      h: "Code"
+      n: "code"
+      r: false
+      sh: "Model code (Settings tab, ID section)."
+      t: "`$STRING`"
+    }
+    created_at: {
+      fo: "date-time"
+      h: "Created At"
+      n: "created_at"
+      r: false
+      t: "`$STRING`"
+    }
+    dataset_code: {
+      h: "Dataset Code"
+      n: "dataset_code"
+      r: false
+      sh: "Code of the dataset the model is trained on."
+      t: "`$STRING`"
+    }
+    model_name: {
+      h: "Model Name"
+      n: "model_name"
+      r: false
+      sh: "Model type name, e.g."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: false
+      sh: "User-given model name."
+      t: "`$STRING`"
+    }
+    properties: {
+      h: "Properties"
+      n: "properties"
+      r: false
+      sh: "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...)."
+      t: "`$OBJECT`"
+    }
+    updated_at: {
+      fo: "date-time"
+      h: "Updated At"
+      n: "updated_at"
+      r: false
+      t: "`$STRING`"
+    }
+  }
+
+  name: "model_info"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /model/fetch-model-info/{model_code}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "model_code"
+                or: "model_code"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/model/fetch-model-info/{model_code}"
+          q: {
+            exist: [
+              "model_code"
+            ]
+          }
+          s: [
+            {
+              lit: "model"
+            }
+            {
+              lit: "fetch-model-info"
+            }
+            {
+              var: "model_code"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

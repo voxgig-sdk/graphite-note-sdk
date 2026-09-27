@@ -1,7 +1,7 @@
 # Typed models for the GraphiteNote SDK.
 #
-# GENERATED from the API model: main.kit.entity.<e>.fields[] and per-op
-# params (op.<name>.points[].args.params[]). Field/param types come from the
+# GENERATED from the API model: main.kit.entity.<e>.fields{} and per-op
+# params (op.<name>.points[].g.params[]). Field/param types come from the
 # canonical type sentinels via @voxgig/sdkgen canonToType (source of truth:
 # @voxgig/apidef VALID_CANON). Do not edit by hand.
 #
@@ -36,6 +36,26 @@ class DatasetCreateData(DatasetCreateDataRequired, total=False):
     columns: int
     datasetcode: str
     tablename: str
+
+
+class DatasetCompleteRequired(TypedDict):
+    datasetcode: str
+    usercode: str
+
+
+class DatasetComplete(DatasetCompleteRequired, total=False):
+    details: dict
+    status: str
+
+
+class DatasetCompleteCreateDataRequired(TypedDict):
+    datasetcode: str
+    usercode: str
+
+
+class DatasetCompleteCreateData(DatasetCompleteCreateDataRequired, total=False):
+    details: dict
+    status: str
 
 
 class DatasetFillRequired(TypedDict):

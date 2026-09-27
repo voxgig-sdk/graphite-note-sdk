@@ -41,6 +41,7 @@ class ReadmeExamplesTest extends TestCase
     // Entity accessor (\$client->Name()) => fixture storage key (lowercase name).
     private const ENTITIES = [
         "Dataset" => "dataset",
+        "DatasetComplete" => "dataset_complete",
         "DatasetFill" => "dataset_fill",
         "ModelInfo" => "model_info",
         "ModelResult" => "model_result",

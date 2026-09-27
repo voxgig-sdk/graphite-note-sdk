@@ -58,7 +58,7 @@ def prediction_basic_setup(extra)
 
   # Generate idmap via transform.
   idmap = Vs.transform(
-    ["prediction01", "prediction02", "prediction03", "model01", "model02", "model03", "model_code01"],
+    ["prediction01", "prediction02", "prediction03", "model_code01"],
     {
       "`$PACK`" => ["", {
         "`$KEY`" => "`$COPY`",

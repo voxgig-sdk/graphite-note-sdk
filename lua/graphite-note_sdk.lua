@@ -367,6 +367,20 @@ function GraphiteNoteSDK:Dataset(data)
 end
 
 
+-- Idiomatic facade: client:DatasetComplete():list() / client:DatasetComplete():load({ id = ... })
+-- Entity access is capitalised (PascalCase) for parity with the other SDKs.
+function GraphiteNoteSDK:DatasetComplete(data)
+  local EntityMod = require("entity.dataset_complete_entity")
+  if data == nil then
+    if self._dataset_complete == nil then
+      self._dataset_complete = EntityMod.new(self, nil)
+    end
+    return self._dataset_complete
+  end
+  return EntityMod.new(self, data)
+end
+
+
 -- Idiomatic facade: client:DatasetFill():list() / client:DatasetFill():load({ id = ... })
 -- Entity access is capitalised (PascalCase) for parity with the other SDKs.
 function GraphiteNoteSDK:DatasetFill(data)

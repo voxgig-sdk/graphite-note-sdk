@@ -56,6 +56,9 @@ func init() {
 	core.NewDatasetEntityFunc = func(client *core.GraphiteNoteSDK, entopts map[string]any) core.GraphiteNoteEntity {
 		return entity.NewDatasetEntity(client, entopts)
 	}
+	core.NewDatasetCompleteEntityFunc = func(client *core.GraphiteNoteSDK, entopts map[string]any) core.GraphiteNoteEntity {
+		return entity.NewDatasetCompleteEntity(client, entopts)
+	}
 	core.NewDatasetFillEntityFunc = func(client *core.GraphiteNoteSDK, entopts map[string]any) core.GraphiteNoteEntity {
 		return entity.NewDatasetFillEntity(client, entopts)
 	}

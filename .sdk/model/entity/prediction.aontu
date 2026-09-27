@@ -1,0 +1,126 @@
+# Entity: prediction
+
+main: kit: entity: prediction: {
+
+  alias: field: {}
+
+  fields: {
+    columns: {
+      h: "Columns"
+      n: "columns"
+      r: false
+      sh: "Column names associated with each prediction row."
+      t: "`$ARRAY`"
+    }
+    data: {
+      h: "Data"
+      n: "data"
+      op: {
+        create: {
+          req: true
+          type: "`$OBJECT`"
+        }
+      }
+      r: false
+      t: "`$ARRAY`"
+    }
+  }
+
+  name: "prediction"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST /v1/prediction/model/{model_code}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "model_code"
+                or: "model_code"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "POST"
+          o: "/v1/prediction/model/{model_code}"
+          q: {
+            exist: [
+              "model_code"
+            ]
+          }
+          s: [
+            {
+              lit: "v1"
+            }
+            {
+              lit: "prediction"
+            }
+            {
+              lit: "model"
+            }
+            {
+              var: "model_code"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+        {
+          co: {
+            id: "POST /v2/prediction/model/{model_code}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "model_code"
+                or: "model_code"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "POST"
+          o: "/v2/prediction/model/{model_code}"
+          q: {
+            exist: [
+              "model_code"
+            ]
+          }
+          s: [
+            {
+              lit: "v2"
+            }
+            {
+              lit: "prediction"
+            }
+            {
+              lit: "model"
+            }
+            {
+              var: "model_code"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

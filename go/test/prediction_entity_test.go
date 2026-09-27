@@ -92,7 +92,7 @@ func predictionBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"prediction01", "prediction02", "prediction03", "model01", "model02", "model03", "model_code01"},
+		[]any{"prediction01", "prediction02", "prediction03", "model_code01"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",

@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
-  spec.name          = "voxgig-sdk-graphite-note"
-  spec.version       = "0.0.1"
+  spec.name          = "voxgig-sdk-graphite-note-sdk"
+  spec.version       = "0.1.1"
   spec.authors       = ["Voxgig"]
   spec.summary       = "Unofficial generated Ruby SDK for the Graphite Note public API. Not affiliated with or endorsed by the upstream API provider."
   spec.description   = "Unofficial generated Ruby SDK for the Graphite Note public API. Not affiliated with or endorsed by the upstream API provider."
@@ -27,8 +27,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["."]
 
   spec.required_ruby_version = ">= 3.0"
-  spec.add_dependency "json", "~> 0"
-  spec.add_dependency "voxgig-struct", "~> 0.0.10"
+  spec.add_dependency "json"
 
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rake", "~> 13.0"

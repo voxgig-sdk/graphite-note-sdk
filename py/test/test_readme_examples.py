@@ -77,6 +77,7 @@ _CLIENT_VARS = ("client", "sdk")
 # The API's capitalised semantic entities -> lowercase fixture key.
 _ENTITIES = {
     "Dataset": "dataset",
+    "DatasetComplete": "dataset_complete",
     "DatasetFill": "dataset_fill",
     "ModelInfo": "model_info",
     "ModelResult": "model_result",

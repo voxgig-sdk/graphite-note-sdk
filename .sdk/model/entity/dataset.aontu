@@ -1,0 +1,80 @@
+# Entity: dataset
+
+main: kit: entity: dataset: {
+
+  alias: field: {}
+
+  fields: {
+    columns: {
+      h: "Columns"
+      n: "columns"
+      op: {
+        create: {
+          req: true
+          type: "`$ARRAY`"
+        }
+      }
+      r: false
+      sh: "Number of columns created."
+      t: "`$INTEGER`"
+    }
+    datasetcode: {
+      h: "Datasetcode"
+      n: "datasetcode"
+      r: false
+      sh: "Unique code assigned to the created dataset."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "Human-readable dataset name."
+      t: "`$STRING`"
+    }
+    tablename: {
+      h: "Tablename"
+      n: "tablename"
+      r: false
+      sh: "Backing table name, e.g."
+      t: "`$STRING`"
+    }
+    usercode: {
+      h: "Usercode"
+      n: "usercode"
+      r: true
+      sh: "Unique code identifying the user."
+      t: "`$STRING`"
+    }
+  }
+
+  name: "dataset"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST /dataset-create"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/dataset-create"
+          s: [
+            {
+              lit: "dataset-create"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

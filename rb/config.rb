@@ -20,7 +20,7 @@ module GraphiteNoteConfig
       "main" => {
         "name" => "GraphiteNote",
         "slug" => "graphite-note",
-        "version" => "0.0.1",
+        "version" => "0.1.1",
         "target" => "rb",
       },
       "feature" => {
@@ -165,6 +165,7 @@ module GraphiteNoteConfig
         },
         "entity" => {
           "dataset" => {},
+          "dataset_complete" => {},
           "dataset_fill" => {},
           "model_info" => {},
           "model_result" => {},
@@ -176,6 +177,8 @@ module GraphiteNoteConfig
           "fields" => [
             {
               "name" => "columns",
+              "title" => "Columns",
+              "type" => "`$INTEGER`",
               "op" => {
                 "create" => {
                   "req" => true,
@@ -183,29 +186,32 @@ module GraphiteNoteConfig
                 },
               },
               "short" => "Number of columns created.",
-              "type" => "`$INTEGER`",
             },
             {
               "name" => "datasetcode",
-              "short" => "Unique code assigned to the created dataset.",
+              "title" => "Datasetcode",
               "type" => "`$STRING`",
+              "short" => "Unique code assigned to the created dataset.",
             },
             {
               "name" => "name",
+              "title" => "Name",
+              "type" => "`$STRING`",
               "req" => true,
               "short" => "Human-readable dataset name.",
-              "type" => "`$STRING`",
             },
             {
               "name" => "tablename",
-              "short" => "Backing table name, e.g.",
+              "title" => "Tablename",
               "type" => "`$STRING`",
+              "short" => "Backing table name, e.g.",
             },
             {
               "name" => "usercode",
+              "title" => "Usercode",
+              "type" => "`$STRING`",
               "req" => true,
               "short" => "Unique code identifying the user.",
-              "type" => "`$STRING`",
             },
           ],
           "name" => "dataset",
@@ -215,7 +221,6 @@ module GraphiteNoteConfig
               "name" => "create",
               "points" => [
                 {
-                  "args" => {},
                   "kind" => "http",
                   "method" => "POST",
                   "orig" => "/dataset-create",
@@ -224,14 +229,75 @@ module GraphiteNoteConfig
                       "lit" => "dataset-create",
                     },
                   ],
-                  "select" => {},
+                  "parts" => [
+                    "dataset-create",
+                  ],
+                  "rename" => {},
                   "transform" => {
                     "req" => "`reqdata`",
                     "res" => "`body.data`",
                   },
-                  "parts" => [
-                    "dataset-create",
+                  "args" => {},
+                  "select" => {},
+                },
+              ],
+            },
+          },
+          "relations" => {
+            "ancestors" => [],
+          },
+        },
+        "dataset_complete" => {
+          "fields" => [
+            {
+              "name" => "datasetcode",
+              "title" => "Datasetcode",
+              "type" => "`$STRING`",
+              "req" => true,
+            },
+            {
+              "name" => "details",
+              "title" => "Details",
+              "type" => "`$OBJECT`",
+            },
+            {
+              "name" => "status",
+              "title" => "Status",
+              "type" => "`$STRING`",
+              "short" => "'success' on success.",
+            },
+            {
+              "name" => "usercode",
+              "title" => "Usercode",
+              "type" => "`$STRING`",
+              "req" => true,
+            },
+          ],
+          "name" => "dataset_complete",
+          "op" => {
+            "create" => {
+              "input" => "data",
+              "name" => "create",
+              "points" => [
+                {
+                  "kind" => "http",
+                  "method" => "POST",
+                  "orig" => "/dataset-complete",
+                  "segments" => [
+                    {
+                      "lit" => "dataset-complete",
+                    },
                   ],
+                  "parts" => [
+                    "dataset-complete",
+                  ],
+                  "rename" => {},
+                  "transform" => {
+                    "req" => "`reqdata`",
+                    "res" => "`body.data`",
+                  },
+                  "args" => {},
+                  "select" => {},
                 },
               ],
             },
@@ -244,45 +310,53 @@ module GraphiteNoteConfig
           "fields" => [
             {
               "name" => "append",
+              "title" => "Append",
+              "type" => "`$BOOLEAN`",
               "req" => true,
               "short" => "True to append to existing rows; false to truncate the dataset first.",
-              "type" => "`$BOOLEAN`",
             },
             {
               "name" => "columns",
-              "req" => true,
+              "title" => "Columns",
               "type" => "`$ARRAY`",
+              "req" => true,
             },
             {
               "name" => "compressed",
+              "title" => "Compressed",
+              "type" => "`$BOOLEAN`",
               "req" => true,
               "short" => "True when insert-data is gzip+base64; false when it is a JSON-escaped string.",
-              "type" => "`$BOOLEAN`",
             },
             {
               "name" => "datasetcode",
-              "req" => true,
+              "title" => "Datasetcode",
               "type" => "`$STRING`",
+              "req" => true,
             },
             {
               "name" => "details",
+              "title" => "Details",
               "type" => "`$OBJECT`",
             },
             {
               "name" => "insertdata",
+              "title" => "Insertdata",
+              "type" => "`$STRING`",
               "req" => true,
               "short" => "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true.",
-              "type" => "`$STRING`",
             },
             {
               "name" => "status",
-              "short" => "'success' on success.",
+              "title" => "Status",
               "type" => "`$STRING`",
+              "short" => "'success' on success.",
             },
             {
               "name" => "usercode",
-              "req" => true,
+              "title" => "Usercode",
               "type" => "`$STRING`",
+              "req" => true,
             },
           ],
           "name" => "dataset_fill",
@@ -292,26 +366,6 @@ module GraphiteNoteConfig
               "name" => "create",
               "points" => [
                 {
-                  "args" => {},
-                  "kind" => "http",
-                  "method" => "POST",
-                  "orig" => "/dataset-complete",
-                  "segments" => [
-                    {
-                      "lit" => "dataset-complete",
-                    },
-                  ],
-                  "select" => {},
-                  "transform" => {
-                    "req" => "`reqdata`",
-                    "res" => "`body.data`",
-                  },
-                  "parts" => [
-                    "dataset-complete",
-                  ],
-                },
-                {
-                  "args" => {},
                   "kind" => "http",
                   "method" => "POST",
                   "orig" => "/dataset-fill",
@@ -320,14 +374,16 @@ module GraphiteNoteConfig
                       "lit" => "dataset-fill",
                     },
                   ],
-                  "select" => {},
+                  "parts" => [
+                    "dataset-fill",
+                  ],
+                  "rename" => {},
                   "transform" => {
                     "req" => "`reqdata`",
                     "res" => "`body.data`",
                   },
-                  "parts" => [
-                    "dataset-fill",
-                  ],
+                  "args" => {},
+                  "select" => {},
                 },
               ],
             },
@@ -340,38 +396,45 @@ module GraphiteNoteConfig
           "fields" => [
             {
               "name" => "code",
-              "short" => "Model code (Settings tab, ID section).",
+              "title" => "Code",
               "type" => "`$STRING`",
+              "short" => "Model code (Settings tab, ID section).",
             },
             {
-              "format" => "date-time",
               "name" => "created_at",
+              "title" => "Created At",
               "type" => "`$STRING`",
+              "format" => "date-time",
             },
             {
               "name" => "dataset_code",
-              "short" => "Code of the dataset the model is trained on.",
+              "title" => "Dataset Code",
               "type" => "`$STRING`",
+              "short" => "Code of the dataset the model is trained on.",
             },
             {
               "name" => "model_name",
-              "short" => "Model type name, e.g.",
+              "title" => "Model Name",
               "type" => "`$STRING`",
+              "short" => "Model type name, e.g.",
             },
             {
               "name" => "name",
-              "short" => "User-given model name.",
+              "title" => "Name",
               "type" => "`$STRING`",
+              "short" => "User-given model name.",
             },
             {
               "name" => "properties",
-              "short" => "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
+              "title" => "Properties",
               "type" => "`$OBJECT`",
+              "short" => "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
             },
             {
-              "format" => "date-time",
               "name" => "updated_at",
+              "title" => "Updated At",
               "type" => "`$STRING`",
+              "format" => "date-time",
             },
           ],
           "name" => "model_info",
@@ -381,17 +444,6 @@ module GraphiteNoteConfig
               "name" => "load",
               "points" => [
                 {
-                  "args" => {
-                    "params" => [
-                      {
-                        "kind" => "param",
-                        "name" => "model_code",
-                        "orig" => "model_code",
-                        "reqd" => true,
-                        "type" => "`$STRING`",
-                      },
-                    ],
-                  },
                   "kind" => "http",
                   "method" => "GET",
                   "orig" => "/model/fetch-model-info/{model_code}",
@@ -406,47 +458,58 @@ module GraphiteNoteConfig
                       "var" => "model_code",
                     },
                   ],
-                  "select" => {
-                    "exist" => [
-                      "model_code",
-                    ],
-                  },
-                  "transform" => {
-                    "req" => "`reqdata`",
-                    "res" => "`body.data`",
-                  },
                   "parts" => [
                     "model",
                     "fetch-model-info",
                     "{model_code}",
                   ],
+                  "rename" => {},
+                  "transform" => {
+                    "req" => "`reqdata`",
+                    "res" => "`body.data`",
+                  },
+                  "args" => {
+                    "params" => [
+                      {
+                        "name" => "model_code",
+                        "orig" => "model_code",
+                        "type" => "`$STRING`",
+                        "kind" => "param",
+                        "reqd" => true,
+                      },
+                    ],
+                  },
+                  "select" => {
+                    "exist" => [
+                      "model_code",
+                    ],
+                  },
                 },
               ],
             },
           },
           "relations" => {
-            "ancestors" => [
-              [
-                "fetch_model_info",
-              ],
-            ],
+            "ancestors" => [],
           },
         },
         "model_result" => {
           "fields" => [
             {
               "name" => "data",
+              "title" => "Data",
               "type" => "`$ARRAY`",
             },
             {
               "name" => "page",
-              "short" => "Page number for paginated results.",
+              "title" => "Page",
               "type" => "`$INTEGER`",
+              "short" => "Page number for paginated results.",
             },
             {
               "name" => "pagesize",
-              "short" => "Rows per page.",
+              "title" => "Pagesize",
               "type" => "`$INTEGER`",
+              "short" => "Rows per page.",
             },
           ],
           "name" => "model_result",
@@ -456,17 +519,6 @@ module GraphiteNoteConfig
               "name" => "create",
               "points" => [
                 {
-                  "args" => {
-                    "params" => [
-                      {
-                        "kind" => "param",
-                        "name" => "model_code",
-                        "orig" => "model_code",
-                        "reqd" => true,
-                        "type" => "`$STRING`",
-                      },
-                    ],
-                  },
                   "kind" => "http",
                   "method" => "POST",
                   "orig" => "/model/fetch-result/{model_code}",
@@ -481,48 +533,58 @@ module GraphiteNoteConfig
                       "var" => "model_code",
                     },
                   ],
-                  "select" => {
-                    "exist" => [
-                      "model_code",
-                    ],
-                  },
-                  "transform" => {
-                    "req" => "`reqdata`",
-                    "res" => "`body`",
-                  },
                   "parts" => [
                     "model",
                     "fetch-result",
                     "{model_code}",
                   ],
+                  "rename" => {},
+                  "transform" => {
+                    "req" => "`reqdata`",
+                    "res" => "`body`",
+                  },
+                  "args" => {
+                    "params" => [
+                      {
+                        "name" => "model_code",
+                        "orig" => "model_code",
+                        "type" => "`$STRING`",
+                        "kind" => "param",
+                        "reqd" => true,
+                      },
+                    ],
+                  },
+                  "select" => {
+                    "exist" => [
+                      "model_code",
+                    ],
+                  },
                 },
               ],
             },
           },
           "relations" => {
-            "ancestors" => [
-              [
-                "fetch_result",
-              ],
-            ],
+            "ancestors" => [],
           },
         },
         "prediction" => {
           "fields" => [
             {
               "name" => "columns",
-              "short" => "Column names associated with each prediction row.",
+              "title" => "Columns",
               "type" => "`$ARRAY`",
+              "short" => "Column names associated with each prediction row.",
             },
             {
               "name" => "data",
+              "title" => "Data",
+              "type" => "`$ARRAY`",
               "op" => {
                 "create" => {
                   "req" => true,
                   "type" => "`$OBJECT`",
                 },
               },
-              "type" => "`$ARRAY`",
             },
           ],
           "name" => "prediction",
@@ -532,17 +594,6 @@ module GraphiteNoteConfig
               "name" => "create",
               "points" => [
                 {
-                  "args" => {
-                    "params" => [
-                      {
-                        "kind" => "param",
-                        "name" => "model_code",
-                        "orig" => "model_code",
-                        "reqd" => true,
-                        "type" => "`$STRING`",
-                      },
-                    ],
-                  },
                   "kind" => "http",
                   "method" => "POST",
                   "orig" => "/v1/prediction/model/{model_code}",
@@ -560,34 +611,35 @@ module GraphiteNoteConfig
                       "var" => "model_code",
                     },
                   ],
-                  "select" => {
-                    "exist" => [
-                      "model_code",
-                    ],
-                  },
-                  "transform" => {
-                    "req" => "`reqdata`",
-                    "res" => "`body.data`",
-                  },
                   "parts" => [
                     "v1",
                     "prediction",
                     "model",
                     "{model_code}",
                   ],
-                },
-                {
+                  "rename" => {},
+                  "transform" => {
+                    "req" => "`reqdata`",
+                    "res" => "`body.data`",
+                  },
                   "args" => {
                     "params" => [
                       {
-                        "kind" => "param",
                         "name" => "model_code",
                         "orig" => "model_code",
-                        "reqd" => true,
                         "type" => "`$STRING`",
+                        "kind" => "param",
+                        "reqd" => true,
                       },
                     ],
                   },
+                  "select" => {
+                    "exist" => [
+                      "model_code",
+                    ],
+                  },
+                },
+                {
                   "kind" => "http",
                   "method" => "POST",
                   "orig" => "/v2/prediction/model/{model_code}",
@@ -605,31 +657,39 @@ module GraphiteNoteConfig
                       "var" => "model_code",
                     },
                   ],
-                  "select" => {
-                    "exist" => [
-                      "model_code",
-                    ],
-                  },
-                  "transform" => {
-                    "req" => "`reqdata`",
-                    "res" => "`body.data`",
-                  },
                   "parts" => [
                     "v2",
                     "prediction",
                     "model",
                     "{model_code}",
                   ],
+                  "rename" => {},
+                  "transform" => {
+                    "req" => "`reqdata`",
+                    "res" => "`body.data`",
+                  },
+                  "args" => {
+                    "params" => [
+                      {
+                        "name" => "model_code",
+                        "orig" => "model_code",
+                        "type" => "`$STRING`",
+                        "kind" => "param",
+                        "reqd" => true,
+                      },
+                    ],
+                  },
+                  "select" => {
+                    "exist" => [
+                      "model_code",
+                    ],
+                  },
                 },
               ],
             },
           },
           "relations" => {
-            "ancestors" => [
-              [
-                "model",
-              ],
-            ],
+            "ancestors" => [],
           },
         },
       },

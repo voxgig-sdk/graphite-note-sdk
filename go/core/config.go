@@ -12,7 +12,7 @@ func MakeConfig() map[string]any {
 		"main": map[string]any{
 			"name": "GraphiteNote",
 			"slug": "graphite-note",
-			"version": "0.0.1",
+			"version": "0.1.1",
 			"target": "go",
 		},
 		"feature": map[string]any{
@@ -157,6 +157,7 @@ func MakeConfig() map[string]any {
 			},
 			"entity": map[string]any{
 				"dataset": map[string]any{},
+				"dataset_complete": map[string]any{},
 				"dataset_fill": map[string]any{},
 				"model_info": map[string]any{},
 				"model_result": map[string]any{},
@@ -168,6 +169,8 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "columns",
+						"title": "Columns",
+						"type": "`$INTEGER`",
 						"op": map[string]any{
 							"create": map[string]any{
 								"req": true,
@@ -175,29 +178,32 @@ func MakeConfig() map[string]any {
 							},
 						},
 						"short": "Number of columns created.",
-						"type": "`$INTEGER`",
 					},
 					map[string]any{
 						"name": "datasetcode",
-						"short": "Unique code assigned to the created dataset.",
+						"title": "Datasetcode",
 						"type": "`$STRING`",
+						"short": "Unique code assigned to the created dataset.",
 					},
 					map[string]any{
 						"name": "name",
+						"title": "Name",
+						"type": "`$STRING`",
 						"req": true,
 						"short": "Human-readable dataset name.",
-						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "tablename",
-						"short": "Backing table name, e.g.",
+						"title": "Tablename",
 						"type": "`$STRING`",
+						"short": "Backing table name, e.g.",
 					},
 					map[string]any{
 						"name": "usercode",
+						"title": "Usercode",
+						"type": "`$STRING`",
 						"req": true,
 						"short": "Unique code identifying the user.",
-						"type": "`$STRING`",
 					},
 				},
 				"name": "dataset",
@@ -207,7 +213,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{},
 								"kind": "http",
 								"method": "POST",
 								"orig": "/dataset-create",
@@ -216,14 +221,75 @@ func MakeConfig() map[string]any {
 										"lit": "dataset-create",
 									},
 								},
-								"select": map[string]any{},
+								"parts": []any{
+									"dataset-create",
+								},
+								"rename": map[string]any{},
 								"transform": map[string]any{
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"parts": []any{
-									"dataset-create",
+								"args": map[string]any{},
+								"select": map[string]any{},
+							},
+						},
+					},
+				},
+				"relations": map[string]any{
+					"ancestors": []any{},
+				},
+			},
+			"dataset_complete": map[string]any{
+				"fields": []any{
+					map[string]any{
+						"name": "datasetcode",
+						"title": "Datasetcode",
+						"type": "`$STRING`",
+						"req": true,
+					},
+					map[string]any{
+						"name": "details",
+						"title": "Details",
+						"type": "`$OBJECT`",
+					},
+					map[string]any{
+						"name": "status",
+						"title": "Status",
+						"type": "`$STRING`",
+						"short": "'success' on success.",
+					},
+					map[string]any{
+						"name": "usercode",
+						"title": "Usercode",
+						"type": "`$STRING`",
+						"req": true,
+					},
+				},
+				"name": "dataset_complete",
+				"op": map[string]any{
+					"create": map[string]any{
+						"input": "data",
+						"name": "create",
+						"points": []any{
+							map[string]any{
+								"kind": "http",
+								"method": "POST",
+								"orig": "/dataset-complete",
+								"segments": []any{
+									map[string]any{
+										"lit": "dataset-complete",
+									},
 								},
+								"parts": []any{
+									"dataset-complete",
+								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body.data`",
+								},
+								"args": map[string]any{},
+								"select": map[string]any{},
 							},
 						},
 					},
@@ -236,45 +302,53 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "append",
+						"title": "Append",
+						"type": "`$BOOLEAN`",
 						"req": true,
 						"short": "True to append to existing rows; false to truncate the dataset first.",
-						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
 						"name": "columns",
-						"req": true,
+						"title": "Columns",
 						"type": "`$ARRAY`",
+						"req": true,
 					},
 					map[string]any{
 						"name": "compressed",
+						"title": "Compressed",
+						"type": "`$BOOLEAN`",
 						"req": true,
 						"short": "True when insert-data is gzip+base64; false when it is a JSON-escaped string.",
-						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
 						"name": "datasetcode",
-						"req": true,
+						"title": "Datasetcode",
 						"type": "`$STRING`",
+						"req": true,
 					},
 					map[string]any{
 						"name": "details",
+						"title": "Details",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
 						"name": "insertdata",
+						"title": "Insertdata",
+						"type": "`$STRING`",
 						"req": true,
 						"short": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true.",
-						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "status",
-						"short": "'success' on success.",
+						"title": "Status",
 						"type": "`$STRING`",
+						"short": "'success' on success.",
 					},
 					map[string]any{
 						"name": "usercode",
-						"req": true,
+						"title": "Usercode",
 						"type": "`$STRING`",
+						"req": true,
 					},
 				},
 				"name": "dataset_fill",
@@ -284,26 +358,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{},
-								"kind": "http",
-								"method": "POST",
-								"orig": "/dataset-complete",
-								"segments": []any{
-									map[string]any{
-										"lit": "dataset-complete",
-									},
-								},
-								"select": map[string]any{},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body.data`",
-								},
-								"parts": []any{
-									"dataset-complete",
-								},
-							},
-							map[string]any{
-								"args": map[string]any{},
 								"kind": "http",
 								"method": "POST",
 								"orig": "/dataset-fill",
@@ -312,14 +366,16 @@ func MakeConfig() map[string]any {
 										"lit": "dataset-fill",
 									},
 								},
-								"select": map[string]any{},
+								"parts": []any{
+									"dataset-fill",
+								},
+								"rename": map[string]any{},
 								"transform": map[string]any{
 									"req": "`reqdata`",
 									"res": "`body.data`",
 								},
-								"parts": []any{
-									"dataset-fill",
-								},
+								"args": map[string]any{},
+								"select": map[string]any{},
 							},
 						},
 					},
@@ -332,38 +388,45 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "code",
-						"short": "Model code (Settings tab, ID section).",
+						"title": "Code",
 						"type": "`$STRING`",
+						"short": "Model code (Settings tab, ID section).",
 					},
 					map[string]any{
-						"format": "date-time",
 						"name": "created_at",
+						"title": "Created At",
 						"type": "`$STRING`",
+						"format": "date-time",
 					},
 					map[string]any{
 						"name": "dataset_code",
-						"short": "Code of the dataset the model is trained on.",
+						"title": "Dataset Code",
 						"type": "`$STRING`",
+						"short": "Code of the dataset the model is trained on.",
 					},
 					map[string]any{
 						"name": "model_name",
-						"short": "Model type name, e.g.",
+						"title": "Model Name",
 						"type": "`$STRING`",
+						"short": "Model type name, e.g.",
 					},
 					map[string]any{
 						"name": "name",
-						"short": "User-given model name.",
+						"title": "Name",
 						"type": "`$STRING`",
+						"short": "User-given model name.",
 					},
 					map[string]any{
 						"name": "properties",
-						"short": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
+						"title": "Properties",
 						"type": "`$OBJECT`",
+						"short": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
 					},
 					map[string]any{
-						"format": "date-time",
 						"name": "updated_at",
+						"title": "Updated At",
 						"type": "`$STRING`",
+						"format": "date-time",
 					},
 				},
 				"name": "model_info",
@@ -373,17 +436,6 @@ func MakeConfig() map[string]any {
 						"name": "load",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{
-									"params": []any{
-										map[string]any{
-											"kind": "param",
-											"name": "model_code",
-											"orig": "model_code",
-											"reqd": true,
-											"type": "`$STRING`",
-										},
-									},
-								},
 								"kind": "http",
 								"method": "GET",
 								"orig": "/model/fetch-model-info/{model_code}",
@@ -398,47 +450,58 @@ func MakeConfig() map[string]any {
 										"var": "model_code",
 									},
 								},
-								"select": map[string]any{
-									"exist": []any{
-										"model_code",
-									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body.data`",
-								},
 								"parts": []any{
 									"model",
 									"fetch-model-info",
 									"{model_code}",
+								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body.data`",
+								},
+								"args": map[string]any{
+									"params": []any{
+										map[string]any{
+											"name": "model_code",
+											"orig": "model_code",
+											"type": "`$STRING`",
+											"kind": "param",
+											"reqd": true,
+										},
+									},
+								},
+								"select": map[string]any{
+									"exist": []any{
+										"model_code",
+									},
 								},
 							},
 						},
 					},
 				},
 				"relations": map[string]any{
-					"ancestors": []any{
-						[]any{
-							"fetch_model_info",
-						},
-					},
+					"ancestors": []any{},
 				},
 			},
 			"model_result": map[string]any{
 				"fields": []any{
 					map[string]any{
 						"name": "data",
+						"title": "Data",
 						"type": "`$ARRAY`",
 					},
 					map[string]any{
 						"name": "page",
-						"short": "Page number for paginated results.",
+						"title": "Page",
 						"type": "`$INTEGER`",
+						"short": "Page number for paginated results.",
 					},
 					map[string]any{
 						"name": "pagesize",
-						"short": "Rows per page.",
+						"title": "Pagesize",
 						"type": "`$INTEGER`",
+						"short": "Rows per page.",
 					},
 				},
 				"name": "model_result",
@@ -448,17 +511,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{
-									"params": []any{
-										map[string]any{
-											"kind": "param",
-											"name": "model_code",
-											"orig": "model_code",
-											"reqd": true,
-											"type": "`$STRING`",
-										},
-									},
-								},
 								"kind": "http",
 								"method": "POST",
 								"orig": "/model/fetch-result/{model_code}",
@@ -473,48 +525,58 @@ func MakeConfig() map[string]any {
 										"var": "model_code",
 									},
 								},
-								"select": map[string]any{
-									"exist": []any{
-										"model_code",
-									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body`",
-								},
 								"parts": []any{
 									"model",
 									"fetch-result",
 									"{model_code}",
+								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body`",
+								},
+								"args": map[string]any{
+									"params": []any{
+										map[string]any{
+											"name": "model_code",
+											"orig": "model_code",
+											"type": "`$STRING`",
+											"kind": "param",
+											"reqd": true,
+										},
+									},
+								},
+								"select": map[string]any{
+									"exist": []any{
+										"model_code",
+									},
 								},
 							},
 						},
 					},
 				},
 				"relations": map[string]any{
-					"ancestors": []any{
-						[]any{
-							"fetch_result",
-						},
-					},
+					"ancestors": []any{},
 				},
 			},
 			"prediction": map[string]any{
 				"fields": []any{
 					map[string]any{
 						"name": "columns",
-						"short": "Column names associated with each prediction row.",
+						"title": "Columns",
 						"type": "`$ARRAY`",
+						"short": "Column names associated with each prediction row.",
 					},
 					map[string]any{
 						"name": "data",
+						"title": "Data",
+						"type": "`$ARRAY`",
 						"op": map[string]any{
 							"create": map[string]any{
 								"req": true,
 								"type": "`$OBJECT`",
 							},
 						},
-						"type": "`$ARRAY`",
 					},
 				},
 				"name": "prediction",
@@ -524,17 +586,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{
-									"params": []any{
-										map[string]any{
-											"kind": "param",
-											"name": "model_code",
-											"orig": "model_code",
-											"reqd": true,
-											"type": "`$STRING`",
-										},
-									},
-								},
 								"kind": "http",
 								"method": "POST",
 								"orig": "/v1/prediction/model/{model_code}",
@@ -552,34 +603,35 @@ func MakeConfig() map[string]any {
 										"var": "model_code",
 									},
 								},
-								"select": map[string]any{
-									"exist": []any{
-										"model_code",
-									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body.data`",
-								},
 								"parts": []any{
 									"v1",
 									"prediction",
 									"model",
 									"{model_code}",
 								},
-							},
-							map[string]any{
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body.data`",
+								},
 								"args": map[string]any{
 									"params": []any{
 										map[string]any{
-											"kind": "param",
 											"name": "model_code",
 											"orig": "model_code",
-											"reqd": true,
 											"type": "`$STRING`",
+											"kind": "param",
+											"reqd": true,
 										},
 									},
 								},
+								"select": map[string]any{
+									"exist": []any{
+										"model_code",
+									},
+								},
+							},
+							map[string]any{
 								"kind": "http",
 								"method": "POST",
 								"orig": "/v2/prediction/model/{model_code}",
@@ -597,31 +649,39 @@ func MakeConfig() map[string]any {
 										"var": "model_code",
 									},
 								},
-								"select": map[string]any{
-									"exist": []any{
-										"model_code",
-									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body.data`",
-								},
 								"parts": []any{
 									"v2",
 									"prediction",
 									"model",
 									"{model_code}",
 								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body.data`",
+								},
+								"args": map[string]any{
+									"params": []any{
+										map[string]any{
+											"name": "model_code",
+											"orig": "model_code",
+											"type": "`$STRING`",
+											"kind": "param",
+											"reqd": true,
+										},
+									},
+								},
+								"select": map[string]any{
+									"exist": []any{
+										"model_code",
+									},
+								},
 							},
 						},
 					},
 				},
 				"relations": map[string]any{
-					"ancestors": []any{
-						[]any{
-							"model",
-						},
-					},
+					"ancestors": []any{},
 				},
 			},
 		},

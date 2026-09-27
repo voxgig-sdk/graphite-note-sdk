@@ -1,7 +1,7 @@
 // Typed models for the GraphiteNote SDK.
 //
-// GENERATED from the API model: main.kit.entity.<e>.fields[] and per-op
-// params (op.<name>.points[].args.params[]). Field/param types come from the
+// GENERATED from the API model: main.kit.entity.<e>.fields{} and per-op
+// params (op.<name>.points[].g.params[]). Field/param types come from the
 // canonical type sentinels via @voxgig/sdkgen canonToType (source of truth:
 // @voxgig/apidef VALID_CANON). Do not edit by hand.
 package entity
@@ -14,11 +14,6 @@ import (
 
 // Dataset is the typed data model for the dataset entity.
 type Dataset struct {
-	Columns *int `json:"columns,omitempty"`
-	Datasetcode *string `json:"datasetcode,omitempty"`
-	Name string `json:"name"`
-	Tablename *string `json:"tablename,omitempty"`
-	Usercode string `json:"usercode"`
 }
 
 // DatasetCreateData is the typed request payload for Dataset.CreateTyped.
@@ -30,16 +25,20 @@ type DatasetCreateData struct {
 	Usercode string `json:"usercode"`
 }
 
-// DatasetFill is the typed data model for the dataset_fill entity.
-type DatasetFill struct {
-	Append bool `json:"append"`
-	Columns []any `json:"columns"`
-	Compressed bool `json:"compressed"`
+// DatasetComplete is the typed data model for the dataset_complete entity.
+type DatasetComplete struct {
+}
+
+// DatasetCompleteCreateData is the typed request payload for DatasetComplete.CreateTyped.
+type DatasetCompleteCreateData struct {
 	Datasetcode string `json:"datasetcode"`
 	Details *map[string]any `json:"details,omitempty"`
-	Insertdata string `json:"insertdata"`
 	Status *string `json:"status,omitempty"`
 	Usercode string `json:"usercode"`
+}
+
+// DatasetFill is the typed data model for the dataset_fill entity.
+type DatasetFill struct {
 }
 
 // DatasetFillCreateData is the typed request payload for DatasetFill.CreateTyped.
@@ -56,13 +55,6 @@ type DatasetFillCreateData struct {
 
 // ModelInfo is the typed data model for the model_info entity.
 type ModelInfo struct {
-	Code *string `json:"code,omitempty"`
-	CreatedAt *string `json:"created_at,omitempty"`
-	DatasetCode *string `json:"dataset_code,omitempty"`
-	ModelName *string `json:"model_name,omitempty"`
-	Name *string `json:"name,omitempty"`
-	Properties *map[string]any `json:"properties,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
 // ModelInfoLoadMatch is the typed request payload for ModelInfo.LoadTyped.
@@ -72,9 +64,6 @@ type ModelInfoLoadMatch struct {
 
 // ModelResult is the typed data model for the model_result entity.
 type ModelResult struct {
-	Data *[]any `json:"data,omitempty"`
-	Page *int `json:"page,omitempty"`
-	Pagesize *int `json:"pagesize,omitempty"`
 }
 
 // ModelResultCreateData is the typed request payload for ModelResult.CreateTyped.
@@ -87,8 +76,6 @@ type ModelResultCreateData struct {
 
 // Prediction is the typed data model for the prediction entity.
 type Prediction struct {
-	Columns *[]any `json:"columns,omitempty"`
-	Data *[]any `json:"data,omitempty"`
 }
 
 // PredictionCreateData is the typed request payload for Prediction.CreateTyped.

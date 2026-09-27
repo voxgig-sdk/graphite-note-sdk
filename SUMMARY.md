@@ -6,7 +6,7 @@ Graphite Note (graphite-note.com) no-code predictive analytics: the Dataset API 
 
 This guide introduces the API, the client libraries, and the companion tools in this repository. Start with the API capabilities, choose a client for your application, and use the linked reference when you need exact request and response details.
 
-The selected API surface contains 5 entities and 7 HTTP routes. There are 6 SDK targets and 2 companion tools.
+The selected API surface contains 6 entities and 7 HTTP routes. There are 6 SDK targets and 2 companion tools.
 
 An entity groups related API operations. An operation can have several routes with different inputs or authentication requirements. The SDK exposes the entity and its operations using the conventions of the selected language.
 
@@ -25,6 +25,16 @@ Key fields to recognise:
 - `name`: Human-readable dataset name.
 - `tablename`: Backing table name, for example
 - `usercode`: Unique code identifying the user.
+
+### [DatasetComplete](docs/api/dataset_complete.html)
+
+Results: Success.
+
+SDK operations: `create`.
+
+Key fields to recognise:
+
+- `status`: &#39;success&#39; on success.
 
 ### [DatasetFill](docs/api/dataset_fill.html)
 
@@ -73,6 +83,7 @@ SDK operations: `create`.
 Key fields to recognise:
 
 - `columns`: Column names associated with each prediction row.
+- `data`: Classification/regression prediction results.
 
 ### Route map
 
@@ -81,7 +92,7 @@ Use this map to locate a capability. Consult the entity reference before supplyi
 | Entity | SDK operation | HTTP route | Authentication |
 | --- | --- | --- | --- |
 | [Dataset](docs/api/dataset.html) | `create` | `POST /dataset-create` | Required |
-| [DatasetFill](docs/api/dataset_fill.html) | `create` | `POST /dataset-complete` | Required |
+| [DatasetComplete](docs/api/dataset_complete.html) | `create` | `POST /dataset-complete` | Required |
 | [DatasetFill](docs/api/dataset_fill.html) | `create` | `POST /dataset-fill` | Required |
 | [ModelInfo](docs/api/model_info.html) | `load` | `GET /model/fetch-model-info/{model_code}` | Required |
 | [ModelResult](docs/api/model_result.html) | `create` | `POST /model/fetch-result/{model_code}` | Required |

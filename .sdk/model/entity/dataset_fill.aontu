@@ -1,0 +1,91 @@
+# Entity: dataset_fill
+
+main: kit: entity: dataset_fill: {
+
+  alias: field: {}
+
+  fields: {
+    append: {
+      h: "Append"
+      n: "append"
+      r: true
+      sh: "True to append to existing rows; false to truncate the dataset first."
+      t: "`$BOOLEAN`"
+    }
+    columns: {
+      h: "Columns"
+      n: "columns"
+      r: true
+      t: "`$ARRAY`"
+    }
+    compressed: {
+      h: "Compressed"
+      n: "compressed"
+      r: true
+      sh: "True when insert-data is gzip+base64; false when it is a JSON-escaped string."
+      t: "`$BOOLEAN`"
+    }
+    datasetcode: {
+      h: "Datasetcode"
+      n: "datasetcode"
+      r: true
+      t: "`$STRING`"
+    }
+    details: {
+      h: "Details"
+      n: "details"
+      r: false
+      t: "`$OBJECT`"
+    }
+    insertdata: {
+      h: "Insertdata"
+      n: "insertdata"
+      r: true
+      sh: "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true."
+      t: "`$STRING`"
+    }
+    status: {
+      h: "Status"
+      n: "status"
+      r: false
+      sh: "'success' on success."
+      t: "`$STRING`"
+    }
+    usercode: {
+      h: "Usercode"
+      n: "usercode"
+      r: true
+      t: "`$STRING`"
+    }
+  }
+
+  name: "dataset_fill"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST /dataset-fill"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/dataset-fill"
+          s: [
+            {
+              lit: "dataset-fill"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.data`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

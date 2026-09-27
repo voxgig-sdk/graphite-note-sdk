@@ -264,7 +264,6 @@ func (sdk *GraphiteNoteSDK) rawRequest(fetchargs map[string]any) (map[string]any
 		if !noBody {
 			if jf := vs.GetProp(fm, "json"); jf != nil {
 				if f, ok := jf.(func() any); ok {
-					// f() returns nil on parse error in our fetcher.
 					jsonData = f()
 				}
 			}
@@ -281,17 +280,6 @@ func (sdk *GraphiteNoteSDK) rawRequest(fetchargs map[string]any) (map[string]any
 	return map[string]any{"ok": false, "err": ctx.MakeError("direct_invalid", "invalid response type")}, nil
 }
 
-// Raw GraphQL access: the pressure valve that makes the generated surface's
-// deliberate omissions (per-call selection sets, typed filter builders,
-// batching, subscriptions) livable — the whole schema stays reachable.
-//
-// Thin wrapper over the same prepare/fetch path Direct uses, with the one
-// thing raw Direct cannot do for GraphQL: a GraphQL failure rides HTTP 200
-// as a top-level `errors` array, so status alone would report a failed query
-// as ok.
-//
-// NOTE: like Direct, this bypasses the feature pipeline — no retry,
-// ratelimit or paging features apply.
 func (sdk *GraphiteNoteSDK) Graphql(
 	query string, variables map[string]any, ctrl map[string]any,
 ) (map[string]any, error) {
@@ -343,6 +331,14 @@ func (sdk *GraphiteNoteSDK) Graphql(
 // client.Dataset(nil).Load(map[string]any{"id": ...}, nil).
 func (sdk *GraphiteNoteSDK) Dataset(data map[string]any) GraphiteNoteEntity {
 	return NewDatasetEntityFunc(sdk, data)
+}
+
+
+// DatasetComplete returns a DatasetComplete entity bound to this client.
+// Idiomatic usage: client.DatasetComplete(nil).List(nil, nil) or
+// client.DatasetComplete(nil).Load(map[string]any{"id": ...}, nil).
+func (sdk *GraphiteNoteSDK) DatasetComplete(data map[string]any) GraphiteNoteEntity {
+	return NewDatasetCompleteEntityFunc(sdk, data)
 }
 
 

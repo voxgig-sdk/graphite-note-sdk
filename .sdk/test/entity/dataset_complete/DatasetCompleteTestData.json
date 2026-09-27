@@ -1,0 +1,44 @@
+{
+  "existing": {
+    "dataset_complete": {
+      "DATASET_COMPLETE00": {
+        "datasetcode": "s28",
+        "details": {},
+        "status": "s2a",
+        "usercode": "s2b",
+        "id": "DATASET_COMPLETE00"
+      },
+      "DATASET_COMPLETE01": {
+        "datasetcode": "s50",
+        "details": {},
+        "status": "s52",
+        "usercode": "s53",
+        "id": "DATASET_COMPLETE01"
+      },
+      "DATASET_COMPLETE02": {
+        "datasetcode": "s78",
+        "details": {},
+        "status": "s7a",
+        "usercode": "s7b",
+        "id": "DATASET_COMPLETE02"
+      }
+    }
+  },
+  "new": {
+    "dataset_complete": {
+      "dataset_complete_ref01": {
+        "datasetcode": "sa0",
+        "details": {},
+        "status": "sa2",
+        "usercode": "sa3"
+      }
+    }
+  },
+  "requests": {
+    "POST /dataset-complete": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

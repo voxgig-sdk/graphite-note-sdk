@@ -24,12 +24,6 @@ const FEATURE_CLASS: Record<string, typeof BaseFeature> = {
 }
 
 
-// Per-feature plugin DEFINITIONS (voxgig/plugin `Definition` values), from
-// the model's active plugin groups. A feature that takes a `plugins` option
-// (secrets over sekreto) reads its own entry; a feature with no plugins has
-// none. Named imports above make each definition statically reachable, so
-// an SDK carries exactly the plugin modules its model selects — the same
-// leanness the old side-effect registry imports bought, without a registry.
 const FEATURE_PLUGINS: Record<string, any[]> = {
   
 }
@@ -40,7 +34,6 @@ class Config {
   makeFeature(this: any, fn: string) {
     const fc = FEATURE_CLASS[fn]
     const fi = new fc()
-    // TODO: errors etc
     return fi
   }
 
@@ -55,7 +48,7 @@ class Config {
   main = {
     name: 'GraphiteNote',
         slug: "graphite-note",
-    version: "0.0.1",
+    version: "0.1.1",
     target: "ts",
 
   }
@@ -212,6 +205,9 @@ class Config {
         dataset: {
         },
   
+        dataset_complete: {
+        },
+  
         dataset_fill: {
         },
   
@@ -233,36 +229,41 @@ class Config {
       "fields": [
         {
           "name": "columns",
+          "title": "Columns",
+          "type": "`$INTEGER`",
           "op": {
             "create": {
               "req": true,
               "type": "`$ARRAY`"
             }
           },
-          "short": "Number of columns created.",
-          "type": "`$INTEGER`"
+          "short": "Number of columns created."
         },
         {
           "name": "datasetcode",
-          "short": "Unique code assigned to the created dataset.",
-          "type": "`$STRING`"
+          "title": "Datasetcode",
+          "type": "`$STRING`",
+          "short": "Unique code assigned to the created dataset."
         },
         {
           "name": "name",
+          "title": "Name",
+          "type": "`$STRING`",
           "req": true,
-          "short": "Human-readable dataset name.",
-          "type": "`$STRING`"
+          "short": "Human-readable dataset name."
         },
         {
           "name": "tablename",
-          "short": "Backing table name, e.g.",
-          "type": "`$STRING`"
+          "title": "Tablename",
+          "type": "`$STRING`",
+          "short": "Backing table name, e.g."
         },
         {
           "name": "usercode",
+          "title": "Usercode",
+          "type": "`$STRING`",
           "req": true,
-          "short": "Unique code identifying the user.",
-          "type": "`$STRING`"
+          "short": "Unique code identifying the user."
         }
       ],
       "name": "dataset",
@@ -272,7 +273,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "args": {},
               "kind": "http",
               "method": "POST",
               "orig": "/dataset-create",
@@ -281,14 +281,75 @@ class Config {
                   "lit": "dataset-create"
                 }
               ],
-              "select": {},
+              "parts": [
+                "dataset-create"
+              ],
+              "rename": {},
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
               },
+              "args": {},
+              "select": {}
+            }
+          ]
+        }
+      },
+      "relations": {
+        "ancestors": []
+      }
+    },
+    "dataset_complete": {
+      "fields": [
+        {
+          "name": "datasetcode",
+          "title": "Datasetcode",
+          "type": "`$STRING`",
+          "req": true
+        },
+        {
+          "name": "details",
+          "title": "Details",
+          "type": "`$OBJECT`"
+        },
+        {
+          "name": "status",
+          "title": "Status",
+          "type": "`$STRING`",
+          "short": "'success' on success."
+        },
+        {
+          "name": "usercode",
+          "title": "Usercode",
+          "type": "`$STRING`",
+          "req": true
+        }
+      ],
+      "name": "dataset_complete",
+      "op": {
+        "create": {
+          "input": "data",
+          "name": "create",
+          "points": [
+            {
+              "kind": "http",
+              "method": "POST",
+              "orig": "/dataset-complete",
+              "segments": [
+                {
+                  "lit": "dataset-complete"
+                }
+              ],
               "parts": [
-                "dataset-create"
-              ]
+                "dataset-complete"
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body.data`"
+              },
+              "args": {},
+              "select": {}
             }
           ]
         }
@@ -301,45 +362,53 @@ class Config {
       "fields": [
         {
           "name": "append",
+          "title": "Append",
+          "type": "`$BOOLEAN`",
           "req": true,
-          "short": "True to append to existing rows; false to truncate the dataset first.",
-          "type": "`$BOOLEAN`"
+          "short": "True to append to existing rows; false to truncate the dataset first."
         },
         {
           "name": "columns",
-          "req": true,
-          "type": "`$ARRAY`"
+          "title": "Columns",
+          "type": "`$ARRAY`",
+          "req": true
         },
         {
           "name": "compressed",
+          "title": "Compressed",
+          "type": "`$BOOLEAN`",
           "req": true,
-          "short": "True when insert-data is gzip+base64; false when it is a JSON-escaped string.",
-          "type": "`$BOOLEAN`"
+          "short": "True when insert-data is gzip+base64; false when it is a JSON-escaped string."
         },
         {
           "name": "datasetcode",
-          "req": true,
-          "type": "`$STRING`"
+          "title": "Datasetcode",
+          "type": "`$STRING`",
+          "req": true
         },
         {
           "name": "details",
+          "title": "Details",
           "type": "`$OBJECT`"
         },
         {
           "name": "insertdata",
+          "title": "Insertdata",
+          "type": "`$STRING`",
           "req": true,
-          "short": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true.",
-          "type": "`$STRING`"
+          "short": "The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true."
         },
         {
           "name": "status",
-          "short": "'success' on success.",
-          "type": "`$STRING`"
+          "title": "Status",
+          "type": "`$STRING`",
+          "short": "'success' on success."
         },
         {
           "name": "usercode",
-          "req": true,
-          "type": "`$STRING`"
+          "title": "Usercode",
+          "type": "`$STRING`",
+          "req": true
         }
       ],
       "name": "dataset_fill",
@@ -349,26 +418,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "args": {},
-              "kind": "http",
-              "method": "POST",
-              "orig": "/dataset-complete",
-              "segments": [
-                {
-                  "lit": "dataset-complete"
-                }
-              ],
-              "select": {},
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body.data`"
-              },
-              "parts": [
-                "dataset-complete"
-              ]
-            },
-            {
-              "args": {},
               "kind": "http",
               "method": "POST",
               "orig": "/dataset-fill",
@@ -377,14 +426,16 @@ class Config {
                   "lit": "dataset-fill"
                 }
               ],
-              "select": {},
+              "parts": [
+                "dataset-fill"
+              ],
+              "rename": {},
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.data`"
               },
-              "parts": [
-                "dataset-fill"
-              ]
+              "args": {},
+              "select": {}
             }
           ]
         }
@@ -397,38 +448,45 @@ class Config {
       "fields": [
         {
           "name": "code",
-          "short": "Model code (Settings tab, ID section).",
-          "type": "`$STRING`"
+          "title": "Code",
+          "type": "`$STRING`",
+          "short": "Model code (Settings tab, ID section)."
         },
         {
-          "format": "date-time",
           "name": "created_at",
-          "type": "`$STRING`"
+          "title": "Created At",
+          "type": "`$STRING`",
+          "format": "date-time"
         },
         {
           "name": "dataset_code",
-          "short": "Code of the dataset the model is trained on.",
-          "type": "`$STRING`"
+          "title": "Dataset Code",
+          "type": "`$STRING`",
+          "short": "Code of the dataset the model is trained on."
         },
         {
           "name": "model_name",
-          "short": "Model type name, e.g.",
-          "type": "`$STRING`"
+          "title": "Model Name",
+          "type": "`$STRING`",
+          "short": "Model type name, e.g."
         },
         {
           "name": "name",
-          "short": "User-given model name.",
-          "type": "`$STRING`"
+          "title": "Name",
+          "type": "`$STRING`",
+          "short": "User-given model name."
         },
         {
           "name": "properties",
-          "short": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).",
-          "type": "`$OBJECT`"
+          "title": "Properties",
+          "type": "`$OBJECT`",
+          "short": "Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...)."
         },
         {
-          "format": "date-time",
           "name": "updated_at",
-          "type": "`$STRING`"
+          "title": "Updated At",
+          "type": "`$STRING`",
+          "format": "date-time"
         }
       ],
       "name": "model_info",
@@ -438,17 +496,6 @@ class Config {
           "name": "load",
           "points": [
             {
-              "args": {
-                "params": [
-                  {
-                    "kind": "param",
-                    "name": "model_code",
-                    "orig": "model_code",
-                    "reqd": true,
-                    "type": "`$STRING`"
-                  }
-                ]
-              },
               "kind": "http",
               "method": "GET",
               "orig": "/model/fetch-model-info/{model_code}",
@@ -463,47 +510,58 @@ class Config {
                   "var": "model_code"
                 }
               ],
-              "select": {
-                "exist": [
-                  "model_code"
-                ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body.data`"
-              },
               "parts": [
                 "model",
                 "fetch-model-info",
                 "{model_code}"
-              ]
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body.data`"
+              },
+              "args": {
+                "params": [
+                  {
+                    "name": "model_code",
+                    "orig": "model_code",
+                    "type": "`$STRING`",
+                    "kind": "param",
+                    "reqd": true
+                  }
+                ]
+              },
+              "select": {
+                "exist": [
+                  "model_code"
+                ]
+              }
             }
           ]
         }
       },
       "relations": {
-        "ancestors": [
-          [
-            "fetch_model_info"
-          ]
-        ]
+        "ancestors": []
       }
     },
     "model_result": {
       "fields": [
         {
           "name": "data",
+          "title": "Data",
           "type": "`$ARRAY`"
         },
         {
           "name": "page",
-          "short": "Page number for paginated results.",
-          "type": "`$INTEGER`"
+          "title": "Page",
+          "type": "`$INTEGER`",
+          "short": "Page number for paginated results."
         },
         {
           "name": "pagesize",
-          "short": "Rows per page.",
-          "type": "`$INTEGER`"
+          "title": "Pagesize",
+          "type": "`$INTEGER`",
+          "short": "Rows per page."
         }
       ],
       "name": "model_result",
@@ -513,17 +571,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "args": {
-                "params": [
-                  {
-                    "kind": "param",
-                    "name": "model_code",
-                    "orig": "model_code",
-                    "reqd": true,
-                    "type": "`$STRING`"
-                  }
-                ]
-              },
               "kind": "http",
               "method": "POST",
               "orig": "/model/fetch-result/{model_code}",
@@ -538,48 +585,58 @@ class Config {
                   "var": "model_code"
                 }
               ],
-              "select": {
-                "exist": [
-                  "model_code"
-                ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body`"
-              },
               "parts": [
                 "model",
                 "fetch-result",
                 "{model_code}"
-              ]
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body`"
+              },
+              "args": {
+                "params": [
+                  {
+                    "name": "model_code",
+                    "orig": "model_code",
+                    "type": "`$STRING`",
+                    "kind": "param",
+                    "reqd": true
+                  }
+                ]
+              },
+              "select": {
+                "exist": [
+                  "model_code"
+                ]
+              }
             }
           ]
         }
       },
       "relations": {
-        "ancestors": [
-          [
-            "fetch_result"
-          ]
-        ]
+        "ancestors": []
       }
     },
     "prediction": {
       "fields": [
         {
           "name": "columns",
-          "short": "Column names associated with each prediction row.",
-          "type": "`$ARRAY`"
+          "title": "Columns",
+          "type": "`$ARRAY`",
+          "short": "Column names associated with each prediction row."
         },
         {
           "name": "data",
+          "title": "Data",
+          "type": "`$ARRAY`",
           "op": {
             "create": {
               "req": true,
               "type": "`$OBJECT`"
             }
-          },
-          "type": "`$ARRAY`"
+          }
         }
       ],
       "name": "prediction",
@@ -589,17 +646,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "args": {
-                "params": [
-                  {
-                    "kind": "param",
-                    "name": "model_code",
-                    "orig": "model_code",
-                    "reqd": true,
-                    "type": "`$STRING`"
-                  }
-                ]
-              },
               "kind": "http",
               "method": "POST",
               "orig": "/v1/prediction/model/{model_code}",
@@ -617,34 +663,35 @@ class Config {
                   "var": "model_code"
                 }
               ],
-              "select": {
-                "exist": [
-                  "model_code"
-                ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body.data`"
-              },
               "parts": [
                 "v1",
                 "prediction",
                 "model",
                 "{model_code}"
-              ]
-            },
-            {
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body.data`"
+              },
               "args": {
                 "params": [
                   {
-                    "kind": "param",
                     "name": "model_code",
                     "orig": "model_code",
-                    "reqd": true,
-                    "type": "`$STRING`"
+                    "type": "`$STRING`",
+                    "kind": "param",
+                    "reqd": true
                   }
                 ]
               },
+              "select": {
+                "exist": [
+                  "model_code"
+                ]
+              }
+            },
+            {
               "kind": "http",
               "method": "POST",
               "orig": "/v2/prediction/model/{model_code}",
@@ -662,31 +709,39 @@ class Config {
                   "var": "model_code"
                 }
               ],
-              "select": {
-                "exist": [
-                  "model_code"
-                ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body.data`"
-              },
               "parts": [
                 "v2",
                 "prediction",
                 "model",
                 "{model_code}"
-              ]
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body.data`"
+              },
+              "args": {
+                "params": [
+                  {
+                    "name": "model_code",
+                    "orig": "model_code",
+                    "type": "`$STRING`",
+                    "kind": "param",
+                    "reqd": true
+                  }
+                ]
+              },
+              "select": {
+                "exist": [
+                  "model_code"
+                ]
+              }
             }
           ]
         }
       },
       "relations": {
-        "ancestors": [
-          [
-            "model"
-          ]
-        ]
+        "ancestors": []
       }
     }
   }

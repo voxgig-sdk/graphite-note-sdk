@@ -70,7 +70,7 @@ function model_info_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["model_info01", "model_info02", "model_info03", "fetch_model_info01", "fetch_model_info02", "fetch_model_info03"] as $k) {
+    foreach (["model_info01", "model_info02", "model_info03"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 

@@ -62,7 +62,7 @@ def model_info_basic_setup(extra)
 
   # Generate idmap via transform.
   idmap = Vs.transform(
-    ["model_info01", "model_info02", "model_info03", "fetch_model_info01", "fetch_model_info02", "fetch_model_info03"],
+    ["model_info01", "model_info02", "model_info03"],
     {
       "`$PACK`" => ["", {
         "`$KEY`" => "`$COPY`",

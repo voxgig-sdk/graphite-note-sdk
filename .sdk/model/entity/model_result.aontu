@@ -1,0 +1,81 @@
+# Entity: model_result
+
+main: kit: entity: model_result: {
+
+  alias: field: {}
+
+  fields: {
+    data: {
+      h: "Data"
+      n: "data"
+      r: false
+      t: "`$ARRAY`"
+    }
+    page: {
+      h: "Page"
+      n: "page"
+      r: false
+      sh: "Page number for paginated results."
+      t: "`$INTEGER`"
+    }
+    pagesize: {
+      h: "Pagesize"
+      n: "pagesize"
+      r: false
+      sh: "Rows per page."
+      t: "`$INTEGER`"
+    }
+  }
+
+  name: "model_result"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST /model/fetch-result/{model_code}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "model_code"
+                or: "model_code"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "POST"
+          o: "/model/fetch-result/{model_code}"
+          q: {
+            exist: [
+              "model_code"
+            ]
+          }
+          s: [
+            {
+              lit: "model"
+            }
+            {
+              lit: "fetch-result"
+            }
+            {
+              var: "model_code"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -224,6 +224,7 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `Prepare` | `(fetchargs map[string]any) (map[string]any, error)` | Build an HTTP request definition without sending. |
 | `Direct` | `(fetchargs map[string]any) (map[string]any, error)` | Build and send an HTTP request. |
 | `Dataset` | `(data map[string]any) GraphiteNoteEntity` | Create a Dataset entity instance. |
+| `DatasetComplete` | `(data map[string]any) GraphiteNoteEntity` | Create a DatasetComplete entity instance. |
 | `DatasetFill` | `(data map[string]any) GraphiteNoteEntity` | Create a DatasetFill entity instance. |
 | `ModelInfo` | `(data map[string]any) GraphiteNoteEntity` | Create a ModelInfo entity instance. |
 | `ModelResult` | `(data map[string]any) GraphiteNoteEntity` | Create a ModelResult entity instance. |
@@ -278,6 +279,19 @@ Operations: Create.
 
 API path: `/dataset-create`
 
+#### DatasetComplete
+
+| Field | Description |
+| --- | --- |
+| `"datasetcode"` |  |
+| `"details"` |  |
+| `"status"` | 'success' on success. |
+| `"usercode"` |  |
+
+Operations: Create.
+
+API path: `/dataset-complete`
+
 #### DatasetFill
 
 | Field | Description |
@@ -293,7 +307,7 @@ API path: `/dataset-create`
 
 Operations: Create.
 
-API path: `/dataset-complete`
+API path: `/dataset-fill`
 
 #### ModelInfo
 
@@ -364,6 +378,39 @@ Create an instance: `dataset := client.Dataset(nil)`
 ```go
 result, err := client.Dataset(nil).Create(map[string]any{
     "name": "example_name",
+    "usercode": "example_usercode",
+}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(result)
+```
+
+
+### DatasetComplete
+
+Create an instance: `datasetComplete := client.DatasetComplete(nil)`
+
+#### Operations
+
+| Method | Description |
+| --- | --- |
+| `Create(data, ctrl)` | Create a new entity with the given data. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `datasetcode` | `string` |  |
+| `details` | `map[string]any` |  |
+| `status` | `string` | 'success' on success. |
+| `usercode` | `string` |  |
+
+#### Example: Create
+
+```go
+result, err := client.DatasetComplete(nil).Create(map[string]any{
+    "datasetcode": "example_datasetcode",
     "usercode": "example_usercode",
 }, nil)
 if err != nil {
@@ -518,14 +565,14 @@ above:
 
 | Feature | What it does |
 |---|---|
-| [`debug`](#debug) | Request/response capture ring buffer for debugging |
-| [`idempotency`](#idempotency) | Idempotency keys for safe retries of mutating operations |
-| [`metrics`](#metrics) | Statistics capture: per-operation counters and latency |
-| [`paging`](#paging) | Pagination signals for list operations |
-| [`ratelimit`](#ratelimit) | Client-side rate limiting via a token bucket |
-| [`retry`](#retry) | Automatic retry of transient failures with exponential backoff |
-| [`test`](#test) | In-memory mock transport for testing without a live server |
-| [`timeout`](#timeout) | Per-request timeout with transport abort |
+| [`debug`](#debug) | Debug capture |
+| [`idempotency`](#idempotency) | Idempotency |
+| [`metrics`](#metrics) | Metrics |
+| [`paging`](#paging) | Paging |
+| [`ratelimit`](#ratelimit) | Rate limiting |
+| [`retry`](#retry) | Retry |
+| [`test`](#test) | Test transport |
+| [`timeout`](#timeout) | Timeout |
 
 > **Order matters for `ratelimit`, `retry`, `timeout`.** These wrap the
 > transport, so each one wraps whatever is already installed: the order you
@@ -534,7 +581,7 @@ above:
 
 ### debug
 
-Request/response capture ring buffer for debugging.
+Debug capture.
 
 | Option | Default |
 |---|---|
@@ -546,7 +593,7 @@ Set `feature.debug.active` to enable it, then override any of the options above.
 
 ### idempotency
 
-Idempotency keys for safe retries of mutating operations.
+Idempotency.
 
 | Option | Default |
 |---|---|
@@ -559,7 +606,7 @@ Set `feature.idempotency.active` to enable it, then override any of the options 
 
 ### metrics
 
-Statistics capture: per-operation counters and latency.
+Metrics.
 
 | Option | Default |
 |---|---|
@@ -569,7 +616,7 @@ Set `feature.metrics.active` to enable it, then override any of the options abov
 
 ### paging
 
-Pagination signals for list operations.
+Paging.
 
 | Option | Default |
 |---|---|
@@ -585,7 +632,7 @@ Set `feature.paging.active` to enable it, then override any of the options above
 
 ### ratelimit
 
-Client-side rate limiting via a token bucket.
+Rate limiting.
 
 | Option | Default |
 |---|---|
@@ -601,7 +648,7 @@ activated earlier.
 
 ### retry
 
-Automatic retry of transient failures with exponential backoff.
+Retry.
 
 | Option | Default |
 |---|---|
@@ -620,7 +667,7 @@ activated earlier.
 
 ### test
 
-In-memory mock transport for testing without a live server.
+Test transport.
 
 | Option | Default |
 |---|---|
@@ -630,7 +677,7 @@ Set `feature.test.active` to enable it, then override any of the options above.
 
 ### timeout
 
-Per-request timeout with transport abort.
+Timeout.
 
 | Option | Default |
 |---|---|
@@ -682,14 +729,14 @@ stage names.
 
 The SDK ships with built-in features:
 
-- **DebugFeature**: Request/response capture ring buffer for debugging
-- **IdempotencyFeature**: Idempotency keys for safe retries of mutating operations
-- **MetricsFeature**: Statistics capture: per-operation counters and latency
-- **PagingFeature**: Pagination signals for list operations
-- **RatelimitFeature**: Client-side rate limiting via a token bucket
-- **RetryFeature**: Automatic retry of transient failures with exponential backoff
-- **TestFeature**: In-memory mock transport for testing without a live server
-- **TimeoutFeature**: Per-request timeout with transport abort
+- **DebugFeature**: Debug capture
+- **IdempotencyFeature**: Idempotency
+- **MetricsFeature**: Metrics
+- **PagingFeature**: Paging
+- **RatelimitFeature**: Rate limiting
+- **RetryFeature**: Retry
+- **TestFeature**: Test transport
+- **TimeoutFeature**: Timeout
 
 Features are initialized in order. Hooks fire in the order features
 were added, so later features can override earlier ones.

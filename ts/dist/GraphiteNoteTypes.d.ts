@@ -12,6 +12,18 @@ export interface DatasetCreateData {
     tablename?: string;
     usercode: string;
 }
+export interface DatasetComplete {
+    datasetcode: string;
+    details?: Record<string, any>;
+    status?: string;
+    usercode: string;
+}
+export interface DatasetCompleteCreateData {
+    datasetcode: string;
+    details?: Record<string, any>;
+    status?: string;
+    usercode: string;
+}
 export interface DatasetFill {
     append: boolean;
     columns: any[];

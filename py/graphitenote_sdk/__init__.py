@@ -313,6 +313,12 @@ class GraphiteNoteSDK:
         return DatasetEntity(self, data)
 
 
+    def DatasetComplete(self, data=None) -> "DatasetCompleteEntity":
+        """Entity factory: client.DatasetComplete().list() / client.DatasetComplete().load({"id": ...})."""
+        from graphitenote_sdk.entity.dataset_complete_entity import DatasetCompleteEntity
+        return DatasetCompleteEntity(self, data)
+
+
     def DatasetFill(self, data=None) -> "DatasetFillEntity":
         """Entity factory: client.DatasetFill().list() / client.DatasetFill().load({"id": ...})."""
         from graphitenote_sdk.entity.dataset_fill_entity import DatasetFillEntity
@@ -365,6 +371,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from graphitenote_sdk.entity.dataset_entity import DatasetEntity
+    from graphitenote_sdk.entity.dataset_complete_entity import DatasetCompleteEntity
     from graphitenote_sdk.entity.dataset_fill_entity import DatasetFillEntity
     from graphitenote_sdk.entity.model_info_entity import ModelInfoEntity
     from graphitenote_sdk.entity.model_result_entity import ModelResultEntity

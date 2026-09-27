@@ -359,6 +359,24 @@ class GraphiteNoteSDK
     }
 
 
+    private $_dataset_complete = null;
+
+    // Canonical facade: $client->DatasetComplete()->list() / ->load(["id" => ...]).
+    // PHP method names are case-insensitive, so lowercase $client->dataset_complete()
+    // resolves here too.
+    public function DatasetComplete($data = null)
+    {
+        require_once __DIR__ . '/entity/dataset_complete_entity.php';
+        if ($data === null) {
+            if ($this->_dataset_complete === null) {
+                $this->_dataset_complete = new DatasetCompleteEntity($this, null);
+            }
+            return $this->_dataset_complete;
+        }
+        return new DatasetCompleteEntity($this, $data);
+    }
+
+
     private $_dataset_fill = null;
 
     // Canonical facade: $client->DatasetFill()->list() / ->load(["id" => ...]).

@@ -1,0 +1,18 @@
+# BasicDatasetCompleteFlow
+
+main: kit: flow: BasicDatasetCompleteFlow:
+{
+  entity: "dataset_complete",
+  kind: "basic",
+  name: "BasicDatasetCompleteFlow",
+  step: [
+    {
+      i: {
+        ref: "dataset_complete_ref01"
+      }
+
+      o: "create"
+    }
+  ],
+  "key$": "BasicDatasetCompleteFlow"
+}

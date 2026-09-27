@@ -1,0 +1,18 @@
+# BasicDatasetFillFlow
+
+main: kit: flow: BasicDatasetFillFlow:
+{
+  entity: "dataset_fill",
+  kind: "basic",
+  name: "BasicDatasetFillFlow",
+  step: [
+    {
+      i: {
+        ref: "dataset_fill_ref01"
+      }
+
+      o: "create"
+    }
+  ],
+  "key$": "BasicDatasetFillFlow"
+}
