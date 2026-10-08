@@ -14,6 +14,9 @@ import {
   loadEnvLocal,
   maybeSkipControl,
   skipIfMissingIds,
+  liveMiss,
+  liveEmpty,
+  describeLive,
 } from '../../utility'
 
 
@@ -40,13 +43,13 @@ describe('ModelInfoDirect', async () => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
     const setup = directSetup({ id: 'direct01' })
     if (maybeSkipControl(t, 'direct', 'direct-load-model_info', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["model_code01"])) return
+    if (skipIfMissingIds(t, setup, ["model_code01"], LIVE_STRICT)) return
     const { client, calls } = setup
 
     const params: any = {}
     const query: any = {}
     if (setup.live) {
-
+      params.model_code = setup.idmap['model_code01']
     } else {
       params.model_code = 'direct01'
     }
@@ -59,18 +62,12 @@ describe('ModelInfoDirect', async () => {
     })
 
     if (setup.live) {
-      // STRICT live mode: a non-2xx is a real failure - this project owns
-      // the server it points at, so there is nothing to be lenient about.
-      //
-      // What is NOT asserted here is the MOCK's own fixtures. `direct01`
-      // is a scripted id and `calls` records the mock transport; neither
-      // exists on a live run, so asserting them made strict mode mean
-      // "compare the live server against the mock's script" - a suite that
-      // could not pass against any real API, including this project's own.
-      assert(result.ok === true,
-        'Live request failed: HTTP ' + result.status)
-      assert(result.status >= 200 && result.status < 300)
-      assert(null != result.data)
+      if (!result.ok || result.status < 200 || result.status >= 300) {
+        return void liveMiss(t, LIVE_STRICT, 'Live load failed: ' + describeLive(result))
+      }
+      if (!(null != result.data)) {
+        return void liveMiss(t, LIVE_STRICT, 'Live load returned no data: ' + describeLive(result))
+      }
     } else {
       assert(result.ok === true)
       assert(result.status === 200)
@@ -85,6 +82,12 @@ describe('ModelInfoDirect', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function liveScenariosActive() { return false && process.env.GRAPHITE_NOTE_TEST_LIVE === 'TRUE' }
 function directSetup(mockres?: any) {

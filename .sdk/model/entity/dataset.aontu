@@ -54,6 +54,11 @@ main: kit: entity: dataset: {
       name: "create"
       points: [
         {
+          bf: [
+            "columns"
+            "name"
+            "usercode"
+          ]
           co: {
             id: "POST /dataset-create"
             source: "openapi3"
@@ -61,6 +66,10 @@ main: kit: entity: dataset: {
           }
           m: "POST"
           o: "/dataset-create"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "dataset-create"

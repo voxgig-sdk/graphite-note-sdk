@@ -53,7 +53,7 @@
         },
         "edition": {
           "github-pages": {
-            "active": true,
+            "active": false,
             "base": "node_modules/@voxgig/docgen/project/.sdk",
             "brand": {},
             "filter": {
@@ -184,6 +184,11 @@
               "points": [
                 {
                   "a": true,
+                  "bf": [
+                    "columns",
+                    "name",
+                    "usercode"
+                  ],
                   "co": {
                     "id": "POST /dataset-create",
                     "source": "openapi3",
@@ -195,6 +200,10 @@
                   "o": "/dataset-create",
                   "q": {},
                   "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
                   "s": [
                     {
                       "lit": "dataset-create"
@@ -256,6 +265,10 @@
               "points": [
                 {
                   "a": true,
+                  "bf": [
+                    "datasetcode",
+                    "usercode"
+                  ],
                   "co": {
                     "id": "POST /dataset-complete",
                     "source": "openapi3",
@@ -267,6 +280,10 @@
                   "o": "/dataset-complete",
                   "q": {},
                   "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
                   "s": [
                     {
                       "lit": "dataset-complete"
@@ -359,6 +376,14 @@
               "points": [
                 {
                   "a": true,
+                  "bf": [
+                    "append",
+                    "columns",
+                    "compressed",
+                    "datasetcode",
+                    "insertdata",
+                    "usercode"
+                  ],
                   "co": {
                     "id": "POST /dataset-fill",
                     "source": "openapi3",
@@ -370,6 +395,10 @@
                   "o": "/dataset-fill",
                   "q": {},
                   "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
                   "s": [
                     {
                       "lit": "dataset-fill"
@@ -484,6 +513,10 @@
                     ]
                   },
                   "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
                   "s": [
                     {
                       "lit": "model"
@@ -545,6 +578,10 @@
               "points": [
                 {
                   "a": true,
+                  "bf": [
+                    "page",
+                    "pagesize"
+                  ],
                   "co": {
                     "id": "POST /model/fetch-result/{model_code}",
                     "source": "openapi3",
@@ -571,6 +608,10 @@
                     ]
                   },
                   "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
                   "s": [
                     {
                       "lit": "model"
@@ -630,6 +671,9 @@
               "points": [
                 {
                   "a": true,
+                  "bf": [
+                    "data"
+                  ],
                   "co": {
                     "id": "POST /v1/prediction/model/{model_code}",
                     "source": "openapi3",
@@ -656,6 +700,10 @@
                     ]
                   },
                   "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
                   "s": [
                     {
                       "lit": "v1"
@@ -677,6 +725,9 @@
                 },
                 {
                   "a": true,
+                  "bf": [
+                    "data"
+                  ],
                   "co": {
                     "id": "POST /v2/prediction/model/{model_code}",
                     "source": "openapi3",
@@ -703,6 +754,10 @@
                     ]
                   },
                   "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
                   "s": [
                     {
                       "lit": "v2"
@@ -1482,6 +1537,7 @@
             },
             "optspec": {
               "clearTimer": "`$FUNCTION`",
+              "now": "`$FUNCTION`",
               "setTimer": "`$FUNCTION`"
             },
             "strict": false
@@ -1741,7 +1797,7 @@
       "optspec": {
         "allow": {
           "method": "GET,PUT,POST,PATCH,DELETE,OPTIONS",
-          "op": "create,update,load,list,remove,command,direct,graphql"
+          "op": "create,update,patch,load,list,remove,command,direct,graphql"
         },
         "apikey": "",
         "auth": {
@@ -1752,7 +1808,12 @@
         },
         "base": "http://localhost:8000",
         "clean": {
-          "keys": "key,token,id"
+          "active": true,
+          "hint": "0",
+          "keys": "key,secret,token,password,passwd,authorization,cookie,credential,signature",
+          "mask": "[redacted]",
+          "min": "4",
+          "values": ""
         },
         "entity": {
           "`$CHILD`": {
@@ -1789,6 +1850,11 @@
         "top": {
           "active": true
         }
+      },
+      "publisher": {
+        "name": "",
+        "security": "",
+        "url": ""
       },
       "repo": {
         "host": "github.com",
@@ -2019,7 +2085,10 @@
             "version": "0.1.1"
           },
           "superseded": [],
-          "title": "Go MCP server"
+          "title": "Go MCP server",
+          "tool": {
+            "write": false
+          }
         },
         "lua": {
           "active": true,
@@ -2396,6 +2465,17 @@
           "base": "",
           "strict": true
         }
+      },
+      "text": {
+        "about_md": "",
+        "docs_url": "",
+        "entity_desc": {},
+        "homepage": "",
+        "meta_source": "",
+        "summary": "",
+        "tagline": "",
+        "title": "",
+        "website": ""
       }
     }
   },

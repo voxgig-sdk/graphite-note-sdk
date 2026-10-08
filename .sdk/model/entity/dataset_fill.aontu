@@ -65,6 +65,14 @@ main: kit: entity: dataset_fill: {
       name: "create"
       points: [
         {
+          bf: [
+            "append"
+            "columns"
+            "compressed"
+            "datasetcode"
+            "insertdata"
+            "usercode"
+          ]
           co: {
             id: "POST /dataset-fill"
             source: "openapi3"
@@ -72,6 +80,10 @@ main: kit: entity: dataset_fill: {
           }
           m: "POST"
           o: "/dataset-fill"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "dataset-fill"

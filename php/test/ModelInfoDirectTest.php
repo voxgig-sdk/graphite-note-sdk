@@ -10,6 +10,18 @@ use PHPUnit\Framework\TestCase;
 
 class ModelInfoDirectTest extends TestCase
 {
+    // main.kit.test.live.strict is true (the default is true): a live
+    // request that fails, or a live test missing an input it needs,
+    // fails the test.
+    // An account with no record for a test to read skips it either way.
+    private const LIVE_STRICT = true;
+
+    private static function liveOk(array $result): bool
+    {
+        $status = Helpers::to_int($result["status"] ?? 0);
+        return empty($result["err"]) && !empty($result["ok"]) && $status >= 200 && $status < 300;
+    }
+
     public function test_direct_load_model_info(): void
     {
         $setup = model_info_direct_setup(["id" => "direct01"]);
@@ -19,14 +31,19 @@ class ModelInfoDirectTest extends TestCase
             return;
         }
         if ($setup["live"]) {
-            $this->markTestSkipped("live direct-load needs real ID — set *_ENTID env var with real IDs to run");
-            return;
+            foreach (["model_code01"] as $_liveKey) {
+                if (null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    Runner::live_miss(self::LIVE_STRICT, "Live test blocked: needs " . $_liveKey . " via GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID");
+                }
+            }
         }
         $client = $setup["client"];
 
         $params = [];
         $query = [];
-        if (!$setup["live"]) {
+        if ($setup["live"]) {
+            $params["model_code"] = $setup["idmap"]["model_code01"] ?? null;
+        } else {
             $params["model_code"] = "direct01";
         }
 
@@ -37,22 +54,13 @@ class ModelInfoDirectTest extends TestCase
             "query" => $query,
         ]);
         if ($setup["live"]) {
-            // Live mode is lenient: synthetic IDs frequently 4xx. Skip
-            // rather than fail when the load endpoint isn't reachable
-            // with the IDs we can construct from setup.idmap.
-            if (!empty($result["err"])) {
-                $this->markTestSkipped("load call failed (likely synthetic IDs against live API): " . (string)$result["err"]);
-                return;
+            if (!self::liveOk($result)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live load failed: " . Runner::live_describe($result));
             }
-            if (empty($result["ok"])) {
-                $this->markTestSkipped("load call not ok (likely synthetic IDs against live API)");
-                return;
+            if (null === ($result["data"] ?? null)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live load returned no data: " . Runner::live_describe($result));
             }
-            $status = Helpers::to_int($result["status"]);
-            if ($status < 200 || $status >= 300) {
-                $this->markTestSkipped("expected 2xx status, got " . $status);
-                return;
-            }
+            $this->assertNotNull($result["data"]);
         } else {
             $this->assertArrayNotHasKey("err", $result);
             $this->assertTrue($result["ok"]);
@@ -89,11 +97,12 @@ function model_info_direct_setup($mockres)
             "apikey" => $env["GRAPHITE_NOTE_APIKEY"],
         ]);
         $client = new GraphiteNoteSDK($merged_opts);
+        $idmap = $env["GRAPHITE_NOTE_TEST_MODEL_INFO_ENTID"] ?? [];
         return [
             "client" => $client,
             "calls" => $calls,
             "live" => true,
-            "idmap" => [],
+            "idmap" => is_array($idmap) ? $idmap : [],
         ];
     }
 

@@ -33,6 +33,10 @@ main: kit: entity: model_result: {
       name: "create"
       points: [
         {
+          bf: [
+            "page"
+            "pagesize"
+          ]
           co: {
             id: "POST /model/fetch-result/{model_code}"
             source: "openapi3"
@@ -55,6 +59,10 @@ main: kit: entity: model_result: {
             exist: [
               "model_code"
             ]
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {

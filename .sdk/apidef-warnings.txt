@@ -1,0 +1,11 @@
+{
+  point: "warning"
+  note: "Points POST /v1/prediction/model/{model_code} and POST /v2/prediction/model/{model_code} on entity=prediction op=create have the same selector (exist: model_code), so only POST /v1/prediction/model/{model_code} is ever chosen. An action or another entity in guide.aontu tells them apart."
+  entity: "prediction"
+  op: "create"
+  points: [
+    "POST /v1/prediction/model/{model_code}"
+    "POST /v2/prediction/model/{model_code}"
+  ]
+
+}

@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { GraphiteNoteSDK, BaseFeature, stdutil } from '../../..'
+import { GraphiteNoteSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,18 @@ describe('PredictionEntity', async () => {
   })
 
 
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = GraphiteNoteSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.Prediction().create({"model_code":1} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.GRAPHITE_NOTE_TEST_LIVE
@@ -51,7 +63,7 @@ describe('PredictionEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"columns":{"a":true,"h":"Columns","n":"columns","r":false,"sh":"Column names associated with each prediction row.","t":"`$ARRAY`","key$":"columns","index$":0},"data":{"a":true,"h":"Data","n":"data","op":{"create":{"req":true,"type":"`$OBJECT`"}},"r":false,"t":"`$ARRAY`","key$":"data","index$":1}},"name":"prediction","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST /v1/prediction/model/{model_code}","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"model_code","or":"model_code","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"POST","o":"/v1/prediction/model/{model_code}","q":{"exist":["model_code"]},"r":{},"s":[{"lit":"v1"},{"lit":"prediction"},{"lit":"model"},{"var":"model_code"}],"t":{"req":"`reqdata`","res":"`body.data`"},"index$":0},{"a":true,"co":{"id":"POST /v2/prediction/model/{model_code}","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"model_code","or":"model_code","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"POST","o":"/v2/prediction/model/{model_code}","q":{"exist":["model_code"]},"r":{},"s":[{"lit":"v2"},{"lit":"prediction"},{"lit":"model"},{"var":"model_code"}],"t":{"req":"`reqdata`","res":"`body.data`"},"index$":1}],"key$":"create"}},"relations":{"ancestors":[]},"key$":"prediction","name__orig":"prediction","Name":"Prediction","name_":"prediction","name-":"prediction","NAME":"PREDICTION","index$":5}, {"active":true,"entity":"prediction","key$":"BasicPredictionFlow","kind":"basic","name":"BasicPredictionFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"prediction_ref01"},"m":{"model_code":"model_code01"},"o":"create","s":[],"v":[],"index$":0}]}, 'Prediction', {"POST /v1/prediction/model/{model_code}":{"protocol":"http","requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"data":{"type":"object","properties":{"predict_values":{"description":"Either an array of prediction rows (each row an array of alias/selectedValue objects — Binary/Multiclass Classification and Regression models), or a single timeseries object (startDate/endDate/sequenceID[/daysData] — Timeseries models).","oneOf":[{},{}]}},"required":["predict_values"],"key$":"data"}},"required":["data"],"x-ref":"#/components/schemas/PredictionRequestV1","index$":1}}}},"parameters":[{"name":"model_code","in":"path","required":true,"description":"The model's code: open the model, Settings tab, ID section.","schema":{"type":"string"},"index$":0}]},"POST /v2/prediction/model/{model_code}":{"protocol":"http","requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"data":{"type":"object","properties":{"predict_values":{"type":"array","items":{"type":"object","properties":{},"description":"One prediction row: keys are the EXACT column names used during model training, values are the inputs. All training features are required; extra identifier fields (Lead ID, Customer ID) are passed through unchanged and echoed in the response.","additionalProperties":true,"x-ref":"#/components/schemas/PredictionRowV2"}}},"required":["predict_values"],"key$":"data"}},"required":["data"],"x-ref":"#/components/schemas/PredictionRequestV2","index$":1}}}},"parameters":[{"name":"model_code","in":"path","required":true,"description":"The model's code: open the model, Settings tab, ID section.","schema":{"type":"string"},"index$":0}]}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"columns":{"a":true,"h":"Columns","n":"columns","r":false,"sh":"Column names associated with each prediction row.","t":"`$ARRAY`","key$":"columns","index$":0},"data":{"a":true,"h":"Data","n":"data","op":{"create":{"req":true,"type":"`$OBJECT`"}},"r":false,"t":"`$ARRAY`","key$":"data","index$":1}},"name":"prediction","op":{"create":{"input":"data","name":"create","points":[{"a":true,"bf":["data"],"co":{"id":"POST /v1/prediction/model/{model_code}","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"model_code","or":"model_code","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"POST","o":"/v1/prediction/model/{model_code}","q":{"exist":["model_code"]},"r":{},"rs":{"kind":"json","media":"application/json"},"s":[{"lit":"v1"},{"lit":"prediction"},{"lit":"model"},{"var":"model_code"}],"t":{"req":"`reqdata`","res":"`body.data`"},"index$":0},{"a":true,"bf":["data"],"co":{"id":"POST /v2/prediction/model/{model_code}","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"model_code","or":"model_code","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"POST","o":"/v2/prediction/model/{model_code}","q":{"exist":["model_code"]},"r":{},"rs":{"kind":"json","media":"application/json"},"s":[{"lit":"v2"},{"lit":"prediction"},{"lit":"model"},{"var":"model_code"}],"t":{"req":"`reqdata`","res":"`body.data`"},"index$":1}],"key$":"create"}},"relations":{"ancestors":[]},"key$":"prediction","name__orig":"prediction","Name":"Prediction","name_":"prediction","name-":"prediction","NAME":"PREDICTION","index$":5}, {"active":true,"entity":"prediction","key$":"BasicPredictionFlow","kind":"basic","name":"BasicPredictionFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"prediction_ref01"},"m":{"model_code":"model_code01"},"o":"create","s":[],"v":[],"index$":0}]}, 'Prediction', {"POST /v1/prediction/model/{model_code}":{"protocol":"http","requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"data":{"type":"object","properties":{"predict_values":{"description":"Either an array of prediction rows (each row an array of alias/selectedValue objects — Binary/Multiclass Classification and Regression models), or a single timeseries object (startDate/endDate/sequenceID[/daysData] — Timeseries models).","oneOf":[{},{}]}},"required":["predict_values"],"key$":"data"}},"required":["data"],"x-ref":"#/components/schemas/PredictionRequestV1","index$":1}}}},"parameters":[{"name":"model_code","in":"path","required":true,"description":"The model's code: open the model, Settings tab, ID section.","schema":{"type":"string"},"index$":0}]},"POST /v2/prediction/model/{model_code}":{"protocol":"http","requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"data":{"type":"object","properties":{"predict_values":{"type":"array","items":{"type":"object","properties":{},"description":"One prediction row: keys are the EXACT column names used during model training, values are the inputs. All training features are required; extra identifier fields (Lead ID, Customer ID) are passed through unchanged and echoed in the response.","additionalProperties":true,"x-ref":"#/components/schemas/PredictionRowV2"}}},"required":["predict_values"],"key$":"data"}},"required":["data"],"x-ref":"#/components/schemas/PredictionRequestV2","index$":1}}}},"parameters":[{"name":"model_code","in":"path","required":true,"description":"The model's code: open the model, Settings tab, ID section.","schema":{"type":"string"},"index$":0}]}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -73,6 +85,12 @@ describe('PredictionEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

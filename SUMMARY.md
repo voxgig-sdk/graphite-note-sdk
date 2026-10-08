@@ -1,6 +1,10 @@
 # Graphite Note API
 
-Graphite Note (graphite-note.com) no-code predictive analytics: the Dataset API (create/fill/complete datasets), the Prediction API (v1 alias-based, v2 column-based, and timeseries forecasting), the Model Results API (paginated result tables) and the Model Info API (model metadata for MLOps/auditing). This definition was authored by Voxgig from Graphite Note&#39;s public developer documentation (docs.graphite-note.com, REST API section), no first-party OpenAPI definition is published. Shapes mirror the documented examples exactly; replace with a first-party definition if one becomes available. Rate limits: 10 requests/min per tenant, 200/min global; 429 on excess. Custom 44x business statuses: 441 plan limit, 442 email exists, 443 trial finished, 445 model creation limit.
+> Graphite Note (graphite-note.com) no-code predictive analytics: the Dataset API (create/fill/complete datasets), the Prediction API (v1 alias-based, v2 column-based, and timeseries forecasting), the Model Results API (paginated result tables) and the Model Info API (model metadata for MLOps/auditing).
+>
+> This definition was authored by Voxgig from Graphite Note&#39;s public developer documentation (docs.graphite-note.com, REST API section), no first-party OpenAPI definition is published. Shapes mirror the documented examples exactly; replace with a first-party definition if one becomes available.
+>
+> Rate limits: 10 requests/min per tenant, 200/min global; 429 on excess. Custom 44x business statuses: 441 plan limit, 442 email exists, 443 trial finished, 445 model creation limit.
 
 ## Start here
 
@@ -12,7 +16,7 @@ An entity groups related API operations. An operation can have several routes wi
 
 ## What the API provides
 
-### [Dataset](docs/api/dataset.html)
+### Dataset
 
 Results: Success.
 
@@ -26,7 +30,7 @@ Key fields to recognise:
 - `tablename`: Backing table name, for example
 - `usercode`: Unique code identifying the user.
 
-### [DatasetComplete](docs/api/dataset_complete.html)
+### DatasetComplete
 
 Results: Success.
 
@@ -36,7 +40,7 @@ Key fields to recognise:
 
 - `status`: &#39;success&#39; on success.
 
-### [DatasetFill](docs/api/dataset_fill.html)
+### DatasetFill
 
 Results: Success.
 
@@ -49,7 +53,7 @@ Key fields to recognise:
 - `insertdata`: The rows to insert, as a STRING: a JSON-escaped array-of-arrays when compressed is false, or gzipped-then-base64 when compressed is true.
 - `status`: &#39;success&#39; on success.
 
-### [ModelInfo](docs/api/model_info.html)
+### ModelInfo
 
 Results: Success.
 
@@ -63,7 +67,7 @@ Key fields to recognise:
 - `name`: User-given model name.
 - `properties`: Full model configuration and structured metadata (excluding bulky training artifacts); shape differs by model type (RFM, CLV, ABC, ...).
 
-### [ModelResult](docs/api/model_result.html)
+### ModelResult
 
 Results: A page of result rows.
 
@@ -74,7 +78,7 @@ Key fields to recognise:
 - `page`: Page number for paginated results.
 - `pagesize`: Rows per page.
 
-### [Prediction](docs/api/prediction.html)
+### Prediction
 
 Results: Prediction results. Timeseries models answer &#123;data: [TimeseriesPoint...]&#125; instead.; Success.
 
@@ -91,13 +95,13 @@ Use this map to locate a capability. Consult the entity reference before supplyi
 
 | Entity | SDK operation | HTTP route | Authentication |
 | --- | --- | --- | --- |
-| [Dataset](docs/api/dataset.html) | `create` | `POST /dataset-create` | Required |
-| [DatasetComplete](docs/api/dataset_complete.html) | `create` | `POST /dataset-complete` | Required |
-| [DatasetFill](docs/api/dataset_fill.html) | `create` | `POST /dataset-fill` | Required |
-| [ModelInfo](docs/api/model_info.html) | `load` | `GET /model/fetch-model-info/{model_code}` | Required |
-| [ModelResult](docs/api/model_result.html) | `create` | `POST /model/fetch-result/{model_code}` | Required |
-| [Prediction](docs/api/prediction.html) | `create` | `POST /v1/prediction/model/{model_code}` | Required |
-| [Prediction](docs/api/prediction.html) | `create` | `POST /v2/prediction/model/{model_code}` | Required |
+| Dataset | `create` | `POST /dataset-create` | Required |
+| DatasetComplete | `create` | `POST /dataset-complete` | Required |
+| DatasetFill | `create` | `POST /dataset-fill` | Required |
+| ModelInfo | `load` | `GET /model/fetch-model-info/{model_code}` | Required |
+| ModelResult | `create` | `POST /model/fetch-result/{model_code}` | Required |
+| Prediction | `create` | `POST /v1/prediction/model/{model_code}` | Required |
+| Prediction | `create` | `POST /v2/prediction/model/{model_code}` | Required |
 
 ## Connect to the API
 
@@ -123,12 +127,12 @@ Choose the language already used by your application or service. The clients rep
 
 | Client | Repository directory | Distribution |
 | --- | --- | --- |
-| [Golang](docs/sdks/go.html) | `go/` | Build from source |
-| [Lua](docs/sdks/lua.html) | `lua/` | Build from source |
-| [PHP](docs/sdks/php.html) | `php/` | Build from source |
-| [Python](docs/sdks/py.html) | `py/` | Build from source |
-| [Ruby](docs/sdks/rb.html) | `rb/` | Build from source |
-| [TypeScript](docs/sdks/ts.html) | `ts/` | Build from source |
+| Golang | `go/` | Build from source |
+| Lua | `lua/` | Build from source |
+| PHP | `php/` | Build from source |
+| Python | `py/` | Build from source |
+| Ruby | `rb/` | Build from source |
+| TypeScript | `ts/` | Build from source |
 
 Build-from-source entries are not marked as published in the project model. Follow the build instructions in that target’s README, then consume the resulting package using your language’s local dependency mechanism. Published entries give the installation command recorded for that client.
 
@@ -136,14 +140,14 @@ Build-from-source entries are not marked as published in the project model. Foll
 
 These targets provide another way to use the API. Their available commands or tools can cover a smaller set of operations than the client libraries.
 
-### [Go CLI](docs/tools/go-cli.html)
+### Go CLI
 
 Use the command-line interface for shell-based tasks and scripts.
 
 Repository directory: `go-cli/`. Not published. Build from the go-cli directory.
 
 
-### [Go MCP server](docs/tools/go-mcp.html)
+### Go MCP server
 
 Use the MCP server to expose supported API operations to an MCP client.
 
@@ -156,21 +160,21 @@ Repository directory: `go-mcp/`. Not published. Build from the go-mcp directory.
 
 Features supply behaviour around API calls, such as request handling, diagnostics, or local testing. Inclusion in this project does not mean a feature is enabled at runtime. Check the selected SDK’s supported features and configuration defaults, then enable the behaviour your application needs.
 
-- [`debug`](docs/features/debug.html): Request/response capture ring buffer for debugging
-- [`idempotency`](docs/features/idempotency.html): Idempotency keys for safe retries of mutating operations
-- [`metrics`](docs/features/metrics.html): Statistics capture: per-operation counters and latency
-- [`paging`](docs/features/paging.html): Pagination signals for list operations
-- [`ratelimit`](docs/features/ratelimit.html): Client-side rate limiting via a token bucket
-- [`retry`](docs/features/retry.html): Automatic retry of transient failures with exponential backoff
-- [`test`](docs/features/test.html): In-memory mock transport for testing without a live server
-- [`timeout`](docs/features/timeout.html): Per-request timeout with transport abort
+- `debug`: Request/response capture ring buffer for debugging
+- `idempotency`: Idempotency keys for safe retries of mutating operations
+- `metrics`: Statistics capture: per-operation counters and latency
+- `paging`: Pagination signals for list operations
+- `ratelimit`: Client-side rate limiting via a token bucket
+- `retry`: Automatic retry of transient failures with exponential backoff
+- `test`: In-memory mock transport for testing without a live server
+- `timeout`: Per-request timeout with transport abort
 
 Start with the default client configuration. Add request limits and diagnostics as needed, test error paths, and review retry behaviour before using operations that change data. A retry can repeat an operation unless the API provides a suitable guarantee.
 
 ## Continue with the documentation
 
-- Follow the [first-call guide](docs/guides/first-call.html) for the setup sequence.
-- Read the [authentication guide](docs/guides/authentication.html) before using protected routes.
-- Use the [API reference](docs/api/index.html) for request schemas, response formats, and status codes.
+- Follow the first-call guide for the setup sequence.
+- Read the authentication guide before using protected routes.
+- Use the API reference for request schemas, response formats, and status codes.
 - Check the chosen SDK or companion tool reference for its configuration and supported operations.
 

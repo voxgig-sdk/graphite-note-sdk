@@ -37,6 +37,8 @@ require_once __DIR__ . '/TransformResponse.php';
 
 GraphiteNoteUtility::setRegistrar(function (GraphiteNoteUtility $u): void {
     $u->clean = [GraphiteNoteClean::class, 'call'];
+    $u->clean_add = [GraphiteNoteClean::class, 'add'];
+    $u->clean_explain = [GraphiteNoteDone::class, 'clean_explain'];
     $u->done = [GraphiteNoteDone::class, 'call'];
     $u->make_error = [GraphiteNoteMakeError::class, 'call'];
     $u->feature_add = [GraphiteNoteFeatureAdd::class, 'call'];

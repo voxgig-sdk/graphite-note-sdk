@@ -33,6 +33,8 @@ require_relative 'transform_response'
 
 GraphiteNoteUtility.registrar = ->(u) {
   u.clean = GraphiteNoteUtilities::Clean
+  u.clean_add = GraphiteNoteUtilities::CleanAdd
+  u.clean_explain = GraphiteNoteUtilities::CleanExplain
   u.done = GraphiteNoteUtilities::Done
   u.make_error = GraphiteNoteUtilities::MakeError
   u.feature_add = GraphiteNoteUtilities::FeatureAdd

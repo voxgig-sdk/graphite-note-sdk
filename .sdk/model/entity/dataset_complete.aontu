@@ -38,6 +38,10 @@ main: kit: entity: dataset_complete: {
       name: "create"
       points: [
         {
+          bf: [
+            "datasetcode"
+            "usercode"
+          ]
           co: {
             id: "POST /dataset-complete"
             source: "openapi3"
@@ -45,6 +49,10 @@ main: kit: entity: dataset_complete: {
           }
           m: "POST"
           o: "/dataset-complete"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "dataset-complete"

@@ -85,6 +85,10 @@ main: kit: entity: model_info: {
               "model_code"
             ]
           }
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "model"

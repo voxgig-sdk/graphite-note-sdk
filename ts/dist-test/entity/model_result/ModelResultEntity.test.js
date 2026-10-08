@@ -54,6 +54,14 @@ const utility_1 = require("../../utility");
         const ent = testsdk.ModelResult();
         (0, node_assert_1.default)(null != ent);
     });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.GraphiteNoteSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.ModelResult().create({ "model_code": 1 }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.GRAPHITE_NOTE_TEST_LIVE;
         for (const op of ['create']) {
@@ -62,7 +70,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "data": { "a": true, "h": "Data", "n": "data", "r": false, "t": "`$ARRAY`", "key$": "data", "index$": 0 }, "page": { "a": true, "h": "Page", "n": "page", "r": false, "sh": "Page number for paginated results.", "t": "`$INTEGER`", "key$": "page", "index$": 1 }, "pagesize": { "a": true, "h": "Pagesize", "n": "pagesize", "r": false, "sh": "Rows per page.", "t": "`$INTEGER`", "key$": "pagesize", "index$": 2 } }, "name": "model_result", "op": { "create": { "input": "data", "name": "create", "points": [{ "a": true, "co": { "id": "POST /model/fetch-result/{model_code}", "source": "openapi3", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "model_code", "or": "model_code", "r": true, "t": "`$STRING`", "index$": 0 }] }, "k": "http", "m": "POST", "o": "/model/fetch-result/{model_code}", "q": { "exist": ["model_code"] }, "r": {}, "s": [{ "lit": "model" }, { "lit": "fetch-result" }, { "var": "model_code" }], "t": { "req": "`reqdata`", "res": "`body`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [] }, "key$": "model_result", "name__orig": "model_result", "Name": "ModelResult", "name_": "model_result", "name-": "model-result", "NAME": "MODEL_RESULT", "index$": 4 }, { "active": true, "entity": "model_result", "key$": "BasicModelResultFlow", "kind": "basic", "name": "BasicModelResultFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "model_result_ref01" }, "m": { "model_code": "model_code01" }, "o": "create", "s": [], "v": [], "index$": 0 }] }, 'ModelResult', { "POST /model/fetch-result/{model_code}": { "protocol": "http", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "page": { "type": "integer", "description": "Page number for paginated results. Defaults to 1.", "key$": "page" }, "page-size": { "type": "integer", "description": "Rows per page. Defaults to 10000.", "key$": "page-size" } }, "description": "Pagination for model result retrieval. Response carries X-Page and X-Page-Size headers.", "x-ref": "#/components/schemas/ModelResultRequest", "index$": 1 } } } }, "parameters": [{ "name": "model_code", "in": "path", "required": true, "description": "The model's code: open the model, Settings tab, ID section.", "schema": { "type": "string" }, "index$": 0 }] } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "data": { "a": true, "h": "Data", "n": "data", "r": false, "t": "`$ARRAY`", "key$": "data", "index$": 0 }, "page": { "a": true, "h": "Page", "n": "page", "r": false, "sh": "Page number for paginated results.", "t": "`$INTEGER`", "key$": "page", "index$": 1 }, "pagesize": { "a": true, "h": "Pagesize", "n": "pagesize", "r": false, "sh": "Rows per page.", "t": "`$INTEGER`", "key$": "pagesize", "index$": 2 } }, "name": "model_result", "op": { "create": { "input": "data", "name": "create", "points": [{ "a": true, "bf": ["page", "pagesize"], "co": { "id": "POST /model/fetch-result/{model_code}", "source": "openapi3", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "model_code", "or": "model_code", "r": true, "t": "`$STRING`", "index$": 0 }] }, "k": "http", "m": "POST", "o": "/model/fetch-result/{model_code}", "q": { "exist": ["model_code"] }, "r": {}, "rs": { "kind": "json", "media": "application/json" }, "s": [{ "lit": "model" }, { "lit": "fetch-result" }, { "var": "model_code" }], "t": { "req": "`reqdata`", "res": "`body`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [] }, "key$": "model_result", "name__orig": "model_result", "Name": "ModelResult", "name_": "model_result", "name-": "model-result", "NAME": "MODEL_RESULT", "index$": 4 }, { "active": true, "entity": "model_result", "key$": "BasicModelResultFlow", "kind": "basic", "name": "BasicModelResultFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "model_result_ref01" }, "m": { "model_code": "model_code01" }, "o": "create", "s": [], "v": [], "index$": 0 }] }, 'ModelResult', { "POST /model/fetch-result/{model_code}": { "protocol": "http", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "page": { "type": "integer", "description": "Page number for paginated results. Defaults to 1.", "key$": "page" }, "page-size": { "type": "integer", "description": "Rows per page. Defaults to 10000.", "key$": "page-size" } }, "description": "Pagination for model result retrieval. Response carries X-Page and X-Page-Size headers.", "x-ref": "#/components/schemas/ModelResultRequest", "index$": 1 } } } }, "parameters": [{ "name": "model_code", "in": "path", "required": true, "description": "The model's code: open the model, Settings tab, ID section.", "schema": { "type": "string" }, "index$": 0 }] } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -76,6 +84,11 @@ const utility_1 = require("../../utility");
         (0, node_assert_1.default)(null != model_result_ref01_data);
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

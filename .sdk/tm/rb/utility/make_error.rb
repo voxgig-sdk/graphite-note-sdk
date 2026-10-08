@@ -2,6 +2,7 @@
 require_relative '../core/operation'
 require_relative '../core/result'
 require_relative '../core/error'
+require_relative 'clean'
 module GraphiteNoteUtilities
   MakeError = ->(ctx, err) {
     if ctx.nil?
@@ -18,9 +19,12 @@ module GraphiteNoteUtilities
     err = result.err if err.nil?
     err = ctx.make_error("unknown", "unknown error") if err.nil?
 
+    # A bare context (no client, no utility) still cleans, through the
+    # schema defaults.
+    clean = ctx.utility&.clean || GraphiteNoteUtilities::Clean
+
     errmsg = err.is_a?(GraphiteNoteError) ? err.msg : err.to_s
-    msg = "GraphiteNoteSDK: #{opname}: #{errmsg}"
-    msg = ctx.utility.clean.call(ctx, msg)
+    msg = clean.call(ctx, "GraphiteNoteSDK: #{opname}: #{errmsg}")
 
     result.err = nil
     spec = ctx.spec
@@ -29,14 +33,19 @@ module GraphiteNoteUtilities
       ctx.ctrl.explain["err"] = { "message" => msg }
     end
 
+    # The context stays reachable for a debugger (`err.ctx`) and is left out
+    # of every serialiser the error defines; result and spec are cleaned
+    # COPIES, so masking them never masks the pipeline's own objects.
     sdk_err = GraphiteNoteError.new("", msg, ctx)
-    sdk_err.result = ctx.utility.clean.call(ctx, result)
-    sdk_err.spec = ctx.utility.clean.call(ctx, spec)
+    sdk_err.result = clean.call(ctx, result)
+    sdk_err.spec = clean.call(ctx, spec)
 
     # Promote the HTTP status to the top level, so a consumer can branch on
     # `err.status` / `err.not_found?` instead of reaching into `err.result`.
     sdk_err.status = result.status.nil? ? -1 : result.status
     sdk_err.code = err.code if err.is_a?(GraphiteNoteError)
+
+    clean.call(ctx, sdk_err)
 
     ctx.ctrl.err = sdk_err
 

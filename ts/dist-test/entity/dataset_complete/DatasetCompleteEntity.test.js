@@ -54,6 +54,14 @@ const utility_1 = require("../../utility");
         const ent = testsdk.DatasetComplete();
         (0, node_assert_1.default)(null != ent);
     });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.GraphiteNoteSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.DatasetComplete().create({ "datasetcode": 1, "usercode": "x" }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.GRAPHITE_NOTE_TEST_LIVE;
         for (const op of ['create']) {
@@ -62,7 +70,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "datasetcode": { "a": true, "h": "Datasetcode", "n": "datasetcode", "r": true, "t": "`$STRING`", "key$": "datasetcode", "index$": 0 }, "details": { "a": true, "h": "Details", "n": "details", "r": false, "t": "`$OBJECT`", "key$": "details", "index$": 1 }, "status": { "a": true, "h": "Status", "n": "status", "r": false, "sh": "'success' on success.", "t": "`$STRING`", "key$": "status", "index$": 2 }, "usercode": { "a": true, "h": "Usercode", "n": "usercode", "r": true, "t": "`$STRING`", "key$": "usercode", "index$": 3 } }, "name": "dataset_complete", "op": { "create": { "input": "data", "name": "create", "points": [{ "a": true, "co": { "id": "POST /dataset-complete", "source": "openapi3", "version": 2 }, "g": {}, "k": "http", "m": "POST", "o": "/dataset-complete", "q": {}, "r": {}, "s": [{ "lit": "dataset-complete" }], "t": { "req": "`reqdata`", "res": "`body.data`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [] }, "key$": "dataset_complete", "name__orig": "dataset_complete", "Name": "DatasetComplete", "name_": "dataset_complete", "name-": "dataset-complete", "NAME": "DATASET_COMPLETE", "index$": 1 }, { "active": true, "entity": "dataset_complete", "key$": "BasicDatasetCompleteFlow", "kind": "basic", "name": "BasicDatasetCompleteFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "dataset_complete_ref01" }, "m": {}, "o": "create", "s": [], "v": [], "index$": 0 }] }, 'DatasetComplete', { "POST /dataset-complete": { "protocol": "http", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "user-code": { "type": "string", "key$": "user-code" }, "dataset-code": { "type": "string", "key$": "dataset-code" } }, "required": ["user-code", "dataset-code"], "description": "Signals the end of dataset insertion: triggers final dataset shape calculation and post-processing.", "x-ref": "#/components/schemas/DatasetCompleteRequest", "index$": 1 } } } }, "parameters": [] } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "datasetcode": { "a": true, "h": "Datasetcode", "n": "datasetcode", "r": true, "t": "`$STRING`", "key$": "datasetcode", "index$": 0 }, "details": { "a": true, "h": "Details", "n": "details", "r": false, "t": "`$OBJECT`", "key$": "details", "index$": 1 }, "status": { "a": true, "h": "Status", "n": "status", "r": false, "sh": "'success' on success.", "t": "`$STRING`", "key$": "status", "index$": 2 }, "usercode": { "a": true, "h": "Usercode", "n": "usercode", "r": true, "t": "`$STRING`", "key$": "usercode", "index$": 3 } }, "name": "dataset_complete", "op": { "create": { "input": "data", "name": "create", "points": [{ "a": true, "bf": ["datasetcode", "usercode"], "co": { "id": "POST /dataset-complete", "source": "openapi3", "version": 2 }, "g": {}, "k": "http", "m": "POST", "o": "/dataset-complete", "q": {}, "r": {}, "rs": { "kind": "json", "media": "application/json" }, "s": [{ "lit": "dataset-complete" }], "t": { "req": "`reqdata`", "res": "`body.data`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [] }, "key$": "dataset_complete", "name__orig": "dataset_complete", "Name": "DatasetComplete", "name_": "dataset_complete", "name-": "dataset-complete", "NAME": "DATASET_COMPLETE", "index$": 1 }, { "active": true, "entity": "dataset_complete", "key$": "BasicDatasetCompleteFlow", "kind": "basic", "name": "BasicDatasetCompleteFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "dataset_complete_ref01" }, "m": {}, "o": "create", "s": [], "v": [], "index$": 0 }] }, 'DatasetComplete', { "POST /dataset-complete": { "protocol": "http", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "user-code": { "type": "string", "key$": "user-code" }, "dataset-code": { "type": "string", "key$": "dataset-code" } }, "required": ["user-code", "dataset-code"], "description": "Signals the end of dataset insertion: triggers final dataset shape calculation and post-processing.", "x-ref": "#/components/schemas/DatasetCompleteRequest", "index$": 1 } } } }, "parameters": [] } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -75,6 +83,11 @@ const utility_1 = require("../../utility");
         (0, node_assert_1.default)(null != dataset_complete_ref01_data);
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

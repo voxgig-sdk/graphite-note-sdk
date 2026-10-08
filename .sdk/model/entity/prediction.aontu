@@ -32,6 +32,9 @@ main: kit: entity: prediction: {
       name: "create"
       points: [
         {
+          bf: [
+            "data"
+          ]
           co: {
             id: "POST /v1/prediction/model/{model_code}"
             source: "openapi3"
@@ -55,6 +58,10 @@ main: kit: entity: prediction: {
               "model_code"
             ]
           }
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "v1"
@@ -75,6 +82,9 @@ main: kit: entity: prediction: {
           }
         }
         {
+          bf: [
+            "data"
+          ]
           co: {
             id: "POST /v2/prediction/model/{model_code}"
             source: "openapi3"
@@ -97,6 +107,10 @@ main: kit: entity: prediction: {
             exist: [
               "model_code"
             ]
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {
